@@ -27,9 +27,9 @@ const PageLink = ({
         ],
         {
             // Active state - highlighted with your theme color
-            "z-10 bg-gradient-to-r from-black to-black text-white border-[#007A7A] shadow-lg": active,
+            "z-10 bg-gradient-to-r from-[#073BBC] to-[#073BBC] text-white border-[#073BBC] shadow-lg": active,
             // Inactive state - subtle hover effects
-            "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-black hover:text-black": !active,
+            "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-[#073BBC] hover:text-[#073BBC]": !active,
         }
     );
 

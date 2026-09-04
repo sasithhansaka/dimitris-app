@@ -4,6 +4,9 @@ export type User = {
     email: string;
     avatar?: string;
     email_verified_at: string | null;
+    role: 'user' | 'admin' | 'super_admin';
+    registered_date: string;
+    status: 'active' | 'inactive' | 'suspend';
     /* @chisel-2fa */
     two_factor_enabled?: boolean;
     /* @end-chisel-2fa */

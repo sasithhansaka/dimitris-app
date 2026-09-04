@@ -30,7 +30,7 @@ export default forwardRef(function SearchInput(
     return (
         <div className="relative">
             {/* Search Container */}
-            <div className="flex rounded-xl shadow-sm border border-gray-200 bg-white overflow-hidden transition-all duration-200 hover:shadow-md focus-within:shadow-lg focus-within:ring-2 focus-within:ring-[#007A7A]/20 focus-within:border-[#1f1f1f] mt-0 lg:mt-6">
+            <div className="flex rounded-xl shadow-sm border border-gray-200 bg-white overflow-hidden transition-all duration-200 hover:shadow-md focus-within:shadow-lg focus-within:ring-2 focus-within:ring-[#073BBC]/20 focus-within:border-[#073BBC] mt-0 lg:mt-6">
                 {/* Input Section */}
                 <div className="relative flex flex-grow items-stretch">
                     {/* Search Icon */}

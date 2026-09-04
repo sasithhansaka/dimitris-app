@@ -1,9 +1,16 @@
-import SearchInput from '../Elements/SearchInput';
-import Pagination from './Pagination';
-import { Disclosure } from '@headlessui/react';
-import { router } from '@inertiajs/react';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
+import SearchInput from "../Elements/SearchInput";
+import Pagination from "./Pagination";
+import { Disclosure } from "@headlessui/react";
+import { router } from "@inertiajs/react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 export function TableBody({
     key,
@@ -23,7 +30,7 @@ export function TableBody({
             {({ open }) => (
                 <>
                     <tr
-                        key={key + 'p'}
+                        key={key + "p"}
                         className="border-b border-gray-200 transition-colors duration-150 hover:bg-gray-50/50"
                     >
                         <TableTd width={10}>
@@ -31,7 +38,7 @@ export function TableBody({
                         </TableTd>
                         {children}
                     </tr>
-                    <tr key={key + 'c'}>
+                    <tr key={key + "c"}>
                         <Disclosure.Panel
                             as="td"
                             colSpan={100}
@@ -63,14 +70,14 @@ export function TableTd({
 }) {
     return (
         <td
-            width={typeof width === 'number' ? width : undefined}
+            width={typeof width === "number" ? width : undefined}
             className={`border-b border-gray-200 py-4 pr-3 pl-4 text-sm font-medium text-gray-800 transition-colors duration-150 sm:pl-6 ${
-                typeof width === 'string' ? width : ''
-            } ${className || ''}`}
+                typeof width === "string" ? width : ""
+            } ${className || ""}`}
             style={{
-                wordWrap: 'break-word',
-                overflow: allowOverflow ? 'visible' : 'hidden',
-                textOverflow: 'ellipsis',
+                wordWrap: "break-word",
+                overflow: allowOverflow ? "visible" : "hidden",
+                textOverflow: "ellipsis",
             }}
         >
             {children}
@@ -87,6 +94,7 @@ export default function MasterTab({
     exportLink,
     filterBar = true,
     search,
+    statusFilter,
     links,
     extraQueryParams = {},
     children,
@@ -110,17 +118,21 @@ export default function MasterTab({
         placeholder: string;
     };
     filterBar?: boolean;
+    statusFilter?: {
+        options: { label: string; value: string }[];
+    };
     links: any;
     extraQueryParams?: Record<string, any>;
     children: any;
 }) {
-    const [searchParam, setSearchParam] = useState(filters.searchParam ?? '');
+    const [searchParam, setSearchParam] = useState(filters.searchParam ?? "");
     const [page, setPage] = useState(filters.page ?? 1);
     const [rowPerPage, setRowPerPage] = useState(filters.perPage ?? 10);
-    const [sortBy, setSortBy] = useState(filters.sortBy ?? 'name');
+    const [sortBy, setSortBy] = useState(filters.sortBy ?? "name");
     const [sortDirection, setSortDirection] = useState(
-        filters.sortDirection ?? 'desc',
+        filters.sortDirection ?? "desc",
     );
+    const [status, setStatus] = useState(filters.status ?? "");
     const [isSearchLoading, setIsSearchLoading] = useState(false);
 
     // Memoized function to make API calls
@@ -131,6 +143,7 @@ export default function MasterTab({
             sortBy: string;
             sortDirection: string;
             searchParam: string;
+            status: string;
         }) => {
             router.get(
                 url,
@@ -140,6 +153,7 @@ export default function MasterTab({
                     sortBy: params.sortBy,
                     sortDirection: params.sortDirection,
                     searchParam: params.searchParam,
+                    status: params.status,
                     ...extraQueryParams,
                 },
                 {
@@ -169,6 +183,7 @@ export default function MasterTab({
             sortBy,
             sortDirection,
             searchParam: value,
+            status,
             ...extraQueryParams,
         });
     }, 1000);
@@ -182,7 +197,7 @@ export default function MasterTab({
 
     // Reset search function
     const resetSearch = () => {
-        const newSearchParam = '';
+        const newSearchParam = "";
         const newPage = 1;
 
         setSearchParam(newSearchParam);
@@ -194,6 +209,7 @@ export default function MasterTab({
             sortBy,
             sortDirection,
             searchParam: newSearchParam,
+            status,
             ...extraQueryParams,
         });
     };
@@ -209,6 +225,7 @@ export default function MasterTab({
             sortBy: column,
             sortDirection: direction,
             searchParam,
+            status,
             ...extraQueryParams,
         });
     };
@@ -223,17 +240,36 @@ export default function MasterTab({
             sortBy,
             sortDirection,
             searchParam,
+            status,
+            ...extraQueryParams,
+        });
+    };
+
+    // Handle status filter change
+    const handleStatusChange = (value: string) => {
+        const newPage = 1; // Reset to first page when filtering
+        setStatus(value);
+        setPage(newPage);
+
+        makeRequest({
+            page: newPage,
+            rowPerPage,
+            sortBy,
+            sortDirection,
+            searchParam,
+            status: value,
             ...extraQueryParams,
         });
     };
 
     // Sync state with filters prop when it changes
     useEffect(() => {
-        setSearchParam(filters.searchParam ?? '');
+        setSearchParam(filters.searchParam ?? "");
         setPage(filters.page ?? 1);
         setRowPerPage(filters.perPage ?? 10);
-        setSortBy(filters.sortBy ?? '');
-        setSortDirection(filters.sortDirection ?? '');
+        setSortBy(filters.sortBy ?? "");
+        setSortDirection(filters.sortDirection ?? "");
+        setStatus(filters.status ?? "");
     }, [filters]);
 
     const getColumnWidth = useCallback(
@@ -268,11 +304,11 @@ export default function MasterTab({
     }) {
         const isActive = sortBy === sortField;
         const widthClass =
-            typeof width === 'string' && width.startsWith('w-') ? width : '';
+            typeof width === "string" && width.startsWith("w-") ? width : "";
         const widthStyle =
-            typeof width === 'number'
+            typeof width === "number"
                 ? { width: `${width}px` }
-                : typeof width === 'string' && !width.startsWith('w-')
+                : typeof width === "string" && !width.startsWith("w-")
                   ? { width }
                   : undefined;
 
@@ -284,20 +320,20 @@ export default function MasterTab({
                     handleOnSort(
                         sortField,
                         isActive
-                            ? sortDirection === 'asc'
-                                ? 'desc'
-                                : 'asc'
-                            : 'asc',
+                            ? sortDirection === "asc"
+                                ? "desc"
+                                : "asc"
+                            : "asc",
                     )
                 }
                 scope="col"
                 className={
                     (sortable
-                        ? 'cursor-pointer transition-all duration-200 '
-                        : 'cursor-default ') +
-                    'group relative py-4 pr-3 pl-4 text-left text-sm font-normal text-black sm:pl-6' +
+                        ? "cursor-pointer transition-all duration-200 "
+                        : "cursor-default ") +
+                    "group relative py-4 pr-3 pl-4 text-left text-sm font-normal text-black sm:pl-6" +
                     widthClass +
-                    (isActive ? '' : '')
+                    (isActive ? "" : "")
                 }
                 style={widthStyle}
             >
@@ -317,12 +353,12 @@ export default function MasterTab({
         <div className="space-y-6">
             {/* Header Section */}
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="max-w-md flex-1">
+                <div className="flex flex-1 flex-col gap-4 sm:flex-row sm:items-center">
                     {search && (
-                        <div className="relative">
+                        <div className="relative max-w-md flex-1">
                             <SearchInput
                                 id="search"
-                                className="block w-full transition-all duration-200  focus:ring-[#0d0d0d]"
+                                className="block w-full transition-all duration-200 focus:ring-[#0d0d0d]"
                                 isFocused
                                 value={searchParam}
                                 placeholder={search.placeholder}
@@ -332,6 +368,29 @@ export default function MasterTab({
                                 onChange={handleSearchChange}
                             />
                         </div>
+                    )}
+
+                    {statusFilter && (
+                        <Select
+                            value={status || "all"}
+                            onValueChange={(value) =>
+                                handleStatusChange(value === "all" ? "" : value)
+                            }
+                        >
+                            <SelectTrigger className="h-12.5 w-40 lg:w-60 lg:py-6 lg:mt-6">
+                                <SelectValue placeholder="Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {statusFilter.options.map((option) => (
+                                    <SelectItem
+                                        key={option.value || "all"}
+                                        value={option.value || "all"}
+                                    >
+                                        {option.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     )}
                 </div>
 
@@ -364,6 +423,7 @@ export default function MasterTab({
                     <div className="inline-block min-w-full align-middle">
                         <table className="min-w-full table-fixed">
                             <colgroup>
+                                <col style={{ width: "10px" }} />
                                 {tableColumns.map(
                                     (column: any, index: number) => {
                                         const width = getColumnWidth(
@@ -371,21 +431,21 @@ export default function MasterTab({
                                             index,
                                         );
                                         const widthClass =
-                                            typeof width === 'string' &&
-                                            width.startsWith('w-')
+                                            typeof width === "string" &&
+                                            width.startsWith("w-")
                                                 ? width
-                                                : '';
+                                                : "";
                                         const widthStyle =
-                                            typeof width === 'number'
+                                            typeof width === "number"
                                                 ? { width: `${width}px` }
-                                                : typeof width === 'string' &&
-                                                    !width.startsWith('w-')
+                                                : typeof width === "string" &&
+                                                    !width.startsWith("w-")
                                                   ? { width }
                                                   : undefined;
 
                                         return (
                                             <col
-                                                key={`${column.sortField || column.label || 'column'}-${index}`}
+                                                key={`${column.sortField || column.label || "column"}-${index}`}
                                                 className={widthClass}
                                                 style={widthStyle}
                                             />
@@ -395,6 +455,10 @@ export default function MasterTab({
                             </colgroup>
                             <thead className="border-b border-gray-200 bg-[#f8fafc]">
                                 <tr>
+                                    <th
+                                        scope="col"
+                                        className="py-4 pr-3 pl-4 sm:pl-6"
+                                    ></th>
                                     {tableColumns.map(
                                         (column: any, index: number) =>
                                             tableTh({
@@ -415,7 +479,7 @@ export default function MasterTab({
                                 <tbody>
                                     <tr>
                                         <td
-                                            colSpan={tableColumns.length}
+                                            colSpan={tableColumns.length + 1}
                                             className="py-16 text-center"
                                         >
                                             <div className="flex flex-col items-center justify-center space-y-4">
