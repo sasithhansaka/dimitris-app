@@ -3,7 +3,9 @@ import {
     BookOpen,
     FolderGit2,
     LayoutGrid,
+    Newspaper,
     ScrollText,
+    Tags,
     Users,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
@@ -35,7 +37,28 @@ const mainNavItems: NavItem[] = [
         href: usersRoutes.index(),
         icon: Users,
     },
+    // {
+    //     title: 'System Logs',
+    //     href: logsRoutes.index(),
+    //     icon: ScrollText,
+    // },
+];
+
+const articleNavItems: NavItem[] = [
     {
+        title: 'Articles',
+        href: '/admin/articles',
+        icon: Newspaper,
+    },
+    {
+        title: 'Articles Category',
+        href: '/admin/articles-category',
+        icon: Tags,
+    },
+];
+
+const LogsNavItems: NavItem[] = [
+      {
         title: 'System Logs',
         href: logsRoutes.index(),
         icon: ScrollText,
@@ -71,7 +94,9 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={mainNavItems} label="Platform" />
+                <NavMain items={articleNavItems} label="Articles" />
+                <NavMain items={LogsNavItems} label="Logs" />
             </SidebarContent>
 
             <SidebarFooter>
