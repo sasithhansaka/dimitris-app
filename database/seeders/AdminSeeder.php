@@ -32,6 +32,8 @@ class AdminSeeder extends Seeder
                     'name' => $admin['name'],
                     'password' => $admin['password'],
                     'role' => User::ROLE_SUPER_ADMIN,
+                    'registered_date' => now(),
+                    'status' => User::STATUS_ACTIVE,
                     'email_verified_at' => now(),
                 ]
             );
