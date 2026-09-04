@@ -56,7 +56,7 @@ export default function UsersShow({ user }: { user: User }) {
         <>
             <Head title={`User: ${user.name}`} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-sm p-4">
-                <div className="mx-auto w-full lg:px-2 lg:mt-3">
+                <div className="mx-auto w-full max-w-5xl lg:px-2 lg:mt-3">
                     <div className="mb-5 flex items-start justify-between gap-4">
                         <div className="space-y-1">
                             <h1 className="text-xl font-semibold tracking-tight text-foreground">
@@ -67,7 +67,7 @@ export default function UsersShow({ user }: { user: User }) {
                                 access.
                             </p>
                         </div>
-                        <Button variant="outline" size="sm" asChild className='h-10 text-[#073bbc] hover:text-[#073bbc]/80'>
+                        <Button variant="outline" size="sm" asChild className='h-10 text-[#000000] hover:text-[#000000]/80'>
                             <Link href={usersRoutes.index().url}>
                                 {/* <ArrowLeftIcon className="size-4" /> */}
                                 Back to Users

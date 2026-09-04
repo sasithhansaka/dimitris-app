@@ -22,6 +22,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import articleCategoriesRoutes from '@/routes/article-categories';
 import logsRoutes from '@/routes/logs';
 import usersRoutes from '@/routes/users';
 import type { NavItem } from '@/types';
@@ -52,7 +53,7 @@ const articleNavItems: NavItem[] = [
     },
     {
         title: 'Articles Category',
-        href: '/admin/articles-category',
+        href: articleCategoriesRoutes.index(),
         icon: Tags,
     },
 ];

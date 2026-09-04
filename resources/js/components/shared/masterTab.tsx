@@ -1,9 +1,10 @@
 import SearchInput from "../Elements/SearchInput";
 import Pagination from "./Pagination";
 import { Disclosure } from "@headlessui/react";
-import { router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { Button } from "@/components/ui/button";
 import {
     Select,
     SelectContent,
@@ -406,11 +407,18 @@ export default function MasterTab({
                             {importLink.label}
                         </button>
                     )}
-                    {/* {createLink && (
-                        <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#007A7A] to-[#00aaaa] rounded-lg hover:from-[#00aaaa] hover:to-[#008888] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#007A7A]/20 shadow-lg">
-                            {createLink.label}
-                        </button>
-                    )} */}
+                    {createLink && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            asChild
+                            className="h-10 text-[#000000] mt-4 hover:text-[#000000]/80"
+                        >
+                            <Link href={createLink.url}>
+                                {createLink.label}
+                            </Link>
+                        </Button>
+                    )}
                 </div>
             </div>
 
