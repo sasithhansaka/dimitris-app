@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUniqueSlug;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +25,7 @@ use Illuminate\Support\Carbon;
 #[Fillable(['title', 'slug', 'introduction', 'content', 'banner', 'keywords', 'status', 'article_category_id'])]
 class Article extends Model
 {
-    use LogsActivity;
+    use HasUniqueSlug, LogsActivity;
 
     public const STATUS_ACTIVE = 'active';
 

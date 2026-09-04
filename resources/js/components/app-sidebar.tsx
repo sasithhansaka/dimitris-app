@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import articleCategoriesRoutes from '@/routes/article-categories';
+import articlesRoutes from '@/routes/articles';
 import logsRoutes from '@/routes/logs';
 import usersRoutes from '@/routes/users';
 import type { NavItem } from '@/types';
@@ -48,7 +49,7 @@ const mainNavItems: NavItem[] = [
 const articleNavItems: NavItem[] = [
     {
         title: 'Articles',
-        href: '/admin/articles',
+        href: articlesRoutes.index(),
         icon: Newspaper,
     },
     {
