@@ -36,7 +36,7 @@ class UserController extends Controller
             ->paginate($request->integer('rowPerPage', 10))
             ->withQueryString();
 
-        return Inertia::render('users/index', [
+        return Inertia::render('Admin/users/index', [
             'users' => $users,
             'filters' => $request->only(['searchParam', 'page', 'rowPerPage', 'sortBy', 'sortDirection', 'status']),
         ]);
@@ -47,7 +47,7 @@ class UserController extends Controller
      */
     public function show(User $user): Response
     {
-        return Inertia::render('users/show', [
+        return Inertia::render('Admin/users/show', [
             'user' => $user,
         ]);
     }

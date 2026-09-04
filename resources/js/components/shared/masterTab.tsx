@@ -377,7 +377,7 @@ export default function MasterTab({
                                 handleStatusChange(value === "all" ? "" : value)
                             }
                         >
-                            <SelectTrigger className="h-12.5 w-40 lg:w-60 lg:py-6 lg:mt-6">
+                            <SelectTrigger className="h-12.5 w-full md:w-60 md:py-6 lg:mt-6">
                                 <SelectValue placeholder="Status" />
                             </SelectTrigger>
                             <SelectContent>
@@ -453,7 +453,7 @@ export default function MasterTab({
                                     },
                                 )}
                             </colgroup>
-                            <thead className="border-b border-gray-200 bg-[#f8fafc]">
+                            <thead className="border-b border-gray-200 bg-[#073BBC]/3">
                                 <tr>
                                     <th
                                         scope="col"
