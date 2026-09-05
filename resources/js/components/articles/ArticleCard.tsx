@@ -1,22 +1,20 @@
 import { Link } from "@inertiajs/react";
 import { PromoPlate, type PlatePattern } from "@/components/ui/PromoPlate";
+import type { Article } from "@/types/article";
 
-export type ArticlePreview = {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  readTime: string;
-  featured?: boolean;
-  image: {
-    pattern: PlatePattern;
-    accent: string;
-    tone?: "light" | "dark";
+const PLATE_PATTERNS: PlatePattern[] = ["arcs", "orbit", "stack", "wave", "field", "bloom", "peak", "beam", "tile", "loop"];
+const PLATE_ACCENTS = ["#2563eb", "#059669", "#d97706", "#7c3aed", "#dc2626"];
+
+function plateFor(id: number) {
+  return {
+    pattern: PLATE_PATTERNS[id % PLATE_PATTERNS.length],
+    accent: PLATE_ACCENTS[id % PLATE_ACCENTS.length],
   };
-};
+}
 
-export function ArticleCard({ article, featured = false }: { article: ArticlePreview; featured?: boolean }) {
+export function ArticleCard({ article, featured = false }: { article: Article; featured?: boolean }) {
+  const plate = plateFor(article.id);
+
   return (
     <article
       className={
@@ -26,24 +24,28 @@ export function ArticleCard({ article, featured = false }: { article: ArticlePre
       }
     >
       <div className={featured ? "min-h-65 overflow-hidden" : "aspect-video overflow-hidden"}>
-        <PromoPlate {...article.image} className="size-full" />
+        {article.banner ? (
+          <img src={`/storage/${article.banner}`} alt={article.title} className="w-full h-[320px] md:h-[330px] lg:h-[500px] object-cover" />
+        ) : (
+          <PromoPlate {...plate} className="size-full" />
+        )}
       </div>
       <div className={featured ? "flex flex-col justify-center p-6 sm:p-8" : "p-4"}>
         <div className="flex flex-wrap items-center gap-2 text-[0.75rem] font-medium text-muted-foreground">
-          <span className="font-semibold text-primary">{article.category}</span>
+          <span className="font-semibold text-primary">{article.category?.name ?? "Articles"}</span>
           <span aria-hidden="true">·</span>
-          <span>{article.readTime}</span>
+          <span>{article.read_time} min read</span>
         </div>
         <h3
           className={
             featured
-              ? "mt-4 text-[1.75rem] leading-[1.08] font-extrabold tracking-[-0.03em] text-foreground"
-              : "mt-3 text-[1rem] leading-snug font-semibold text-foreground"
+              ? "mt-4 text-[1.75rem] leading-[1.08] font-extrabold tracking-[-0.03em] text-foreground line-clamp-2"
+              : "mt-3 text-[1rem] leading-snug font-semibold text-foreground line-clamp-1"
           }
         >
           {article.title}
         </h3>
-        <p className="mt-3 text-[0.86rem] leading-relaxed text-muted-foreground">{article.excerpt}</p>
+        <p className="mt-3 text-[0.86rem] leading-relaxed text-muted-foreground line-clamp-1">{article.introduction}</p>
         <Link
           href={`/articles/${article.slug}`}
           className="mt-5 inline-flex min-h-11 items-center self-start text-[0.84rem] font-semibold text-primary hover:underline"

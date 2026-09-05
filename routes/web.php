@@ -4,10 +4,11 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Public\ArticleController as PublicArticleController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Public/home')->name('home');
-Route::inertia('articles', 'Public/Articles/page')->name('public.articles');
+Route::get('articles', [PublicArticleController::class, 'index'])->name('public.articles');
 
 Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(function () {
     Route::inertia('admin/dashboard', 'Admin/dashboard/dashboard')->name('dashboard');
