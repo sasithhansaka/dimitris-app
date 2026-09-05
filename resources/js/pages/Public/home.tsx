@@ -7,7 +7,14 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CouponCard, type Coupon } from "@/components/coupons/CouponCard";
 import { ProductCard, type Product } from "@/components/products/ProductCard";
-import { CompetitionCard, type Competition } from "@/components/competitions/CompetitionCard";
+import {
+    CompetitionCard,
+    type Competition,
+} from "@/components/competitions/CompetitionCard";
+import {
+    CatalogOfferCard,
+    type Offer,
+} from "@/components/offers/CatalogOfferCard";
 import { ArrowRight, Search, TicketCheck, Trophy } from "lucide-react";
 
 const FEATURED_PRODUCTS: Product[] = [
@@ -125,7 +132,11 @@ const FEATURED_COMPETITIONS: Competition[] = [
         prize: "12x monthly coffee subscription boxes",
         validUntil: "2026-12-15",
         entryMethod: "receipt",
-        brand: { id: "2", name: "Fresco", logo: { monogram: "F", accent: "#059669", ink: "#ffffff" } },
+        brand: {
+            id: "2",
+            name: "Fresco",
+            logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
+        },
         image: { pattern: "peak", accent: "#059669" },
     },
     {
@@ -135,7 +146,11 @@ const FEATURED_COMPETITIONS: Competition[] = [
         prize: "1x Wireless Noise-Cancelling Headphones",
         validUntil: "2026-11-20",
         entryMethod: "code",
-        brand: { id: "3", name: "Circuit", logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" } },
+        brand: {
+            id: "3",
+            name: "Circuit",
+            logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
+        },
         image: { pattern: "beam", accent: "#d97706" },
     },
     {
@@ -145,8 +160,44 @@ const FEATURED_COMPETITIONS: Competition[] = [
         prize: "$1,000 home decor voucher",
         validUntil: "2026-10-05",
         entryMethod: "qr",
-        brand: { id: "4", name: "Hearth", logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" } },
+        brand: {
+            id: "4",
+            name: "Hearth",
+            logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" },
+        },
         image: { pattern: "bloom", accent: "#7c3aed" },
+    },
+];
+
+const FEATURED_OFFERS: Offer[] = [
+    {
+        id: "1",
+        slug: "northwind-storewide-sale",
+        title: "Northwind storewide seasonal sale",
+        description: "Save across the full catalog, no minimum spend required.",
+        validUntil: "2026-11-15",
+        brand: { id: "1", name: "Northwind", logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" } },
+        relatedCouponSlug: "20-off-first-order",
+        image: { pattern: "wave", accent: "#2563eb" },
+    },
+    {
+        id: "2",
+        slug: "fresco-weekly-groceries",
+        title: "Fresco weekly grocery picks",
+        description: "Fresh deals on pantry staples, updated every Monday.",
+        validUntil: "2026-10-20",
+        brand: { id: "2", name: "Fresco", logo: { monogram: "F", accent: "#059669", ink: "#ffffff" } },
+        relatedCouponSlug: "buy-one-get-one-free",
+        image: { pattern: "field", accent: "#059669" },
+    },
+    {
+        id: "3",
+        slug: "circuit-tech-clearance",
+        title: "Circuit tech clearance event",
+        description: "Last season's electronics at clearance prices, while supplies last.",
+        validUntil: "2026-10-05",
+        brand: { id: "3", name: "Circuit", logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" } },
+        image: { pattern: "tile", accent: "#d97706" },
     },
 ];
 
@@ -310,6 +361,21 @@ export default function Home() {
                             competition={competition}
                             featured={index === 0}
                         />
+                    ))}
+                </div>
+            </Container>
+
+            {/* promotions */}
+            <Container as="section" className="pt-14 lg:pt-20">
+                <SectionHeading
+                    title="Latest offers"
+                    sub="Explore promotions and product collections from familiar businesses."
+                    actionLabel="View all offers"
+                    actionHref="/offers"
+                />
+                <div className="mt-7 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                    {FEATURED_OFFERS.map((offer) => (
+                        <CatalogOfferCard key={offer.id} offer={offer} />
                     ))}
                 </div>
             </Container>
