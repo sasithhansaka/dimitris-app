@@ -12,7 +12,7 @@ export function Container({
   as?: "div" | "section" | "header" | "footer" | "nav" | "main";
 }) {
   return (
-    <Tag className={cn("mx-auto w-full max-w-335 px-5 sm:px-8 lg:px-10", className)}>
+    <Tag className={cn("mx-auto w-full max-w-shell px-5 sm:px-8 lg:px-10", className)}>
       {children}
     </Tag>
   );

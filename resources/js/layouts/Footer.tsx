@@ -39,21 +39,20 @@ const COLUMNS: { title: string; links: FooterItem[] }[] = [
 
 export function Footer() {
     return (
-        <footer className="mt-56 border-t border-border bg-muted/50 pb-[calc(env(safe-area-inset-bottom)+68px)] lg:mt-28 lg:pb-0">
+        <footer className="mt-20 border-t border-rule bg-paper-deep/50 pb-[calc(env(safe-area-inset-bottom)+68px)] lg:mt-28 lg:pb-0">
             <Container className="py-12 lg:py-16">
                 <div className="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,2.6fr)] lg:gap-16">
                     <div>
                         <Wordmark size="md" />
-                        <p className="mt-4 max-w-[36ch] text-[0.9rem] leading-relaxed text-muted-foreground">
-                            Discover the best deals, coupons, and offers all in
-                            one place.
+                        <p className="mt-4 max-w-[36ch] text-[0.9rem] leading-relaxed text-ink-3">
+                           Product discovery, coupon claims, gift ideas and prize competitions in one clear place.
                         </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-x-6 gap-y-9 sm:grid-cols-4">
                         {COLUMNS.map((col) => (
                             <div key={col.title}>
-                                <h3 className="mb-4 text-xs font-semibold uppercase tracking-wide text-foreground">
+                                <h3 className="u-label mb-4 text-ink">
                                     {col.title}
                                 </h3>
                                 <ul className="space-y-2.5">
@@ -62,12 +61,12 @@ export function Footer() {
                                             {link.href ? (
                                                 <Link
                                                     href={link.href}
-                                                    className="text-[0.9rem] text-muted-foreground transition-colors hover:text-primary"
+                                                    className="text-[0.9rem] text-ink-2 transition-colors hover:text-brand"
                                                 >
                                                     {link.label}
                                                 </Link>
                                             ) : (
-                                                <span className="text-[0.9rem] text-muted-foreground">
+                                                <span className="text-[0.9rem] text-ink-2">
                                                     {link.label}
                                                 </span>
                                             )}
@@ -79,12 +78,12 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-start sm:justify-between lg:mt-16">
-                    <p className="text-[0.8125rem] text-muted-foreground">
+                <div className="mt-12 lg:mb-6 flex flex-col gap-3 border-t border-rule pt-6 sm:flex-row sm:items-start sm:justify-between lg:mt-16">
+                    <p className="text-[0.8125rem] text-ink-3">
                         © {new Date().getFullYear()} Kuponi.al. All rights
                         reserved.
                     </p>
-                    <p className="max-w-[62ch] text-[0.8125rem] leading-relaxed text-muted-foreground sm:text-right">
+                    <p className="max-w-[62ch] text-[0.8125rem] leading-relaxed text-ink-3 sm:text-right">
                         Prices and availability are subject to change without
                         notice.
                     </p>

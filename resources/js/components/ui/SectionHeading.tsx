@@ -23,18 +23,18 @@ export function SectionHeading({
   id?: string;
 }) {
   return (
-    <div className={cn("border-t border-border pt-5", className)}>
+    <div className={cn("border-t border-rule pt-5", className)}>
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
         <h2
           id={id}
-          className="text-[1.6rem] leading-[1.1] font-extrabold tracking-[-0.03em] text-foreground sm:text-[1.9rem]"
+          className="u-display text-[1.6rem] leading-[1.1] text-ink sm:text-[1.9rem]"
         >
           {title}
         </h2>
         {actionLabel && actionHref && (
           <Link
             href={actionHref}
-            className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+            className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-brand transition-colors hover:text-brand-hover"
           >
             {actionLabel}
             <ArrowRight
@@ -44,7 +44,7 @@ export function SectionHeading({
           </Link>
         )}
       </div>
-      {sub && <p className="mt-2 max-w-[62ch] text-[0.95rem] leading-relaxed text-muted-foreground">{sub}</p>}
+      {sub && <p className="mt-2 max-w-[62ch] text-[0.95rem] leading-relaxed text-ink-3">{sub}</p>}
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function Home() {
                 {auth.user ? (
                     <Link
                         href={dashboard()}
-                        className="inline-block rounded-sm border border-border px-5 py-1.5 text-sm leading-normal text-foreground hover:bg-muted"
+                        className="inline-block rounded-sm border border-rule px-5 py-1.5 text-sm leading-normal text-ink hover:bg-paper-deep"
                     >
                         Dashboard
                     </Link>
@@ -22,14 +22,14 @@ export default function Home() {
                     <div className="flex items-center gap-4">
                         <Link
                             href={login()}
-                            className="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-foreground hover:border-border"
+                            className="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-ink hover:border-rule"
                         >
                             Log in
                         </Link>
                         {/* @chisel-registration */}
                         <Link
                             href={register()}
-                            className="inline-block rounded-sm border border-border px-5 py-1.5 text-sm leading-normal text-foreground hover:bg-muted"
+                            className="inline-block rounded-sm border border-rule px-5 py-1.5 text-sm leading-normal text-ink hover:bg-paper-deep"
                         >
                             Register
                         </Link>

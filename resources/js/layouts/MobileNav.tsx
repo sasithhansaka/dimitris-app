@@ -43,17 +43,17 @@ export function MobileNav() {
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close more menu"
-            className="fixed inset-0 z-40 bg-foreground/28 lg:hidden"
+            className="fixed inset-0 z-40 bg-ink/28 lg:hidden"
           />
-          <aside className="fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+58px)] z-50 rounded-t-xl border-t border-border bg-background p-5 shadow-[0_-18px_42px_-24px_rgba(20,21,28,0.55)] lg:hidden">
+          <aside className="fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+58px)] z-50 rounded-t-xl border-t border-rule-strong bg-paper p-5 shadow-[0_-18px_42px_-24px_rgba(20,21,28,0.55)] lg:hidden">
             <div className="mx-auto max-w-md">
               <div className="flex items-center justify-between gap-4">
-                <h2 className="text-[1.35rem] font-extrabold tracking-[-0.03em]">More</h2>
+                <h2 className="u-display text-[1.35rem]">More</h2>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label="Close more menu"
-                  className="flex size-10 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
+                  className="flex size-10 items-center justify-center rounded-md text-ink-3 hover:bg-paper-deep"
                 >
                   <X className="size-5" />
                 </button>
@@ -66,15 +66,15 @@ export function MobileNav() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setOpen(false)}
-                      className="rounded-md border border-border bg-secondary p-4 transition-colors hover:border-foreground/30"
+                      className="rounded-md border border-rule bg-surface p-4 transition-colors hover:border-ink-3"
                     >
-                      <span className="flex size-9 items-center justify-center rounded-md bg-muted text-primary">
+                      <span className="flex size-9 items-center justify-center rounded-md bg-paper-deep text-brand">
                         <Icon className="size-4.5" />
                       </span>
-                      <span className="mt-3 block text-[0.88rem] font-semibold text-foreground">
+                      <span className="mt-3 block text-[0.88rem] font-semibold text-ink">
                         {item.label}
                       </span>
-                      <span className="mt-1 block text-[0.72rem] leading-snug text-muted-foreground">
+                      <span className="mt-1 block text-[0.72rem] leading-snug text-ink-3">
                         {item.description}
                       </span>
                     </Link>
@@ -88,7 +88,7 @@ export function MobileNav() {
 
       <nav
         aria-label="Primary"
-        className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-rule bg-paper/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
       >
         <ul className="mx-auto flex max-w-md items-stretch">
           {TABS.map((tab) => {
@@ -101,7 +101,7 @@ export function MobileNav() {
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "relative flex min-h-14.5 flex-col items-center justify-center gap-1 px-1 pt-1.5 pb-1 transition-colors",
-                    active ? "text-primary" : "text-muted-foreground",
+                    active ? "text-brand" : "text-ink-3",
                   )}
                 >
                   <Icon className="size-5.5" strokeWidth={active ? 2.3 : 1.9} />
@@ -110,7 +110,7 @@ export function MobileNav() {
                   </span>
                   <span
                     className={cn(
-                      "absolute inset-x-5 top-0 h-0.5 bg-primary transition-opacity",
+                      "absolute inset-x-5 top-0 h-0.5 bg-brand transition-opacity",
                       active ? "opacity-100" : "opacity-0",
                     )}
                   />
@@ -125,14 +125,14 @@ export function MobileNav() {
               aria-expanded={open}
               className={cn(
                 "relative flex min-h-14.5 w-full flex-col items-center justify-center gap-1 px-1 pt-1.5 pb-1 transition-colors",
-                open || moreActive ? "text-primary" : "text-muted-foreground",
+                open || moreActive ? "text-brand" : "text-ink-3",
               )}
             >
               <Menu className="size-5.5" strokeWidth={open || moreActive ? 2.3 : 1.9} />
               <span className="text-[0.6875rem] leading-none font-medium">More</span>
               <span
                 className={cn(
-                  "absolute inset-x-5 top-0 h-0.5 bg-primary transition-opacity",
+                  "absolute inset-x-5 top-0 h-0.5 bg-brand transition-opacity",
                   open || moreActive ? "opacity-100" : "opacity-0",
                 )}
               />

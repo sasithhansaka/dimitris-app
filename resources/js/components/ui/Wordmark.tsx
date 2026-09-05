@@ -18,7 +18,7 @@ export function Wordmark({
     return (
         <span
             className={cn(
-                " border-primary flex gap-2 font-extrabold tracking-[-0.045em] text-foreground",
+                "border-brand flex gap-2 font-extrabold tracking-[-0.045em] text-ink",
                 scale,
                 className,
             )}
