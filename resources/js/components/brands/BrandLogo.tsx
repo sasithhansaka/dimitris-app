@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 export type Brand = {
   id: string;
   name: string;
+  tagline?: string;
+  activeOffers?: number;
   logo: {
     monogram: string;
     accent: string;

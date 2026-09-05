@@ -15,6 +15,11 @@ import {
     CatalogOfferCard,
     type Offer,
 } from "@/components/offers/CatalogOfferCard";
+import { BrandCard } from "@/components/brands/BrandCard";
+import type { Brand } from "@/components/brands/BrandLogo";
+import { GiftCardCard, type GiftCard } from "@/components/gift-cards/GiftCardCard";
+import { ArticleCard } from "@/components/articles/ArticleCard";
+import type { Article } from "@/types/article";
 import { ArrowRight, Search, TicketCheck, Trophy } from "lucide-react";
 
 const FEATURED_PRODUCTS: Product[] = [
@@ -176,7 +181,11 @@ const FEATURED_OFFERS: Offer[] = [
         title: "Northwind storewide seasonal sale",
         description: "Save across the full catalog, no minimum spend required.",
         validUntil: "2026-11-15",
-        brand: { id: "1", name: "Northwind", logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" } },
+        brand: {
+            id: "1",
+            name: "Northwind",
+            logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
+        },
         relatedCouponSlug: "20-off-first-order",
         image: { pattern: "wave", accent: "#2563eb" },
     },
@@ -186,7 +195,11 @@ const FEATURED_OFFERS: Offer[] = [
         title: "Fresco weekly grocery picks",
         description: "Fresh deals on pantry staples, updated every Monday.",
         validUntil: "2026-10-20",
-        brand: { id: "2", name: "Fresco", logo: { monogram: "F", accent: "#059669", ink: "#ffffff" } },
+        brand: {
+            id: "2",
+            name: "Fresco",
+            logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
+        },
         relatedCouponSlug: "buy-one-get-one-free",
         image: { pattern: "field", accent: "#059669" },
     },
@@ -194,10 +207,150 @@ const FEATURED_OFFERS: Offer[] = [
         id: "3",
         slug: "circuit-tech-clearance",
         title: "Circuit tech clearance event",
-        description: "Last season's electronics at clearance prices, while supplies last.",
+        description:
+            "Last season's electronics at clearance prices, while supplies last.",
         validUntil: "2026-10-05",
+        brand: {
+            id: "3",
+            name: "Circuit",
+            logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
+        },
+        image: { pattern: "tile", accent: "#d97706" },
+    },
+];
+
+const POPULAR_BRANDS: Brand[] = [
+    {
+        id: "1",
+        name: "Northwind",
+        tagline: "Everyday essentials",
+        activeOffers: 4,
+        logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
+    },
+    {
+        id: "2",
+        name: "Fresco",
+        tagline: "Fresh groceries",
+        activeOffers: 3,
+        logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
+    },
+    {
+        id: "3",
+        name: "Circuit",
+        tagline: "Electronics & tech",
+        activeOffers: 5,
+        logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
+    },
+    {
+        id: "4",
+        name: "Hearth",
+        tagline: "Home & living",
+        activeOffers: 2,
+        logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" },
+    },
+    {
+        id: "5",
+        name: "Solace",
+        tagline: "Beauty & wellness",
+        activeOffers: 3,
+        logo: { monogram: "S", accent: "#dc2626", ink: "#ffffff" },
+    },
+    {
+        id: "6",
+        name: "Uplift",
+        tagline: "Sports & outdoors",
+        activeOffers: 1,
+        logo: { monogram: "U", accent: "#0f766e", ink: "#ffffff" },
+    },
+];
+
+const FEATURED_GIFT_CARDS: GiftCard[] = [
+    {
+        id: "1",
+        slug: "northwind-gift-card",
+        title: "Northwind gift card",
+        description: "Redeemable storewide, online and in every location.",
+        valueLabels: ["$25", "$50", "$100"],
+        brand: { id: "1", name: "Northwind", logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" } },
+        image: { pattern: "wave", accent: "#2563eb" },
+    },
+    {
+        id: "2",
+        slug: "fresco-gift-card",
+        title: "Fresco gift card",
+        description: "Perfect for groceries, gifting, or weekly essentials.",
+        valueLabels: ["$20", "$40", "$75"],
+        brand: { id: "2", name: "Fresco", logo: { monogram: "F", accent: "#059669", ink: "#ffffff" } },
+        image: { pattern: "field", accent: "#059669" },
+    },
+    {
+        id: "3",
+        slug: "circuit-gift-card",
+        title: "Circuit gift card",
+        description: "Put toward electronics, accessories, and more.",
+        valueLabels: ["$50", "$100", "$200"],
         brand: { id: "3", name: "Circuit", logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" } },
         image: { pattern: "tile", accent: "#d97706" },
+    },
+    {
+        id: "4",
+        slug: "hearth-gift-card",
+        title: "Hearth gift card",
+        description: "A flexible gift for home and living purchases.",
+        valueLabels: ["$25", "$50", "$100"],
+        brand: { id: "4", name: "Hearth", logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" } },
+        image: { pattern: "bloom", accent: "#7c3aed" },
+    },
+];
+
+const FEATURED_ARTICLES: Article[] = [
+    {
+        id: 1,
+        title: "How to stack coupons for maximum savings",
+        slug: "how-to-stack-coupons",
+        introduction: "A quick guide to combining store offers, manufacturer coupons, and cashback for the biggest discount.",
+        content: "",
+        banner: null,
+        keywords: null,
+        status: "active",
+        read_time: 5,
+        featured: true,
+        article_category_id: 1,
+        category: { id: 1, name: "Guides", slug: "guides", description: null, status: "active", created_at: "", updated_at: "" },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        title: "5 gift card tricks most shoppers miss",
+        slug: "gift-card-tricks",
+        introduction: "Simple ways to get more value out of gift cards before they expire.",
+        content: "",
+        banner: null,
+        keywords: null,
+        status: "active",
+        read_time: 4,
+        featured: false,
+        article_category_id: 2,
+        category: { id: 2, name: "Tips", slug: "tips", description: null, status: "active", created_at: "", updated_at: "" },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+    },
+    {
+        id: 3,
+        title: "The competition entry checklist",
+        slug: "competition-entry-checklist",
+        introduction: "What to check before you submit an entry so you don't get disqualified.",
+        content: "",
+        banner: null,
+        keywords: null,
+        status: "active",
+        read_time: 3,
+        featured: false,
+        article_category_id: 3,
+        category: { id: 3, name: "Competitions", slug: "competitions", description: null, status: "active", created_at: "", updated_at: "" },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
     },
 ];
 
@@ -379,6 +532,79 @@ export default function Home() {
                     ))}
                 </div>
             </Container>
+
+            {/* brands */}
+
+            <Container as="section" className="pt-14 lg:pt-20">
+                <SectionHeading
+                    title="Popular brands"
+                    sub="Discover offers and products from businesses shoppers trust."
+                    actionLabel="Browse products"
+                    actionHref="/products"
+                />
+                <div className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:gap-5 xl:grid-cols-6">
+                    {POPULAR_BRANDS.map((brand) => (
+                        <BrandCard key={brand.id} brand={brand} />
+                    ))}
+                </div>
+            </Container>
+
+            <Container as="section" className="pt-14 lg:pt-20">
+                <SectionHeading
+                    title="Gift cards"
+                    sub="Save gift cards from businesses you like for later."
+                    actionLabel="Browse gift cards"
+                    actionHref="/gift-cards"
+                />
+                <div className="u-rail u-rail-mask-sm -mx-5 mt-7 flex gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 xl:grid-cols-4">
+                    {FEATURED_GIFT_CARDS.map((giftCard) => (
+                        <div
+                            key={giftCard.id}
+                            className="w-[78vw] max-w-77.5 shrink-0 sm:w-auto sm:max-w-none"
+                        >
+                            <GiftCardCard giftCard={giftCard} />
+                        </div>
+                    ))}
+                </div>
+            </Container>
+            <Container as="section" className="pt-14 lg:pt-20">
+                <SectionHeading
+                    title="From the blog"
+                    sub="Guides and ideas for coupons, receipts and competitions."
+                    actionLabel="All articles"
+                    actionHref="/articles"
+                />
+                <div className="mt-7 grid gap-5 sm:grid-cols-3">
+                    {FEATURED_ARTICLES.map((article) => (
+                        <ArticleCard key={article.id} article={article} />
+                    ))}
+                </div>
+            </Container>
+
+
+{/* 
+//////////
+
+s
+s
+s
+s
+s
+s
+
+s
+s
+s
+ss
+
+ss
+
+
+
+
+
+            //////////
+            <SelectionBar /> */}
 
             <div className="flex flex-col items-center gap-4 p-6 text-sm lg:p-8">
                 {auth.user ? (
