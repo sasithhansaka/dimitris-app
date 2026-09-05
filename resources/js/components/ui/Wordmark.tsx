@@ -18,7 +18,7 @@ export function Wordmark({
     return (
         <span
             className={cn(
-                "inline-block border-primary font-extrabold tracking-[-0.045em] text-foreground",
+                " border-primary flex gap-2 font-extrabold tracking-[-0.045em] text-foreground",
                 scale,
                 className,
             )}
@@ -28,6 +28,7 @@ export function Wordmark({
                 alt="Logo"
                 className="h-7 w-7 mt-2 object-cover"
             />
+            <p className=" mt-3 lg:mt-2">Kuponi.al</p>
         </span>
     );
 }
