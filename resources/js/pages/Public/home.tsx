@@ -6,7 +6,68 @@ import { register } from "@/routes";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CouponCard, type Coupon } from "@/components/coupons/CouponCard";
+import { ProductCard, type Product } from "@/components/products/ProductCard";
+import { CompetitionCard, type Competition } from "@/components/competitions/CompetitionCard";
 import { ArrowRight, Search, TicketCheck, Trophy } from "lucide-react";
+
+const FEATURED_PRODUCTS: Product[] = [
+    {
+        id: "1",
+        name: "Wireless Noise-Cancelling Headphones",
+        description:
+            "Over-ear headphones with adaptive noise cancellation and 30-hour battery life.",
+        brand: {
+            id: "3",
+            name: "Circuit",
+            logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
+        },
+        category: { id: "electronics", name: "Electronics" },
+        coupon: { slug: "5-cashback-electronics", reward: "5% BACK" },
+        image: { pattern: "beam", accent: "#d97706" },
+    },
+    {
+        id: "2",
+        name: "Organic Snack Variety Pack",
+        description:
+            "A mix of organic, non-GMO snacks perfect for lunchboxes and travel.",
+        brand: {
+            id: "2",
+            name: "Fresco",
+            logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
+        },
+        category: { id: "grocery", name: "Grocery" },
+        coupon: { slug: "buy-one-get-one-free", reward: "BOGO" },
+        image: { pattern: "field", accent: "#059669" },
+    },
+    {
+        id: "3",
+        name: "Everyday Backpack",
+        description:
+            "Water-resistant backpack with a padded laptop sleeve and multiple compartments.",
+        brand: {
+            id: "1",
+            name: "Northwind",
+            logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
+        },
+        category: { id: "fashion", name: "Fashion" },
+        coupon: { slug: "buy-one-get-one-free", reward: "BOGO" },
+        image: { pattern: "tile", accent: "#2563eb" },
+    },
+    {
+        id: "4",
+        name: "Ceramic Cookware Set",
+        description:
+            "A 10-piece non-stick ceramic cookware set, oven-safe up to 450°F.",
+        brand: {
+            id: "4",
+            name: "Hearth",
+            logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" },
+        },
+        category: { id: "home", name: "Home & Living" },
+        coupon: { slug: "buy-one-get-one-free", reward: "BOGO" },
+        image: { pattern: "bloom", accent: "#7c3aed" },
+    },
+];
 
 const FEATURED_COUPONS: Coupon[] = [
     {
@@ -16,7 +77,11 @@ const FEATURED_COUPONS: Coupon[] = [
         reward: "20% OFF",
         rewardKind: "Discount",
         validUntil: "2026-12-31",
-        brand: { id: "1", name: "Northwind", logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" } },
+        brand: {
+            id: "1",
+            name: "Northwind",
+            logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
+        },
         productName: "Storewide",
         image: { pattern: "arcs", accent: "#2563eb" },
     },
@@ -27,7 +92,11 @@ const FEATURED_COUPONS: Coupon[] = [
         reward: "BOGO",
         rewardKind: "Bundle",
         validUntil: "2026-11-30",
-        brand: { id: "2", name: "Fresco", logo: { monogram: "F", accent: "#059669", ink: "#ffffff" } },
+        brand: {
+            id: "2",
+            name: "Fresco",
+            logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
+        },
         productName: "Snacks range",
         image: { pattern: "orbit", accent: "#059669" },
     },
@@ -38,9 +107,46 @@ const FEATURED_COUPONS: Coupon[] = [
         reward: "5% BACK",
         rewardKind: "Cashback",
         validUntil: "2026-10-31",
-        brand: { id: "3", name: "Circuit", logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" } },
+        brand: {
+            id: "3",
+            name: "Circuit",
+            logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
+        },
         productName: "Electronics",
         image: { pattern: "stack", accent: "#d97706" },
+    },
+];
+
+const FEATURED_COMPETITIONS: Competition[] = [
+    {
+        id: "1",
+        slug: "win-a-year-of-coffee",
+        title: "Win a year's supply of coffee",
+        prize: "12x monthly coffee subscription boxes",
+        validUntil: "2026-12-15",
+        entryMethod: "receipt",
+        brand: { id: "2", name: "Fresco", logo: { monogram: "F", accent: "#059669", ink: "#ffffff" } },
+        image: { pattern: "peak", accent: "#059669" },
+    },
+    {
+        id: "2",
+        slug: "headphones-giveaway",
+        title: "Premium headphones giveaway",
+        prize: "1x Wireless Noise-Cancelling Headphones",
+        validUntil: "2026-11-20",
+        entryMethod: "code",
+        brand: { id: "3", name: "Circuit", logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" } },
+        image: { pattern: "beam", accent: "#d97706" },
+    },
+    {
+        id: "3",
+        slug: "home-makeover-prize",
+        title: "Home makeover prize draw",
+        prize: "$1,000 home decor voucher",
+        validUntil: "2026-10-05",
+        entryMethod: "qr",
+        brand: { id: "4", name: "Hearth", logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" } },
+        image: { pattern: "bloom", accent: "#7c3aed" },
     },
 ];
 
@@ -154,6 +260,26 @@ export default function Home() {
                 </Container>
             </section>
 
+            {/* /products */}
+            <Container as="section" className="pt-12 lg:pt-16">
+                <SectionHeading
+                    title="Popular products"
+                    sub="Trending picks with coupons ready to claim."
+                    actionLabel="All products"
+                    actionHref="/products"
+                />
+                <div className="u-rail u-rail-mask -mx-5 mt-7 flex gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-2 lg:px-0 xl:grid-cols-4">
+                    {FEATURED_PRODUCTS.map((product) => (
+                        <div
+                            key={product.id}
+                            className="w-[78vw] max-w-[300px] shrink-0 lg:w-auto lg:max-w-none"
+                        >
+                            <ProductCard product={product} />
+                        </div>
+                    ))}
+                </div>
+            </Container>
+            {/* featureed  coupons  */}
             <Container as="section" className="pt-14 lg:pt-20">
                 <SectionHeading
                     title="Featured coupons"
@@ -164,6 +290,26 @@ export default function Home() {
                 <div className="mt-7 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                     {FEATURED_COUPONS.map((coupon) => (
                         <CouponCard key={coupon.id} coupon={coupon} />
+                    ))}
+                </div>
+            </Container>
+
+            {/* competitions */}
+
+            <Container as="section" className="pt-14 lg:pt-20">
+                <SectionHeading
+                    title="Featured competitions"
+                    sub="Enter for a chance to win great prizes."
+                    actionLabel="All competitions"
+                    actionHref="/competitions"
+                />
+                <div className="mt-7 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                    {FEATURED_COMPETITIONS.map((competition, index) => (
+                        <CompetitionCard
+                            key={competition.id}
+                            competition={competition}
+                            featured={index === 0}
+                        />
                     ))}
                 </div>
             </Container>
