@@ -1,6 +1,7 @@
 import InputError from "@/components/input-error";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -32,6 +33,8 @@ export default function EditArticle({
         banner: null as File | null,
         keywords: article.keywords ?? "",
         status: article.status,
+        read_time: String(article.read_time),
+        featured: article.featured,
         article_category_id: String(article.article_category_id),
         _method: "put",
     });
@@ -255,6 +258,53 @@ export default function EditArticle({
                                             message={
                                                 errors.article_category_id
                                             }
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="read_time">
+                                            Read time (minutes){" "}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
+                                        <Input
+                                            id="read_time"
+                                            type="number"
+                                            min={1}
+                                            placeholder="e.g. 5"
+                                            value={data.read_time}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "read_time",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.read_time}
+                                        />
+                                    </div>
+
+                                    <div className="flex items-center gap-2 pt-7">
+                                        <Checkbox
+                                            id="featured"
+                                            checked={data.featured}
+                                            onCheckedChange={(checked) =>
+                                                setData(
+                                                    "featured",
+                                                    checked === true,
+                                                )
+                                            }
+                                        />
+                                        <Label
+                                            htmlFor="featured"
+                                            className="font-normal"
+                                        >
+                                            Featured article
+                                        </Label>
+                                        <InputError
+                                            message={errors.featured}
                                         />
                                     </div>
 

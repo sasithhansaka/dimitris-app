@@ -9,6 +9,8 @@ export type Article = {
     banner: string | null;
     keywords: string | null;
     status: 'active' | 'inactive' | 'draft';
+    read_time: number;
+    featured: boolean;
     article_category_id: number;
     category?: ArticleCategory | null;
     created_at: string;

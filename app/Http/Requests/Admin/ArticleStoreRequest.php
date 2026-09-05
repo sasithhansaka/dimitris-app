@@ -27,6 +27,8 @@ class ArticleStoreRequest extends FormRequest
                 Article::STATUS_INACTIVE,
                 Article::STATUS_DRAFT,
             ])],
+            'read_time' => ['required', 'integer', 'min:1'],
+            'featured' => ['boolean'],
             'article_category_id' => ['required', 'integer', 'exists:article_categories,id'],
         ];
     }

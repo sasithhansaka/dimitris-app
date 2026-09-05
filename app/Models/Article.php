@@ -18,14 +18,20 @@ use Illuminate\Support\Carbon;
  * @property string|null $banner
  * @property string|null $keywords
  * @property string $status
+ * @property int $read_time
+ * @property bool $featured
  * @property int $article_category_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['title', 'slug', 'introduction', 'content', 'banner', 'keywords', 'status', 'article_category_id'])]
+#[Fillable(['title', 'slug', 'introduction', 'content', 'banner', 'keywords', 'status', 'read_time', 'featured', 'article_category_id'])]
 class Article extends Model
 {
     use HasUniqueSlug, LogsActivity;
+
+    protected $casts = [
+        'featured' => 'boolean',
+    ];
 
     public const STATUS_ACTIVE = 'active';
 
