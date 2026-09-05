@@ -25,4 +25,18 @@ class ArticleController extends Controller
             'recentArticles' => $articles->where('featured', false)->values(),
         ]);
     }
+
+    /**
+     * Display a single published article.
+     */
+    public function show(Article $article): Response
+    {
+        abort_unless($article->status === Article::STATUS_ACTIVE, 404);
+
+        $article->load('category');
+
+        return Inertia::render('Public/Articles/show', [
+            'article' => $article,
+        ]);
+    }
 }
