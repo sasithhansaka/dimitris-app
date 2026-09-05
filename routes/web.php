@@ -13,6 +13,7 @@ Route::get('articles/{article:slug}', [PublicArticleController::class, 'show'])-
 Route::inertia('competitions', 'Public/Competitions/page')->name('public.competitions');
 Route::inertia('offers', 'Public/Offers/page')->name('public.offers');
 Route::inertia('gift-cards', 'Public/GiftCards/page')->name('public.gift-cards');
+Route::inertia('coupons', 'Public/Coupons/page')->name('public.coupons');
 
 Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(function () {
     Route::inertia('admin/dashboard', 'Admin/dashboard/dashboard')->name('dashboard');

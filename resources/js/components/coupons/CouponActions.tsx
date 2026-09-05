@@ -2,21 +2,33 @@ import { useState } from "react";
 import { router } from "@inertiajs/react";
 import { Heart, ReceiptText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCouponsSelection } from "./CouponsSelectionContext";
 
 export function CouponActions({
   couponId,
   title,
+  reward = "",
   stacked = false,
 }: {
   couponId: string;
   title: string;
+  reward?: string;
   stacked?: boolean;
 }) {
   const [saved, setSaved] = useState(false);
-  const [selected, setSelected] = useState(false);
+  const shared = useCouponsSelection();
+  const [localSelected, setLocalSelected] = useState(false);
+
+  const selected = shared ? shared.isSelected(couponId) : localSelected;
 
   function claimWithReceipt() {
-    setSelected(true);
+    if (shared) {
+      if (!shared.isSelected(couponId)) {
+        shared.toggleSelection({ id: couponId, title, reward });
+      }
+    } else {
+      setLocalSelected(true);
+    }
     router.visit("/coupons/receipt-upload");
   }
 
