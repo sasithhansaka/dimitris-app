@@ -129,7 +129,14 @@ export default function ArticlesIndex({
                             }
                         >
                             <TableTd width={80}>{article.id}</TableTd>
-                            <TableTd>{article.title}</TableTd>
+                            <TableTd>
+                                <span
+                                    className="line-clamp-2"
+                                    title={article.title}
+                                >
+                                    {article.title}
+                                </span>
+                            </TableTd>
                             <TableTd>
                                 <span
                                     className="block truncate"
