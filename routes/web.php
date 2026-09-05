@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Public/home')->name('home');
+Route::inertia('articles', 'Public/Articles/page')->name('public.articles');
 
 Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(function () {
     Route::inertia('admin/dashboard', 'Admin/dashboard/dashboard')->name('dashboard');
