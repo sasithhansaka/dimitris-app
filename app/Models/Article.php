@@ -15,7 +15,7 @@ use Illuminate\Support\Carbon;
  * @property string $slug
  * @property string|null $introduction
  * @property string $content
- * @property string|null $banner
+ * @property string $banner
  * @property string|null $keywords
  * @property string $status
  * @property int $read_time

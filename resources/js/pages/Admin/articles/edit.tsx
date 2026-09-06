@@ -40,8 +40,9 @@ export default function EditArticle({
     });
 
     const [keywordInput, setKeywordInput] = useState("");
+    const originalBanner = article.banner ? `/storage/${article.banner}` : null;
     const [bannerPreview, setBannerPreview] = useState<string | null>(
-        article.banner ? `/storage/${article.banner}` : null,
+        originalBanner,
     );
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -80,6 +81,14 @@ export default function EditArticle({
         const file = e.target.files?.[0] ?? null;
         setData("banner", file);
         setBannerPreview(file ? URL.createObjectURL(file) : bannerPreview);
+    };
+
+    const removeBanner = () => {
+        setData("banner", null);
+        setBannerPreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
     };
 
     const submit = (e: React.FormEvent) => {
@@ -319,15 +328,26 @@ export default function EditArticle({
                                             id="banner"
                                             type="file"
                                             accept="image/*"
+                                            required={!bannerPreview}
                                             ref={fileInputRef}
                                             onChange={handleBannerChange}
                                         />
                                         {bannerPreview && (
-                                            <img
-                                                src={bannerPreview}
-                                                alt="Banner preview"
-                                                className="mt-2 h-40 w-40 rounded-md border border-border object-cover"
-                                            />
+                                            <div className="relative mt-2 w-fit">
+                                                <img
+                                                    src={bannerPreview}
+                                                    alt="Banner preview"
+                                                    className="h-40 w-40 rounded-md border border-border object-cover"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={removeBanner}
+                                                    title="Remove banner"
+                                                    className="absolute -top-2 -right-2 cursor-pointer rounded-full  p-1 text-black bg-gray-100 hover:opacity-90"
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </button>
+                                            </div>
                                         )}
                                         <InputError message={errors.banner} />
                                     </div>

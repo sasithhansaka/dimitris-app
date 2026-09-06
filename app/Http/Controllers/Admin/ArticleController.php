@@ -38,7 +38,7 @@ class ArticleController extends Controller
             $query->where('status', $status);
         }
 
-        $articles = $query->orderBy('title')
+        $articles = $query->orderByDesc('created_at')
             ->paginate($request->integer('rowPerPage', 10))
             ->withQueryString();
 
@@ -54,7 +54,10 @@ class ArticleController extends Controller
     public function create(): Response
     {
         return Inertia::render('Admin/articles/create', [
-            'categories' => ArticleCategory::query()->orderBy('name')->get(['id', 'name']),
+            'categories' => ArticleCategory::query()
+                ->where('status', ArticleCategory::STATUS_ACTIVE)
+                ->orderBy('name')
+                ->get(['id', 'name']),
         ]);
     }
 
@@ -84,7 +87,13 @@ class ArticleController extends Controller
     {
         return Inertia::render('Admin/articles/edit', [
             'article' => $article,
-            'categories' => ArticleCategory::query()->orderBy('name')->get(['id', 'name']),
+            'categories' => ArticleCategory::query()
+                ->where(function ($query) use ($article) {
+                    $query->where('status', ArticleCategory::STATUS_ACTIVE)
+                        ->orWhere('id', $article->article_category_id);
+                })
+                ->orderBy('name')
+                ->get(['id', 'name']),
         ]);
     }
 

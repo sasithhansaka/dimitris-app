@@ -20,7 +20,11 @@ class ArticleUpdateRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'introduction' => ['required', 'string'],
             'content' => ['required', 'string'],
-            'banner' => ['nullable', 'image', 'max:5120'],
+            'banner' => [
+                $this->route('article')?->banner ? 'nullable' : 'required',
+                'image',
+                'max:5120',
+            ],
             'keywords' => ['nullable', 'string'],
             'status' => ['required', Rule::in([
                 Article::STATUS_ACTIVE,
@@ -30,6 +34,18 @@ class ArticleUpdateRequest extends FormRequest
             'read_time' => ['required', 'integer', 'min:1'],
             'featured' => ['boolean'],
             'article_category_id' => ['required', 'integer', 'exists:article_categories,id'],
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'article_category_id' => 'article category',
         ];
     }
 }

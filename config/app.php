@@ -123,4 +123,17 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Coming Soon Mode
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, all public-facing site pages show a "coming soon" page
+    | instead of their normal content. The admin panel and the login /
+    | register pages remain reachable as usual.
+    |
+    */
+
+    'coming_soon' => (bool) env('COMING_SOON_MODE', false),
+
 ];
