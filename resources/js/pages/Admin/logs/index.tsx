@@ -183,7 +183,7 @@ export default function LogsIndex({
                             </TableTd>
                             <TableTd>{formatDateTime(log.created_at)}</TableTd>
                             <TableTd allowOverflow>
-                                <span className="text-gray-600">
+                                <span className="text-gray-600 line-clamp-4">
                                     {log.details ?? '—'}
                                 </span>
                             </TableTd>

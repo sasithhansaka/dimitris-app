@@ -6,7 +6,7 @@ export type Article = {
     slug: string;
     introduction: string | null;
     content: string;
-    banner: string | null;
+    banner: string;
     keywords: string | null;
     status: 'active' | 'inactive' | 'draft';
     read_time: number;

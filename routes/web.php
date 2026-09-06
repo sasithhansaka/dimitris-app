@@ -7,17 +7,19 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'Public/home')->name('home');
-Route::get('articles', [PublicArticleController::class, 'index'])->name('public.articles');
-Route::get('articles/{article:slug}', [PublicArticleController::class, 'show'])->name('public.articles.show');
-Route::inertia('competitions', 'Public/Competitions/page')->name('public.competitions');
-Route::inertia('offers', 'Public/Offers/page')->name('public.offers');
-Route::inertia('gift-cards', 'Public/GiftCards/page')->name('public.gift-cards');
-Route::inertia('coupons', 'Public/Coupons/page')->name('public.coupons');
-Route::inertia('products', 'Public/products/page')->name('public.products');
-Route::inertia('account', 'Public/account/page')->name('public.account');
-Route::inertia('wallet', 'Public/wallet/page')->name('public.wallet');
-Route::inertia('notifications', 'Public/notifications/page')->name('public.notifications');
+Route::middleware(['coming.soon'])->group(function () {
+    Route::inertia('/', 'Public/home')->name('home');
+    Route::get('articles', [PublicArticleController::class, 'index'])->name('public.articles');
+    Route::get('articles/{article:slug}', [PublicArticleController::class, 'show'])->name('public.articles.show');
+    Route::inertia('competitions', 'Public/Competitions/page')->name('public.competitions');
+    Route::inertia('offers', 'Public/Offers/page')->name('public.offers');
+    Route::inertia('gift-cards', 'Public/GiftCards/page')->name('public.gift-cards');
+    Route::inertia('coupons', 'Public/Coupons/page')->name('public.coupons');
+    Route::inertia('products', 'Public/products/page')->name('public.products');
+    Route::inertia('account', 'Public/account/page')->name('public.account');
+    Route::inertia('wallet', 'Public/wallet/page')->name('public.wallet');
+    Route::inertia('notifications', 'Public/notifications/page')->name('public.notifications');
+});
 
 Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(function () {
     Route::inertia('admin/dashboard', 'Admin/dashboard/dashboard')->name('dashboard');

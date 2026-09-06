@@ -34,7 +34,7 @@ class ArticleCategoryController extends Controller
             $query->where('status', $status);
         }
 
-        $categories = $query->orderBy('name')
+        $categories = $query->orderByDesc('created_at')
             ->paginate($request->integer('rowPerPage', 10))
             ->withQueryString();
 
@@ -100,6 +100,15 @@ class ArticleCategoryController extends Controller
      */
     public function destroy(ArticleCategory $articleCategory): RedirectResponse
     {
+        if ($articleCategory->articles()->exists()) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => __('This category cannot be deleted because it is linked to one or more articles.'),
+            ]);
+
+            return to_route('article-categories.index');
+        }
+
         $articleCategory->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Article category deleted.')]);
