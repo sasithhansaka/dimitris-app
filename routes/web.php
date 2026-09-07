@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,14 @@ Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(functio
     Route::get('admin/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
     Route::put('admin/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
     Route::delete('admin/articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+
+    Route::get('admin/distributors', [DistributorController::class, 'index'])->name('distributors.index');
+    Route::get('admin/distributors/create', [DistributorController::class, 'create'])->name('distributors.create');
+    Route::post('admin/distributors', [DistributorController::class, 'store'])->name('distributors.store');
+    Route::get('admin/distributors/{distributor}', [DistributorController::class, 'show'])->name('distributors.show');
+    Route::get('admin/distributors/{distributor}/edit', [DistributorController::class, 'edit'])->name('distributors.edit');
+    Route::put('admin/distributors/{distributor}', [DistributorController::class, 'update'])->name('distributors.update');
+    Route::delete('admin/distributors/{distributor}', [DistributorController::class, 'destroy'])->name('distributors.destroy');
 });
 
 require __DIR__.'/settings.php';

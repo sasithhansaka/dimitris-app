@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import {
     BookOpen,
+    Building2,
     FolderGit2,
     LayoutGrid,
     Newspaper,
@@ -24,6 +25,7 @@ import {
 import { dashboard } from '@/routes';
 import articleCategoriesRoutes from '@/routes/article-categories';
 import articlesRoutes from '@/routes/articles';
+import distributorsRoutes from '@/routes/distributors';
 import logsRoutes from '@/routes/logs';
 import usersRoutes from '@/routes/users';
 import type { NavItem } from '@/types';
@@ -59,8 +61,16 @@ const articleNavItems: NavItem[] = [
     },
 ];
 
+const distributorNavItems: NavItem[] = [
+    {
+        title: 'Distributors',
+        href: distributorsRoutes.index(),
+        icon: Building2,
+    },
+];
+
 const LogsNavItems: NavItem[] = [
-      {
+    {
         title: 'System Logs',
         href: logsRoutes.index(),
         icon: ScrollText,
@@ -98,6 +108,7 @@ export function AppSidebar() {
             <SidebarContent>
                 <NavMain items={mainNavItems} label="Platform" />
                 <NavMain items={articleNavItems} label="Articles" />
+                <NavMain items={distributorNavItems} label="Distributors" />
                 <NavMain items={LogsNavItems} label="Logs" />
             </SidebarContent>
 
