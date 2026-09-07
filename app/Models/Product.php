@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int $category_id
  * @property string $name
  * @property string|null $description
- * @property string $image
+ * @property string|null $image
  * @property string $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at

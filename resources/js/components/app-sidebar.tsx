@@ -5,6 +5,7 @@ import {
     FolderGit2,
     LayoutGrid,
     Newspaper,
+    Package,
     ScrollText,
     Tag,
     Tags,
@@ -30,6 +31,7 @@ import brandsRoutes from '@/routes/brands';
 import distributorsRoutes from '@/routes/distributors';
 import logsRoutes from '@/routes/logs';
 import productCategoriesRoutes from '@/routes/product-categories';
+import productsRoutes from '@/routes/products';
 import usersRoutes from '@/routes/users';
 import type { NavItem } from '@/types';
 
@@ -81,6 +83,11 @@ const brandNavItems: NavItem[] = [
 ];
 
 const productNavItems: NavItem[] = [
+    {
+        title: 'Products',
+        href: productsRoutes.index(),
+        icon: Package,
+    },
     {
         title: 'Product Categories',
         href: productCategoriesRoutes.index(),

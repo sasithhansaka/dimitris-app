@@ -1,23 +1,24 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { dashboard } from '@/routes';
-import brandsRoutes from '@/routes/brands';
-import type { BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import { Tag, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { dashboard } from "@/routes";
+import brandsRoutes from "@/routes/brands";
+import distributorsRoutes from "@/routes/distributors";
+import type { BreadcrumbItem } from "@/types";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Plus, Tag, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 export default function CreateBrand({
     distributors,
@@ -25,10 +26,10 @@ export default function CreateBrand({
     distributors: { id: number; name: string }[];
 }) {
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        description: '',
+        name: "",
+        description: "",
         logo: null as File | null,
-        status: 'active',
+        status: "active",
         distributor_ids: [] as number[],
     });
 
@@ -41,7 +42,7 @@ export default function CreateBrand({
 
     const toggleDistributor = (id: number, checked: boolean) => {
         setData(
-            'distributor_ids',
+            "distributor_ids",
             checked
                 ? [...data.distributor_ids, id]
                 : data.distributor_ids.filter(
@@ -52,15 +53,15 @@ export default function CreateBrand({
 
     const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
-        setData('logo', file);
+        setData("logo", file);
         setLogoPreview(file ? URL.createObjectURL(file) : null);
     };
 
     const removeLogo = () => {
-        setData('logo', null);
+        setData("logo", null);
         setLogoPreview(null);
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = "";
         }
     };
 
@@ -98,7 +99,7 @@ export default function CreateBrand({
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Brand Name{' '}
+                                            Brand Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -110,7 +111,7 @@ export default function CreateBrand({
                                             placeholder="e.g. Acme Corp"
                                             value={data.name}
                                             onChange={(e) =>
-                                                setData('name', e.target.value)
+                                                setData("name", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.name} />
@@ -118,7 +119,7 @@ export default function CreateBrand({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="status">
-                                            Status{' '}
+                                            Status{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -126,7 +127,7 @@ export default function CreateBrand({
                                         <Select
                                             value={data.status}
                                             onValueChange={(value) =>
-                                                setData('status', value)
+                                                setData("status", value)
                                             }
                                         >
                                             <SelectTrigger
@@ -161,7 +162,7 @@ export default function CreateBrand({
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'description',
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
@@ -173,13 +174,25 @@ export default function CreateBrand({
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">
-                                        <Label>
-                                            Distributors{' '}
-                                            <span className="text-destructive">
-                                                *
-                                            </span>
-                                        </Label>
-                                        <div className="border-border max-h-[100px] md:max-h-[250px] lg:max-h-[350px] overflow-y-auto rounded-md border p-3">
+                                        <div className="flex items-center gap-3">
+                                            <Label>
+                                                Distributors{" "}
+                                                <span className="text-destructive">
+                                                    *
+                                                </span>
+                                            </Label>
+                                            <Link
+                                                href={
+                                                    distributorsRoutes.create()
+                                                        .url
+                                                }
+                                                title="Create distributor"
+                                                className="text-muted-foreground hover:text-foreground bg-secondary  inline-flex items-center"
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Link>
+                                        </div>
+                                        <div className="border-border max-h-[100px] overflow-y-auto rounded-md border p-3 md:max-h-[250px] lg:max-h-[350px]">
                                             <div className="grid grid-cols-3 gap-x-4 gap-y-2">
                                                 {sortedDistributors.map(
                                                     (distributor) => (
@@ -290,9 +303,9 @@ export default function CreateBrand({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Brands', href: brandsRoutes.index() },
-    { title: 'Create', href: brandsRoutes.create() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Brands", href: brandsRoutes.index() },
+    { title: "Create", href: brandsRoutes.create() },
 ];
 
 CreateBrand.layout = {

@@ -22,6 +22,8 @@ export default function EditProductCategory({
 }: {
     productCategory: ProductCategory;
 }) {
+    const isLinkedToProducts = (productCategory.products_count ?? 0) > 0;
+
     const { data, setData, put, processing, errors } = useForm({
         name: productCategory.name,
         description: productCategory.description ?? '',
@@ -106,14 +108,31 @@ export default function EditProductCategory({
                                                 <SelectItem value="active">
                                                     Active
                                                 </SelectItem>
-                                                <SelectItem value="inactive">
+                                                <SelectItem
+                                                    value="inactive"
+                                                    disabled={
+                                                        isLinkedToProducts
+                                                    }
+                                                >
                                                     Inactive
                                                 </SelectItem>
-                                                <SelectItem value="draft">
+                                                <SelectItem
+                                                    value="draft"
+                                                    disabled={
+                                                        isLinkedToProducts
+                                                    }
+                                                >
                                                     Draft
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
+                                        {isLinkedToProducts && (
+                                            <p className="text-muted-foreground text-xs">
+                                                This product category is linked
+                                                to one or more products and must
+                                                stay active.
+                                            </p>
+                                        )}
                                         <InputError message={errors.status} />
                                     </div>
 

@@ -14,9 +14,10 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { dashboard } from '@/routes';
 import brandsRoutes from '@/routes/brands';
+import distributorsRoutes from '@/routes/distributors';
 import type { Brand, BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import { Tag, X } from 'lucide-react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { Plus, Tag, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 export default function EditBrand({
@@ -26,6 +27,8 @@ export default function EditBrand({
     brand: Brand;
     distributors: { id: number; name: string }[];
 }) {
+    const isLinkedToProducts = (brand.products_count ?? 0) > 0;
+
     const { data, setData, post, processing, errors } = useForm({
         name: brand.name,
         description: brand.description ?? '',
@@ -155,14 +158,31 @@ export default function EditBrand({
                                                 <SelectItem value="active">
                                                     Active
                                                 </SelectItem>
-                                                <SelectItem value="inactive">
+                                                <SelectItem
+                                                    value="inactive"
+                                                    disabled={
+                                                        isLinkedToProducts
+                                                    }
+                                                >
                                                     Inactive
                                                 </SelectItem>
-                                                <SelectItem value="draft">
+                                                <SelectItem
+                                                    value="draft"
+                                                    disabled={
+                                                        isLinkedToProducts
+                                                    }
+                                                >
                                                     Draft
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
+                                        {isLinkedToProducts && (
+                                            <p className="text-muted-foreground text-xs">
+                                                This brand is linked to one or
+                                                more products and must stay
+                                                active.
+                                            </p>
+                                        )}
                                         <InputError message={errors.status} />
                                     </div>
 
@@ -189,13 +209,25 @@ export default function EditBrand({
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">
-                                        <Label>
-                                            Distributors{' '}
-                                            <span className="text-destructive">
-                                                *
-                                            </span>
-                                        </Label>
-                                        <div className="border-border max-h-[100px] md:max-h-[250px] lg:max-h-[350px] overflow-y-auto rounded-md border p-3">
+                                        <div className="flex items-center gap-3">
+                                            <Label>
+                                                Distributors{' '}
+                                                <span className="text-destructive">
+                                                    *
+                                                </span>
+                                            </Label>
+                                            <Link
+                                                href={
+                                                    distributorsRoutes.create()
+                                                        .url
+                                                }
+                                                title="Create distributor"
+                                                className="text-muted-foreground hover:text-foreground bg-secondary inline-flex items-center"
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Link>
+                                        </div>
+                                        <div className="border-border max-h-[100px] overflow-y-auto rounded-md border p-3 md:max-h-[250px] lg:max-h-[350px]">
                                             <div className="grid grid-cols-3 gap-x-4 gap-y-2">
                                                 {sortedDistributors.map(
                                                     (distributor) => (

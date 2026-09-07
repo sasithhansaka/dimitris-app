@@ -6,6 +6,7 @@ use App\Models\Brand;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class BrandUpdateRequest extends FormRequest
 {
@@ -47,5 +48,26 @@ class BrandUpdateRequest extends FormRequest
             'name' => 'brand name',
             'distributor_ids' => 'distributors',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            /** @var Brand $brand */
+            $brand = $this->route('brand');
+
+            if (
+                $this->input('status') !== Brand::STATUS_ACTIVE
+                && $brand->products()->exists()
+            ) {
+                $validator->errors()->add(
+                    'status',
+                    __('This brand is linked to one or more products and must stay active.'),
+                );
+            }
+        });
     }
 }

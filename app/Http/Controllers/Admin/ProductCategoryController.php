@@ -79,6 +79,8 @@ class ProductCategoryController extends Controller
      */
     public function edit(ProductCategory $productCategory): Response
     {
+        $productCategory->loadCount('products');
+
         return Inertia::render('Admin/productCategories/edit', [
             'productCategory' => $productCategory,
         ]);
@@ -101,6 +103,15 @@ class ProductCategoryController extends Controller
      */
     public function destroy(ProductCategory $productCategory): RedirectResponse
     {
+        if ($productCategory->products()->exists()) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => __('This product category cannot be deleted because it is linked to one or more products.'),
+            ]);
+
+            return to_route('product-categories.index');
+        }
+
         $productCategory->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Product category deleted.')]);

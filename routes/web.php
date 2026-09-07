@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\ProductCategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
 use Illuminate\Support\Facades\Route;
@@ -70,6 +71,14 @@ Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(functio
     Route::get('admin/product-categories/{productCategory}/edit', [ProductCategoryController::class, 'edit'])->name('product-categories.edit');
     Route::put('admin/product-categories/{productCategory}', [ProductCategoryController::class, 'update'])->name('product-categories.update');
     Route::delete('admin/product-categories/{productCategory}', [ProductCategoryController::class, 'destroy'])->name('product-categories.destroy');
+
+    Route::get('admin/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('admin/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('admin/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('admin/products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('admin/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('admin/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('admin/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 });
 
 require __DIR__.'/settings.php';

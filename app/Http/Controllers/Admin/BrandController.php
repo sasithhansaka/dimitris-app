@@ -97,7 +97,7 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand): Response
     {
-        $brand->load('distributors:id');
+        $brand->load('distributors:id')->loadCount('products');
         $linkedIds = $brand->distributors->pluck('id');
 
         return Inertia::render('Admin/brands/edit', [
@@ -142,6 +142,15 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand): RedirectResponse
     {
+        if ($brand->products()->exists()) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => __('This brand cannot be deleted because it is linked to one or more products.'),
+            ]);
+
+            return to_route('brands.index');
+        }
+
         $brand->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Brand deleted.')]);
