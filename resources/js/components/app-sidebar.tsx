@@ -1,17 +1,21 @@
-import { Link } from '@inertiajs/react';
+import { Link } from "@inertiajs/react";
 import {
     BookOpen,
+    Building2,
     FolderGit2,
     LayoutGrid,
     Newspaper,
+    Package,
     ScrollText,
+    Store,
+    Tag,
     Tags,
     Users,
-} from 'lucide-react';
-import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
+} from "lucide-react";
+import AppLogo from "@/components/app-logo";
+import { NavFooter } from "@/components/nav-footer";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
 import {
     Sidebar,
     SidebarContent,
@@ -20,22 +24,27 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
-import articleCategoriesRoutes from '@/routes/article-categories';
-import articlesRoutes from '@/routes/articles';
-import logsRoutes from '@/routes/logs';
-import usersRoutes from '@/routes/users';
-import type { NavItem } from '@/types';
+} from "@/components/ui/sidebar";
+import { dashboard } from "@/routes";
+import articleCategoriesRoutes from "@/routes/article-categories";
+import articlesRoutes from "@/routes/articles";
+import brandsRoutes from "@/routes/brands";
+import distributorsRoutes from "@/routes/distributors";
+import logsRoutes from "@/routes/logs";
+import productCategoriesRoutes from "@/routes/product-categories";
+import productsRoutes from "@/routes/products";
+import retailersRoutes from "@/routes/retailers";
+import usersRoutes from "@/routes/users";
+import type { NavItem } from "@/types";
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: "Dashboard",
         href: dashboard(),
         icon: LayoutGrid,
     },
     {
-        title: 'Users',
+        title: "Users",
         href: usersRoutes.index(),
         icon: Users,
     },
@@ -46,22 +55,59 @@ const mainNavItems: NavItem[] = [
     // },
 ];
 
+const productNavItems: NavItem[] = [
+    {
+        title: "Products",
+        href: productsRoutes.index(),
+        icon: Package,
+    },
+    {
+        title: "Product Categories",
+        href: productCategoriesRoutes.index(),
+        icon: Tags,
+    },
+];
+
+const brandNavItems: NavItem[] = [
+    {
+        title: "Brands",
+        href: brandsRoutes.index(),
+        icon: Tag,
+    },
+];
+
+const distributorNavItems: NavItem[] = [
+    {
+        title: "Distributors",
+        href: distributorsRoutes.index(),
+        icon: Building2,
+    },
+];
+
+const retailerNavItems: NavItem[] = [
+    {
+        title: "Retailers",
+        href: retailersRoutes.index(),
+        icon: Store,
+    },
+];
+
 const articleNavItems: NavItem[] = [
     {
-        title: 'Articles',
+        title: "Articles",
         href: articlesRoutes.index(),
         icon: Newspaper,
     },
     {
-        title: 'Articles Category',
+        title: "Articles Category",
         href: articleCategoriesRoutes.index(),
         icon: Tags,
     },
 ];
 
 const LogsNavItems: NavItem[] = [
-      {
-        title: 'System Logs',
+    {
+        title: "System Logs",
         href: logsRoutes.index(),
         icon: ScrollText,
     },
@@ -69,13 +115,13 @@ const LogsNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
+        title: "Repository",
+        href: "https://github.com/laravel/react-starter-kit",
         icon: FolderGit2,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
+        title: "Documentation",
+        href: "https://laravel.com/docs/starter-kits#react",
         icon: BookOpen,
     },
 ];
@@ -97,6 +143,10 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} label="Platform" />
+                <NavMain items={productNavItems} label="Products" />
+                <NavMain items={brandNavItems} label="Brands" />
+                <NavMain items={retailerNavItems} label="Retailers" />
+                <NavMain items={distributorNavItems} label="Distributors" />
                 <NavMain items={articleNavItems} label="Articles" />
                 <NavMain items={LogsNavItems} label="Logs" />
             </SidebarContent>
