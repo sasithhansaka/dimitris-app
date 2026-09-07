@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
@@ -13,15 +12,16 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string|null $description
- * @property string|null $logo
  * @property string $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'description', 'logo', 'status'])]
-class Brand extends Model
+#[Fillable(['name', 'description', 'status'])]
+class ProductCategory extends Model
 {
     use LogsActivity;
+
+    protected $table = 'product_categories';
 
     public const STATUS_ACTIVE = 'active';
 
@@ -29,13 +29,8 @@ class Brand extends Model
 
     public const STATUS_DRAFT = 'draft';
 
-    public function distributors(): BelongsToMany
-    {
-        return $this->belongsToMany(Distributor::class);
-    }
-
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'category_id');
     }
 }

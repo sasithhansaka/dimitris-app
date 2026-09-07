@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\DistributorController;
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +62,14 @@ Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(functio
     Route::get('admin/brands/{brand}/edit', [BrandController::class, 'edit'])->name('brands.edit');
     Route::put('admin/brands/{brand}', [BrandController::class, 'update'])->name('brands.update');
     Route::delete('admin/brands/{brand}', [BrandController::class, 'destroy'])->name('brands.destroy');
+
+    Route::get('admin/product-categories', [ProductCategoryController::class, 'index'])->name('product-categories.index');
+    Route::get('admin/product-categories/create', [ProductCategoryController::class, 'create'])->name('product-categories.create');
+    Route::post('admin/product-categories', [ProductCategoryController::class, 'store'])->name('product-categories.store');
+    Route::get('admin/product-categories/{productCategory}', [ProductCategoryController::class, 'show'])->name('product-categories.show');
+    Route::get('admin/product-categories/{productCategory}/edit', [ProductCategoryController::class, 'edit'])->name('product-categories.edit');
+    Route::put('admin/product-categories/{productCategory}', [ProductCategoryController::class, 'update'])->name('product-categories.update');
+    Route::delete('admin/product-categories/{productCategory}', [ProductCategoryController::class, 'destroy'])->name('product-categories.destroy');
 });
 
 require __DIR__.'/settings.php';

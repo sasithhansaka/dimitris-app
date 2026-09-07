@@ -5,21 +5,22 @@ namespace App\Models;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property int $brand_id
+ * @property int $category_id
  * @property string $name
  * @property string|null $description
- * @property string|null $logo
+ * @property string $image
  * @property string $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'description', 'logo', 'status'])]
-class Brand extends Model
+#[Fillable(['brand_id', 'category_id', 'name', 'description', 'image', 'status'])]
+class Product extends Model
 {
     use LogsActivity;
 
@@ -29,13 +30,13 @@ class Brand extends Model
 
     public const STATUS_DRAFT = 'draft';
 
-    public function distributors(): BelongsToMany
+    public function brand(): BelongsTo
     {
-        return $this->belongsToMany(Distributor::class);
+        return $this->belongsTo(Brand::class);
     }
 
-    public function products(): HasMany
+    public function category(): BelongsTo
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 }

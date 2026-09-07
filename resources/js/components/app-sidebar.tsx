@@ -29,6 +29,7 @@ import articlesRoutes from '@/routes/articles';
 import brandsRoutes from '@/routes/brands';
 import distributorsRoutes from '@/routes/distributors';
 import logsRoutes from '@/routes/logs';
+import productCategoriesRoutes from '@/routes/product-categories';
 import usersRoutes from '@/routes/users';
 import type { NavItem } from '@/types';
 
@@ -79,6 +80,14 @@ const brandNavItems: NavItem[] = [
     },
 ];
 
+const productNavItems: NavItem[] = [
+    {
+        title: 'Product Categories',
+        href: productCategoriesRoutes.index(),
+        icon: Tags,
+    },
+];
+
 const LogsNavItems: NavItem[] = [
     {
         title: 'System Logs',
@@ -120,6 +129,7 @@ export function AppSidebar() {
                 <NavMain items={articleNavItems} label="Articles" />
                 <NavMain items={distributorNavItems} label="Distributors" />
                 <NavMain items={brandNavItems} label="Brands" />
+                <NavMain items={productNavItems} label="Products" />
                 <NavMain items={LogsNavItems} label="Logs" />
             </SidebarContent>
 
