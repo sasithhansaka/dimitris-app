@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
@@ -52,6 +53,14 @@ Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(functio
     Route::get('admin/distributors/{distributor}/edit', [DistributorController::class, 'edit'])->name('distributors.edit');
     Route::put('admin/distributors/{distributor}', [DistributorController::class, 'update'])->name('distributors.update');
     Route::delete('admin/distributors/{distributor}', [DistributorController::class, 'destroy'])->name('distributors.destroy');
+
+    Route::get('admin/brands', [BrandController::class, 'index'])->name('brands.index');
+    Route::get('admin/brands/create', [BrandController::class, 'create'])->name('brands.create');
+    Route::post('admin/brands', [BrandController::class, 'store'])->name('brands.store');
+    Route::get('admin/brands/{brand}', [BrandController::class, 'show'])->name('brands.show');
+    Route::get('admin/brands/{brand}/edit', [BrandController::class, 'edit'])->name('brands.edit');
+    Route::put('admin/brands/{brand}', [BrandController::class, 'update'])->name('brands.update');
+    Route::delete('admin/brands/{brand}', [BrandController::class, 'destroy'])->name('brands.destroy');
 });
 
 require __DIR__.'/settings.php';

@@ -80,7 +80,7 @@ class DistributorController extends Controller
     public function show(Distributor $distributor): Response
     {
         return Inertia::render('Admin/distributors/show', [
-            'distributor' => $distributor,
+            'distributor' => $distributor->load('brands'),
         ]);
     }
 
@@ -89,6 +89,8 @@ class DistributorController extends Controller
      */
     public function edit(Distributor $distributor): Response
     {
+        $distributor->loadCount('brands');
+
         return Inertia::render('Admin/distributors/edit', [
             'distributor' => $distributor,
         ]);
@@ -124,6 +126,15 @@ class DistributorController extends Controller
      */
     public function destroy(Distributor $distributor): RedirectResponse
     {
+        if ($distributor->brands()->exists()) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => __('This distributor cannot be deleted because it is linked to one or more brands.'),
+            ]);
+
+            return to_route('distributors.index');
+        }
+
         $distributor->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Distributor deleted.')]);

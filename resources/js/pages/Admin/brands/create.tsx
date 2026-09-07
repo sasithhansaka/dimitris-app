@@ -1,6 +1,7 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -11,56 +12,52 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import { COUNTRIES } from '@/lib/countries';
 import { dashboard } from '@/routes';
-import distributorsRoutes from '@/routes/distributors';
-import type { BreadcrumbItem, Distributor } from '@/types';
+import brandsRoutes from '@/routes/brands';
+import type { BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Building2, X } from 'lucide-react';
+import { Tag, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 
-export default function EditDistributor({
-    distributor,
+export default function CreateBrand({
+    distributors,
 }: {
-    distributor: Distributor;
+    distributors: { id: number; name: string }[];
 }) {
-    const isLinkedToBrands = (distributor.brands_count ?? 0) > 0;
-
     const { data, setData, post, processing, errors } = useForm({
-        name: distributor.name,
-        country: distributor.country,
-        description: distributor.description ?? '',
+        name: '',
+        description: '',
         logo: null as File | null,
-        email: distributor.email ?? '',
-        phone: distributor.phone ?? '',
-        address: distributor.address ?? '',
-        status: distributor.status,
-        remove_logo: false,
-        _method: 'put',
+        status: 'active',
+        distributor_ids: [] as number[],
     });
 
-    const originalLogo = distributor.logo
-        ? `/storage/${distributor.logo}`
-        : null;
-    const [logoPreview, setLogoPreview] = useState<string | null>(originalLogo);
+    const [logoPreview, setLogoPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const sortedDistributors = [...distributors].sort((a, b) =>
+        a.name.localeCompare(b.name),
+    );
+
+    const toggleDistributor = (id: number, checked: boolean) => {
+        setData(
+            'distributor_ids',
+            checked
+                ? [...data.distributor_ids, id]
+                : data.distributor_ids.filter(
+                      (distributorId) => distributorId !== id,
+                  ),
+        );
+    };
 
     const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
-        setData((prevData) => ({
-            ...prevData,
-            logo: file,
-            remove_logo: false,
-        }));
-        setLogoPreview(file ? URL.createObjectURL(file) : logoPreview);
+        setData('logo', file);
+        setLogoPreview(file ? URL.createObjectURL(file) : null);
     };
 
     const removeLogo = () => {
-        setData((prevData) => ({
-            ...prevData,
-            logo: null,
-            remove_logo: true,
-        }));
+        setData('logo', null);
         setLogoPreview(null);
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
@@ -69,22 +66,20 @@ export default function EditDistributor({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(distributorsRoutes.update(distributor.id).url, {
-            forceFormData: true,
-        });
+        post(brandsRoutes.store().url, { forceFormData: true });
     };
 
     return (
         <>
-            <Head title="Edit Distributor" />
+            <Head title="Create Brand" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-sm p-4">
                 <div className="mx-auto w-full max-w-5xl">
                     <div className="mb-5 space-y-1">
                         <h1 className="text-foreground text-xl font-semibold tracking-tight">
-                            Edit distributor
+                            Create brand
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Update the details of this distributor.
+                            Add a new brand and assign its distributors.
                         </p>
                     </div>
 
@@ -92,9 +87,9 @@ export default function EditDistributor({
                         <Card className="gap-0 border py-0 shadow-none">
                             <CardHeader className="border-border border-b px-6 py-5">
                                 <div className="flex items-center gap-2">
-                                    <Building2 className="text-muted-foreground size-4.5" />
+                                    <Tag className="text-muted-foreground size-4.5" />
                                     <span className="text-foreground text-sm font-semibold">
-                                        Edit distributor
+                                        New brand
                                     </span>
                                 </div>
                             </CardHeader>
@@ -103,7 +98,7 @@ export default function EditDistributor({
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Distributor Name{' '}
+                                            Brand Name{' '}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -112,7 +107,7 @@ export default function EditDistributor({
                                             id="name"
                                             type="text"
                                             autoFocus
-                                            placeholder="e.g. Acme Distribution Ltd"
+                                            placeholder="e.g. Acme Corp"
                                             value={data.name}
                                             onChange={(e) =>
                                                 setData('name', e.target.value)
@@ -122,36 +117,37 @@ export default function EditDistributor({
                                     </div>
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="country">
-                                            Country{' '}
+                                        <Label htmlFor="status">
+                                            Status{' '}
                                             <span className="text-destructive">
                                                 *
                                             </span>
                                         </Label>
                                         <Select
-                                            value={data.country}
+                                            value={data.status}
                                             onValueChange={(value) =>
-                                                setData('country', value)
+                                                setData('status', value)
                                             }
                                         >
                                             <SelectTrigger
-                                                id="country"
+                                                id="status"
                                                 className="w-full"
                                             >
-                                                <SelectValue placeholder="Select country" />
+                                                <SelectValue placeholder="Status" />
                                             </SelectTrigger>
-                                            <SelectContent className="max-h-72">
-                                                {COUNTRIES.map((country) => (
-                                                    <SelectItem
-                                                        key={country}
-                                                        value={country}
-                                                    >
-                                                        {country}
-                                                    </SelectItem>
-                                                ))}
+                                            <SelectContent>
+                                                <SelectItem value="active">
+                                                    Active
+                                                </SelectItem>
+                                                <SelectItem value="inactive">
+                                                    Inactive
+                                                </SelectItem>
+                                                <SelectItem value="draft">
+                                                    Draft
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        <InputError message={errors.country} />
+                                        <InputError message={errors.status} />
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">
@@ -161,7 +157,7 @@ export default function EditDistributor({
                                         <textarea
                                             id="description"
                                             rows={4}
-                                            placeholder="A short description of this distributor"
+                                            placeholder="A short description of this brand"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
@@ -176,106 +172,63 @@ export default function EditDistributor({
                                         />
                                     </div>
 
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="status">
-                                            Status{' '}
+                                    <div className="grid gap-2 sm:col-span-2">
+                                        <Label>
+                                            Distributors{' '}
                                             <span className="text-destructive">
                                                 *
                                             </span>
                                         </Label>
-                                        <Select
-                                            value={data.status}
-                                            onValueChange={(value) =>
-                                                setData(
-                                                    'status',
-                                                    value as typeof data.status,
-                                                )
-                                            }
-                                        >
-                                            <SelectTrigger
-                                                id="status"
-                                                className="w-full"
-                                            >
-                                                <SelectValue placeholder="Status" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="active">
-                                                    Active
-                                                </SelectItem>
-                                                <SelectItem
-                                                    value="inactive"
-                                                    disabled={isLinkedToBrands}
-                                                >
-                                                    Inactive
-                                                </SelectItem>
-                                                <SelectItem
-                                                    value="draft"
-                                                    disabled={isLinkedToBrands}
-                                                >
-                                                    Draft
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {isLinkedToBrands && (
-                                            <p className="text-muted-foreground text-xs">
-                                                This distributor is linked to
-                                                one or more brands and must stay
-                                                active.
-                                            </p>
-                                        )}
-                                        <InputError message={errors.status} />
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="email">Email</Label>
-                                        <Input
-                                            id="email"
-                                            type="email"
-                                            placeholder="e.g. contact@distributor.com"
-                                            value={data.email}
-                                            onChange={(e) =>
-                                                setData('email', e.target.value)
-                                            }
-                                        />
-                                        <InputError message={errors.email} />
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="phone">Phone</Label>
-                                        <Input
-                                            id="phone"
-                                            type="tel"
-                                            inputMode="tel"
-                                            placeholder="e.g. +1 555 123 4567"
-                                            value={data.phone}
-                                            onChange={(e) =>
-                                                setData(
-                                                    'phone',
-                                                    e.target.value.replace(
-                                                        /[^0-9+\-()\s]/g,
-                                                        '',
+                                        <div className="border-border max-h-[100px] md:max-h-[250px] lg:max-h-[350px] overflow-y-auto rounded-md border p-3">
+                                            <div className="grid grid-cols-3 gap-x-4 gap-y-2">
+                                                {sortedDistributors.map(
+                                                    (distributor) => (
+                                                        <div
+                                                            key={distributor.id}
+                                                            className="flex min-w-0 items-center gap-2"
+                                                        >
+                                                            <Checkbox
+                                                                id={`distributor-${distributor.id}`}
+                                                                checked={data.distributor_ids.includes(
+                                                                    distributor.id,
+                                                                )}
+                                                                onCheckedChange={(
+                                                                    checked,
+                                                                ) =>
+                                                                    toggleDistributor(
+                                                                        distributor.id,
+                                                                        checked ===
+                                                                            true,
+                                                                    )
+                                                                }
+                                                                className="shrink-0"
+                                                            />
+                                                            <Label
+                                                                htmlFor={`distributor-${distributor.id}`}
+                                                                className="min-w-0 flex-1 truncate leading-normal font-normal"
+                                                                title={
+                                                                    distributor.name
+                                                                }
+                                                            >
+                                                                {
+                                                                    distributor.name
+                                                                }
+                                                            </Label>
+                                                        </div>
                                                     ),
-                                                )
-                                            }
+                                                )}
+                                                {sortedDistributors.length ===
+                                                    0 && (
+                                                    <p className="text-muted-foreground col-span-3 text-sm">
+                                                        No distributors
+                                                        available.
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <InputError
+                                            message={errors.distributor_ids}
                                         />
-                                        <InputError message={errors.phone} />
-                                    </div>
-
-                                    <div className="grid gap-2 sm:col-span-2">
-                                        <Label htmlFor="address">Address</Label>
-                                        <Input
-                                            id="address"
-                                            type="text"
-                                            placeholder="e.g. 123 Main Street, City"
-                                            value={data.address}
-                                            onChange={(e) =>
-                                                setData(
-                                                    'address',
-                                                    e.target.value,
-                                                )
-                                            }
-                                        />
-                                        <InputError message={errors.address} />
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">
@@ -325,7 +278,7 @@ export default function EditDistributor({
                                     className="cursor-pointer"
                                 >
                                     {processing && <Spinner />}
-                                    Save changes
+                                    Create brand
                                 </Button>
                             </div>
                         </Card>
@@ -338,10 +291,10 @@ export default function EditDistributor({
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },
-    { title: 'Distributors', href: distributorsRoutes.index() },
-    { title: 'Edit', href: '#' },
+    { title: 'Brands', href: brandsRoutes.index() },
+    { title: 'Create', href: brandsRoutes.create() },
 ];
 
-EditDistributor.layout = {
+CreateBrand.layout = {
     breadcrumbs,
 };

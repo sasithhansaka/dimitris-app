@@ -11,18 +11,14 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property string $name
- * @property string $country
  * @property string|null $description
  * @property string|null $logo
- * @property string|null $email
- * @property string|null $phone
- * @property string|null $address
  * @property string $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'country', 'description', 'logo', 'email', 'phone', 'address', 'status'])]
-class Distributor extends Model
+#[Fillable(['name', 'description', 'logo', 'status'])]
+class Brand extends Model
 {
     use LogsActivity;
 
@@ -32,8 +28,8 @@ class Distributor extends Model
 
     public const STATUS_DRAFT = 'draft';
 
-    public function brands(): BelongsToMany
+    public function distributors(): BelongsToMany
     {
-        return $this->belongsToMany(Brand::class);
+        return $this->belongsToMany(Distributor::class);
     }
 }

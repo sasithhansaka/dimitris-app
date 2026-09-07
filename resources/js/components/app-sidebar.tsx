@@ -6,6 +6,7 @@ import {
     LayoutGrid,
     Newspaper,
     ScrollText,
+    Tag,
     Tags,
     Users,
 } from 'lucide-react';
@@ -25,6 +26,7 @@ import {
 import { dashboard } from '@/routes';
 import articleCategoriesRoutes from '@/routes/article-categories';
 import articlesRoutes from '@/routes/articles';
+import brandsRoutes from '@/routes/brands';
 import distributorsRoutes from '@/routes/distributors';
 import logsRoutes from '@/routes/logs';
 import usersRoutes from '@/routes/users';
@@ -69,6 +71,14 @@ const distributorNavItems: NavItem[] = [
     },
 ];
 
+const brandNavItems: NavItem[] = [
+    {
+        title: 'Brands',
+        href: brandsRoutes.index(),
+        icon: Tag,
+    },
+];
+
 const LogsNavItems: NavItem[] = [
     {
         title: 'System Logs',
@@ -109,6 +119,7 @@ export function AppSidebar() {
                 <NavMain items={mainNavItems} label="Platform" />
                 <NavMain items={articleNavItems} label="Articles" />
                 <NavMain items={distributorNavItems} label="Distributors" />
+                <NavMain items={brandNavItems} label="Brands" />
                 <NavMain items={LogsNavItems} label="Logs" />
             </SidebarContent>
 

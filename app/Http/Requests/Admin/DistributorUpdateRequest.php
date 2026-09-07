@@ -6,6 +6,7 @@ use App\Models\Distributor;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class DistributorUpdateRequest extends FormRequest
 {
@@ -48,5 +49,26 @@ class DistributorUpdateRequest extends FormRequest
         return [
             'name' => 'distributor name',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            /** @var Distributor $distributor */
+            $distributor = $this->route('distributor');
+
+            if (
+                $this->input('status') !== Distributor::STATUS_ACTIVE
+                && $distributor->brands()->exists()
+            ) {
+                $validator->errors()->add(
+                    'status',
+                    __('This distributor is linked to one or more brands and must stay active.'),
+                );
+            }
+        });
     }
 }
