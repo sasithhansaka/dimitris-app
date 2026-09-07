@@ -7,6 +7,7 @@ import {
     Newspaper,
     Package,
     ScrollText,
+    Store,
     Tag,
     Tags,
     Users,
@@ -32,6 +33,7 @@ import distributorsRoutes from '@/routes/distributors';
 import logsRoutes from '@/routes/logs';
 import productCategoriesRoutes from '@/routes/product-categories';
 import productsRoutes from '@/routes/products';
+import retailersRoutes from '@/routes/retailers';
 import usersRoutes from '@/routes/users';
 import type { NavItem } from '@/types';
 
@@ -95,6 +97,14 @@ const productNavItems: NavItem[] = [
     },
 ];
 
+const retailerNavItems: NavItem[] = [
+    {
+        title: 'Retailers',
+        href: retailersRoutes.index(),
+        icon: Store,
+    },
+];
+
 const LogsNavItems: NavItem[] = [
     {
         title: 'System Logs',
@@ -137,6 +147,7 @@ export function AppSidebar() {
                 <NavMain items={distributorNavItems} label="Distributors" />
                 <NavMain items={brandNavItems} label="Brands" />
                 <NavMain items={productNavItems} label="Products" />
+                <NavMain items={retailerNavItems} label="Retailers" />
                 <NavMain items={LogsNavItems} label="Logs" />
             </SidebarContent>
 

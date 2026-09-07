@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class ProductUpdateRequest extends FormRequest
 {
@@ -43,5 +44,26 @@ class ProductUpdateRequest extends FormRequest
             'brand_id' => 'brand',
             'category_id' => 'category',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            /** @var Product $product */
+            $product = $this->route('product');
+
+            if (
+                $this->input('status') !== Product::STATUS_ACTIVE
+                && $product->retailers()->exists()
+            ) {
+                $validator->errors()->add(
+                    'status',
+                    __('This product is linked to one or more retailers and must stay active.'),
+                );
+            }
+        });
     }
 }

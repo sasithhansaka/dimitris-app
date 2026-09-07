@@ -6,4 +6,5 @@ export type * from './distributor';
 export type * from './navigation';
 export type * from './product';
 export type * from './productCategory';
+export type * from './retailer';
 export type * from './ui';

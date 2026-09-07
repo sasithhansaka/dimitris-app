@@ -99,6 +99,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product): Response
     {
+        $product->loadCount('retailers');
+
         return Inertia::render('Admin/products/edit', [
             'product' => $product,
             'brands' => Brand::query()
@@ -148,6 +150,15 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
+        if ($product->retailers()->exists()) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => __('This product cannot be deleted because it is linked to one or more retailers.'),
+            ]);
+
+            return to_route('products.index');
+        }
+
         $product->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Product deleted.')]);

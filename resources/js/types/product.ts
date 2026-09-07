@@ -11,6 +11,7 @@ export type Product = {
     status: 'active' | 'inactive' | 'draft';
     brand?: Brand;
     category?: ProductCategory;
+    retailers_count?: number;
     created_at: string;
     updated_at: string;
     [key: string]: unknown;

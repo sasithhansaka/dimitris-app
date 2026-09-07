@@ -29,6 +29,8 @@ export default function EditProduct({
     brands: { id: number; name: string }[];
     categories: { id: number; name: string }[];
 }) {
+    const isLinkedToRetailers = (product.retailers_count ?? 0) > 0;
+
     const { data, setData, post, processing, errors } = useForm({
         name: product.name,
         brand_id: String(product.brand_id),
@@ -138,7 +140,7 @@ export default function EditProduct({
                                             <Link
                                                 href={brandsRoutes.create().url}
                                                 title="Create brand"
-                                                className="text-muted-foreground hover:text-foreground bg-secondary  inline-flex items-center"
+                                                className="text-muted-foreground hover:text-foreground bg-secondary inline-flex items-center"
                                             >
                                                 <Plus className="h-4 w-4" />
                                             </Link>
@@ -194,7 +196,7 @@ export default function EditProduct({
                                                         .url
                                                 }
                                                 title="Create product category"
-                                                className="text-muted-foreground hover:text-foreground bg-secondary  inline-flex items-center"
+                                                className="text-muted-foreground hover:text-foreground bg-secondary inline-flex items-center"
                                             >
                                                 <Plus className="h-4 w-4" />
                                             </Link>
@@ -269,14 +271,31 @@ export default function EditProduct({
                                                 <SelectItem value="active">
                                                     Active
                                                 </SelectItem>
-                                                <SelectItem value="inactive">
+                                                <SelectItem
+                                                    value="inactive"
+                                                    disabled={
+                                                        isLinkedToRetailers
+                                                    }
+                                                >
                                                     Inactive
                                                 </SelectItem>
-                                                <SelectItem value="draft">
+                                                <SelectItem
+                                                    value="draft"
+                                                    disabled={
+                                                        isLinkedToRetailers
+                                                    }
+                                                >
                                                     Draft
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
+                                        {isLinkedToRetailers && (
+                                            <p className="text-muted-foreground text-xs">
+                                                This product is linked to one or
+                                                more retailers and must stay
+                                                active.
+                                            </p>
+                                        )}
                                         <InputError message={errors.status} />
                                     </div>
 
