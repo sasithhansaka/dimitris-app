@@ -71,7 +71,7 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <Button
+                            {/* <Button
                                 variant="outline"
                                 size="sm"
                                 asChild
@@ -83,7 +83,7 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
                                     <PencilIcon className="size-4" />
                                     Edit
                                 </Link>
-                            </Button>
+                            </Button> */}
                             <Button
                                 variant="outline"
                                 size="sm"

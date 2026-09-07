@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\DistributorStoreRequest;
 use App\Http\Requests\Admin\DistributorUpdateRequest;
+use App\Models\Brand;
 use App\Models\Distributor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -80,7 +81,9 @@ class DistributorController extends Controller
     public function show(Distributor $distributor): Response
     {
         return Inertia::render('Admin/distributors/show', [
-            'distributor' => $distributor->load('brands'),
+            'distributor' => $distributor->load([
+                'brands' => fn ($query) => $query->where('status', Brand::STATUS_ACTIVE),
+            ]),
         ]);
     }
 

@@ -1,5 +1,6 @@
 import type { Brand } from './brand';
 import type { ProductCategory } from './productCategory';
+import type { Retailer } from './retailer';
 
 export type Product = {
     id: number;
@@ -11,6 +12,7 @@ export type Product = {
     status: 'active' | 'inactive' | 'draft';
     brand?: Brand;
     category?: ProductCategory;
+    retailers?: Retailer[];
     retailers_count?: number;
     created_at: string;
     updated_at: string;

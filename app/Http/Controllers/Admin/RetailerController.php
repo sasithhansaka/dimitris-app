@@ -89,7 +89,9 @@ class RetailerController extends Controller
     public function show(Retailer $retailer): Response
     {
         return Inertia::render('Admin/retailers/show', [
-            'retailer' => $retailer->load('products'),
+            'retailer' => $retailer->load([
+                'products' => fn ($query) => $query->where('status', Product::STATUS_ACTIVE),
+            ]),
         ]);
     }
 

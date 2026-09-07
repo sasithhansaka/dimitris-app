@@ -6,7 +6,7 @@ import { dashboard } from '@/routes';
 import productsRoutes from '@/routes/products';
 import type { BreadcrumbItem, Product } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { PencilIcon, Package, Tags, Truck } from 'lucide-react';
+import { PencilIcon, Package, Store, Tags, Truck } from 'lucide-react';
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -52,6 +52,10 @@ function formatDate(date: string): string {
 }
 
 export default function ProductsShow({ product }: { product: Product }) {
+    const retailers = [...(product.retailers ?? [])].sort((a, b) =>
+        a.name.localeCompare(b.name),
+    );
+
     return (
         <>
             <Head title={`Product: ${product.name}`} />
@@ -67,7 +71,7 @@ export default function ProductsShow({ product }: { product: Product }) {
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <Button
+                            {/* <Button
                                 variant="outline"
                                 size="sm"
                                 asChild
@@ -79,7 +83,7 @@ export default function ProductsShow({ product }: { product: Product }) {
                                     <PencilIcon className="size-4" />
                                     Edit
                                 </Link>
-                            </Button>
+                            </Button> */}
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -157,6 +161,31 @@ export default function ProductsShow({ product }: { product: Product }) {
                                 label="Description"
                                 value={product.description ?? '-'}
                             />
+
+                            <Separator />
+
+                            <div className="grid gap-2">
+                                <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                                    Retailers
+                                </span>
+                                {retailers.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2 pt-1">
+                                        {retailers.map((retailer) => (
+                                            <span
+                                                key={retailer.id}
+                                                className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                                            >
+                                                <Store className="text-muted-foreground size-3.5" />
+                                                {retailer.name}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <span className="text-foreground text-sm">
+                                        -
+                                    </span>
+                                )}
+                            </div>
                         </CardContent>
                     </Card>
                 </div>

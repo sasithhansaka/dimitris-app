@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\ProductUpdateRequest;
 use App\Models\Brand;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\Retailer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -90,7 +91,11 @@ class ProductController extends Controller
     public function show(Product $product): Response
     {
         return Inertia::render('Admin/products/show', [
-            'product' => $product->load(['brand', 'category']),
+            'product' => $product->load([
+                'brand',
+                'category',
+                'retailers' => fn ($query) => $query->where('status', Retailer::STATUS_ACTIVE),
+            ]),
         ]);
     }
 

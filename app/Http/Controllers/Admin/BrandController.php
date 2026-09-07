@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\BrandStoreRequest;
 use App\Http\Requests\Admin\BrandUpdateRequest;
 use App\Models\Brand;
 use App\Models\Distributor;
+use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -88,7 +89,10 @@ class BrandController extends Controller
     public function show(Brand $brand): Response
     {
         return Inertia::render('Admin/brands/show', [
-            'brand' => $brand->load('distributors'),
+            'brand' => $brand->load([
+                'distributors' => fn ($query) => $query->where('status', Distributor::STATUS_ACTIVE),
+                'products' => fn ($query) => $query->where('status', Product::STATUS_ACTIVE),
+            ]),
         ]);
     }
 

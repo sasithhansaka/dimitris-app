@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductCategoryStoreRequest;
 use App\Http\Requests\Admin\ProductCategoryUpdateRequest;
+use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -70,7 +71,9 @@ class ProductCategoryController extends Controller
     public function show(ProductCategory $productCategory): Response
     {
         return Inertia::render('Admin/productCategories/show', [
-            'productCategory' => $productCategory,
+            'productCategory' => $productCategory->load([
+                'products' => fn ($query) => $query->where('status', Product::STATUS_ACTIVE),
+            ]),
         ]);
     }
 

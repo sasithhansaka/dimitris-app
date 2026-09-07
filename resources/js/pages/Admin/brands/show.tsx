@@ -6,7 +6,7 @@ import { dashboard } from '@/routes';
 import brandsRoutes from '@/routes/brands';
 import type { Brand, BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { PencilIcon, Tag, Truck } from 'lucide-react';
+import { Package, PencilIcon, Tag, Truck } from 'lucide-react';
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -55,6 +55,9 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
     const distributors = [...(brand.distributors ?? [])].sort((a, b) =>
         a.name.localeCompare(b.name),
     );
+    const products = [...(brand.products ?? [])].sort((a, b) =>
+        a.name.localeCompare(b.name),
+    );
 
     return (
         <>
@@ -71,7 +74,7 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <Button
+                            {/* <Button
                                 variant="outline"
                                 size="sm"
                                 asChild
@@ -81,7 +84,7 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
                                     <PencilIcon className="size-4" />
                                     Edit
                                 </Link>
-                            </Button>
+                            </Button> */}
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -149,6 +152,31 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
                                             >
                                                 <Truck className="text-muted-foreground size-3.5" />
                                                 {distributor.name}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <span className="text-foreground text-sm">
+                                        -
+                                    </span>
+                                )}
+                            </div>
+
+                            <Separator />
+
+                            <div className="grid gap-2">
+                                <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                                    Products
+                                </span>
+                                {products.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2 pt-1">
+                                        {products.map((product) => (
+                                            <span
+                                                key={product.id}
+                                                className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                                            >
+                                                <Package className="text-muted-foreground size-3.5" />
+                                                {product.name}
                                             </span>
                                         ))}
                                     </div>
