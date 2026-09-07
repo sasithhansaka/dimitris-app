@@ -5,7 +5,7 @@ export default function AppLogoIcon(
 ) {
     return (
         <img
-            src="/perkLogo.png"
+            src="/new_perk_logo.png"
             alt="Logo"
             {...props}
         />

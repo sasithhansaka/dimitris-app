@@ -24,7 +24,7 @@ export function Wordmark({
             )}
         >
             <img
-                src="/perkLogo.png"
+                src="/new_perk_logo.png"
                 alt="Logo"
                 className="h-7 w-7 mt-2 object-cover"
             />
