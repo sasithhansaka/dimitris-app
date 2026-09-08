@@ -120,12 +120,19 @@ export default function ProductsIndex({
                         >
                             <TableTd width={80}>{product.id}</TableTd>
                             <TableTd>
-                                <span
-                                    className="line-clamp-2"
-                                    title={product.name}
-                                >
-                                    {product.name}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    <img
+                                        src={`/storage/${product.image}`}
+                                        alt={product.name}
+                                        className="border-border size-8 shrink-0 rounded-md border object-cover"
+                                    />
+                                    <span
+                                        className="line-clamp-2"
+                                        title={product.name}
+                                    >
+                                        {product.name}
+                                    </span>
+                                </div>
                             </TableTd>
                             <TableTd>{product.brand?.name ?? '-'}</TableTd>
                             <TableTd>{product.category?.name ?? '-'}</TableTd>

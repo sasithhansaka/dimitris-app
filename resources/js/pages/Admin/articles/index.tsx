@@ -12,10 +12,10 @@ const tableColumns = [
     { label: "ID", sortField: "id", sortable: false, width: 4 },
     { label: "Title", sortField: "title", sortable: false, width: "20%" },
     {
-        label: "Introduction",
-        sortField: "introduction",
+        label: "Featured",
+        sortField: "featured",
         sortable: false,
-        width: "28%",
+        width: "18%",
     },
     { label: "Status", sortField: "status", sortable: false, width: "12%" },
     {
@@ -36,14 +36,6 @@ function statusClassName(status: string): string {
         default:
             return "bg-gray-100 text-red-500";
     }
-}
-
-function truncateWords(text: string, limit: number): string {
-    const words = text.trim().split(/\s+/);
-    if (words.length <= limit) {
-        return text;
-    }
-    return `${words.slice(0, limit).join(" ")} ...`;
 }
 
 export default function ArticlesIndex({
@@ -138,17 +130,13 @@ export default function ArticlesIndex({
                                 </span>
                             </TableTd>
                             <TableTd>
-                                <span
-                                    className="block truncate"
-                                    title={article.introduction ?? undefined}
-                                >
-                                    {article.introduction
-                                        ? truncateWords(
-                                              article.introduction,
-                                              6,
-                                          )
-                                        : "-"}
-                                </span>
+                                {article.featured ? (
+                                    <Badge className="border-transparent text-black bg-gray-100 dark:text-black">
+                                        Featured
+                                    </Badge>
+                                ) : (
+                                    "-"
+                                )}
                             </TableTd>
                             <TableTd>
                                 <Badge

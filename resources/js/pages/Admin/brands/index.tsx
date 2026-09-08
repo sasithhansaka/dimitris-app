@@ -1,49 +1,42 @@
-import Confirm from '@/components/Models/Confirm';
-import MasterTab, { TableBody, TableTd } from '@/components/shared/masterTab';
-import { Badge } from '@/components/ui/badge';
-import { dashboard } from '@/routes';
-import brandsRoutes from '@/routes/brands';
-import type { Brand, BreadcrumbItem } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
-import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import { BrandMark } from "@/components/BrandMark";
+import Confirm from "@/components/Models/Confirm";
+import MasterTab, { TableBody, TableTd } from "@/components/shared/masterTab";
+import { Badge } from "@/components/ui/badge";
+import { dashboard } from "@/routes";
+import brandsRoutes from "@/routes/brands";
+import type { Brand, BreadcrumbItem } from "@/types";
+import { Head, Link, router } from "@inertiajs/react";
+import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 
 const tableColumns = [
-    { label: 'ID', sortField: 'id', sortable: false, width: 4 },
-    { label: 'Name', sortField: 'name', sortable: false, width: '18%' },
+    { label: "ID", sortField: "id", sortable: false, width: 4 },
+    { label: "Name", sortField: "name", sortable: false, width: "18%" },
     {
-        label: 'Description',
-        sortField: 'description',
+        label: "Featured",
+        sortField: "featured",
         sortable: false,
-        width: '27%',
+        width: "18%",
     },
     {
-        label: 'Distributors',
-        sortField: 'distributors',
+        label: "Distributors",
+        sortField: "distributors",
         sortable: false,
-        width: '22%',
+        width: "22%",
     },
-    { label: 'Status', sortField: 'status', sortable: false, width: '12%' },
-    { label: 'Actions', sortField: 'actions', sortable: false, width: '15%' },
+    { label: "Status", sortField: "status", sortable: false, width: "12%" },
+    { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
 ];
 
 function statusClassName(status: string): string {
     switch (status) {
-        case 'active':
-            return 'bg-gray-100 text-[#073BBC]';
-        case 'inactive':
-            return 'bg-gray-100 text-black';
+        case "active":
+            return "bg-gray-100 text-[#073BBC]";
+        case "inactive":
+            return "bg-gray-100 text-black";
         default:
-            return 'bg-gray-100 text-red-500';
+            return "bg-gray-100 text-red-500";
     }
-}
-
-function truncateWords(text: string, limit: number): string {
-    const words = text.trim().split(/\s+/);
-    if (words.length <= limit) {
-        return text;
-    }
-    return `${words.slice(0, limit).join(' ')} ...`;
 }
 
 export default function BrandsIndex({
@@ -84,16 +77,16 @@ export default function BrandsIndex({
                     filters={filters}
                     url={brandsRoutes.index().url}
                     createLink={{
-                        label: 'Create Brand',
+                        label: "Create Brand",
                         url: brandsRoutes.create().url,
                     }}
-                    search={{ placeholder: 'Search by name or description...' }}
+                    search={{ placeholder: "Search by name or description..." }}
                     statusFilter={{
                         options: [
-                            { label: 'All', value: '' },
-                            { label: 'Active', value: 'active' },
-                            { label: 'Inactive', value: 'inactive' },
-                            { label: 'Draft', value: 'draft' },
+                            { label: "All", value: "" },
+                            { label: "Active", value: "active" },
+                            { label: "Inactive", value: "inactive" },
+                            { label: "Draft", value: "draft" },
                         ],
                     }}
                     links={brands.links}
@@ -130,22 +123,27 @@ export default function BrandsIndex({
                         >
                             <TableTd width={80}>{brand.id}</TableTd>
                             <TableTd>
-                                <span
-                                    className="line-clamp-2"
-                                    title={brand.name}
-                                >
-                                    {brand.name}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    <BrandMark
+                                        name={brand.name}
+                                        logo={brand.logo}
+                                    />
+                                    <span
+                                        className="line-clamp-2"
+                                        title={brand.name}
+                                    >
+                                        {brand.name}
+                                    </span>
+                                </div>
                             </TableTd>
                             <TableTd>
-                                <span
-                                    className="block truncate"
-                                    title={brand.description ?? undefined}
-                                >
-                                    {brand.description
-                                        ? truncateWords(brand.description, 6)
-                                        : '-'}
-                                </span>
+                                {brand.featured ? (
+                                    <Badge className="border-transparent text-black bg-gray-100 dark:text-black">
+                                        Featured
+                                    </Badge>
+                                ) : (
+                                    "-"
+                                )}
                             </TableTd>
                             <TableTd>
                                 {brand.distributors &&
@@ -154,14 +152,14 @@ export default function BrandsIndex({
                                         className="block truncate"
                                         title={brand.distributors
                                             .map((d) => d.name)
-                                            .join(', ')}
+                                            .join(", ")}
                                     >
                                         {brand.distributors[0].name}
                                         {brand.distributors.length > 1 &&
                                             ` +${brand.distributors.length - 1} more`}
                                     </span>
                                 ) : (
-                                    '-'
+                                    "-"
                                 )}
                             </TableTd>
                             <TableTd>
@@ -210,7 +208,7 @@ export default function BrandsIndex({
                 message={
                     brandToDelete
                         ? `Are you sure you want to delete "${brandToDelete.name}"?`
-                        : ''
+                        : ""
                 }
                 confirmText="Delete"
                 variant="danger"
@@ -221,8 +219,8 @@ export default function BrandsIndex({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Brands', href: brandsRoutes.index() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Brands", href: brandsRoutes.index() },
 ];
 
 BrandsIndex.layout = {
