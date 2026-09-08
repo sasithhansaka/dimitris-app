@@ -11,6 +11,7 @@ import {
     Store,
     Tag,
     Tags,
+    Ticket,
     Users,
 } from "lucide-react";
 import AppLogo from "@/components/app-logo";
@@ -30,6 +31,7 @@ import { dashboard } from "@/routes";
 import articleCategoriesRoutes from "@/routes/article-categories";
 import articlesRoutes from "@/routes/articles";
 import brandsRoutes from "@/routes/brands";
+import couponsRoutes from "@/routes/coupons";
 import distributorsRoutes from "@/routes/distributors";
 import logsRoutes from "@/routes/logs";
 import offersRoutes from "@/routes/offers";
@@ -54,6 +56,11 @@ const mainNavItems: NavItem[] = [
         title: "Offers",
         href: offersRoutes.index(),
         icon: Percent,
+    },
+    {
+        title: "Coupons",
+        href: couponsRoutes.index(),
+        icon: Ticket,
     },
     // {
     //     title: 'System Logs',

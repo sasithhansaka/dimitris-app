@@ -30,7 +30,11 @@ export default function EditProduct({
     brands: { id: number; name: string }[];
     categories: { id: number; name: string }[];
 }) {
-    const isLinkedToRetailers = (product.retailers_count ?? 0) > 0;
+    const linkedTo = [
+        (product.retailers_count ?? 0) > 0 ? 'retailers' : null,
+        (product.coupons_count ?? 0) > 0 ? 'coupons' : null,
+    ].filter((item): item is string => item !== null);
+    const isLinked = linkedTo.length > 0;
 
     const { data, setData, post, processing, errors } = useForm({
         name: product.name,
@@ -276,7 +280,7 @@ export default function EditProduct({
                                                 <SelectItem
                                                     value="inactive"
                                                     disabled={
-                                                        isLinkedToRetailers
+                                                        isLinked
                                                     }
                                                 >
                                                     Inactive
@@ -284,18 +288,18 @@ export default function EditProduct({
                                                 <SelectItem
                                                     value="draft"
                                                     disabled={
-                                                        isLinkedToRetailers
+                                                        isLinked
                                                     }
                                                 >
                                                     Draft
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        {isLinkedToRetailers && (
+                                        {isLinked && (
                                             <p className="text-muted-foreground text-xs">
-                                                This product is linked to one or
-                                                more retailers and must stay
-                                                active.
+                                                This product is linked to one
+                                                or more {linkedTo.join(', ')}{' '}
+                                                and must stay active.
                                             </p>
                                         )}
                                         <InputError message={errors.status} />

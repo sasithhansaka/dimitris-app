@@ -36,4 +36,10 @@ class Retailer extends Model
     {
         return $this->belongsToMany(Product::class, 'product_retailers');
     }
+
+    public function coupons(): BelongsToMany
+    {
+        return $this->belongsToMany(Coupon::class, 'coupon_retailers')
+            ->withTimestamps();
+    }
 }

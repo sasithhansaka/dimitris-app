@@ -60,14 +60,20 @@ class ProductUpdateRequest extends FormRequest
             /** @var Product $product */
             $product = $this->route('product');
 
-            if (
-                $this->input('status') !== Product::STATUS_ACTIVE
-                && $product->retailers()->exists()
-            ) {
-                $validator->errors()->add(
-                    'status',
-                    __('This product is linked to one or more retailers and must stay active.'),
-                );
+            if ($this->input('status') !== Product::STATUS_ACTIVE) {
+                $linkedTo = array_filter([
+                    $product->retailers()->exists() ? 'retailers' : null,
+                    $product->coupons()->exists() ? 'coupons' : null,
+                ]);
+
+                if ($linkedTo !== []) {
+                    $validator->errors()->add(
+                        'status',
+                        __('This product is linked to one or more :items and must stay active.', [
+                            'items' => implode(', ', $linkedTo),
+                        ]),
+                    );
+                }
             }
 
             if ($this->boolean('remove_image') && ! $this->hasFile('image')) {

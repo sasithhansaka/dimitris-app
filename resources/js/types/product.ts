@@ -15,6 +15,7 @@ export type Product = {
     category?: ProductCategory;
     retailers?: Retailer[];
     retailers_count?: number;
+    coupons_count?: number;
     created_at: string;
     updated_at: string;
     [key: string]: unknown;

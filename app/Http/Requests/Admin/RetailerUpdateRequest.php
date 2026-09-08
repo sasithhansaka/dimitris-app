@@ -6,6 +6,7 @@ use App\Models\Retailer;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class RetailerUpdateRequest extends FormRequest
 {
@@ -51,5 +52,26 @@ class RetailerUpdateRequest extends FormRequest
             'name' => 'retailer name',
             'product_ids' => 'products',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            /** @var Retailer $retailer */
+            $retailer = $this->route('retailer');
+
+            if (
+                $this->input('status') !== Retailer::STATUS_ACTIVE
+                && $retailer->coupons()->exists()
+            ) {
+                $validator->errors()->add(
+                    'status',
+                    __('This retailer is linked to one or more coupons and must stay active.'),
+                );
+            }
+        });
     }
 }

@@ -100,7 +100,7 @@ class RetailerController extends Controller
      */
     public function edit(Retailer $retailer): Response
     {
-        $retailer->load('products:id');
+        $retailer->load('products:id')->loadCount('coupons');
         $linkedIds = $retailer->products->pluck('id');
 
         return Inertia::render('Admin/retailers/edit', [
@@ -147,6 +147,15 @@ class RetailerController extends Controller
      */
     public function destroy(Retailer $retailer): RedirectResponse
     {
+        if ($retailer->coupons()->exists()) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => __('This retailer cannot be deleted because it is linked to one or more coupons.'),
+            ]);
+
+            return to_route('retailers.index');
+        }
+
         $retailer->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Retailer deleted.')]);

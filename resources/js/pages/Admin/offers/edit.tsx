@@ -20,6 +20,10 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { Percent, Plus, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 
+function toDateInputValue(date: string): string {
+    return date.slice(0, 10);
+}
+
 export default function EditOffer({
     offer,
     brands,
@@ -34,8 +38,8 @@ export default function EditOffer({
         image: null as File | null,
         status: offer.status,
         featured: offer.featured,
-        start_date: offer.start_date,
-        end_date: offer.end_date,
+        start_date: toDateInputValue(offer.start_date),
+        end_date: toDateInputValue(offer.end_date),
         remove_image: false,
         _method: 'put',
     });

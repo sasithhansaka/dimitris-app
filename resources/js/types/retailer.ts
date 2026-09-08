@@ -11,6 +11,7 @@ export type Retailer = {
     country: string;
     status: 'active' | 'inactive' | 'draft';
     products?: Product[];
+    coupons_count?: number;
     created_at: string;
     updated_at: string;
     [key: string]: unknown;
