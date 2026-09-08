@@ -14,50 +14,43 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { dashboard } from '@/routes';
 import brandsRoutes from '@/routes/brands';
-import productCategoriesRoutes from '@/routes/product-categories';
-import productsRoutes from '@/routes/products';
-import type { BreadcrumbItem, Product } from '@/types';
+import offersRoutes from '@/routes/offers';
+import type { BreadcrumbItem, Offer } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { Package, Plus, X } from 'lucide-react';
+import { Percent, Plus, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 
-export default function EditProduct({
-    product,
-    brands,
-    categories,
-}: {
-    product: Product;
-    brands: { id: number; name: string }[];
-    categories: { id: number; name: string }[];
-}) {
-    const linkedTo = [
-        (product.retailers_count ?? 0) > 0 ? 'retailers' : null,
-        (product.coupons_count ?? 0) > 0 ? 'coupons' : null,
-    ].filter((item): item is string => item !== null);
-    const isLinked = linkedTo.length > 0;
+function toDateInputValue(date: string): string {
+    return date.slice(0, 10);
+}
 
+export default function EditOffer({
+    offer,
+    brands,
+}: {
+    offer: Offer;
+    brands: { id: number; name: string }[];
+}) {
     const { data, setData, post, processing, errors } = useForm({
-        name: product.name,
-        brand_id: String(product.brand_id),
-        category_id: String(product.category_id),
-        description: product.description ?? '',
+        title: offer.title,
+        brand_id: String(offer.brand_id),
+        description: offer.description,
         image: null as File | null,
-        status: product.status,
-        featured: product.featured,
+        status: offer.status,
+        featured: offer.featured,
+        start_date: toDateInputValue(offer.start_date),
+        end_date: toDateInputValue(offer.end_date),
         remove_image: false,
         _method: 'put',
     });
 
-    const originalImage = product.image ? `/storage/${product.image}` : null;
+    const originalImage = offer.image ? `/storage/${offer.image}` : null;
     const [imagePreview, setImagePreview] = useState<string | null>(
         originalImage,
     );
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const sortedBrands = [...brands].sort((a, b) =>
-        a.name.localeCompare(b.name),
-    );
-    const sortedCategories = [...categories].sort((a, b) =>
         a.name.localeCompare(b.name),
     );
 
@@ -85,20 +78,20 @@ export default function EditProduct({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(productsRoutes.update(product.id).url, { forceFormData: true });
+        post(offersRoutes.update(offer.id).url, { forceFormData: true });
     };
 
     return (
         <>
-            <Head title="Edit Product" />
+            <Head title="Edit Offer" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-sm p-4">
                 <div className="mx-auto w-full max-w-5xl">
                     <div className="mb-5 space-y-1">
                         <h1 className="text-foreground text-xl font-semibold tracking-tight">
-                            Edit product
+                            Edit offer
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Update the details of this product.
+                            Update the details of this offer.
                         </p>
                     </div>
 
@@ -106,9 +99,9 @@ export default function EditProduct({
                         <Card className="gap-0 border py-0 shadow-none">
                             <CardHeader className="border-border border-b px-6 py-5">
                                 <div className="flex items-center gap-2">
-                                    <Package className="text-muted-foreground size-4.5" />
+                                    <Percent className="text-muted-foreground size-4.5" />
                                     <span className="text-foreground text-sm font-semibold">
-                                        Edit product
+                                        Edit offer
                                     </span>
                                 </div>
                             </CardHeader>
@@ -116,23 +109,23 @@ export default function EditProduct({
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2 sm:col-span-2">
-                                        <Label htmlFor="name">
-                                            Product Name{' '}
+                                        <Label htmlFor="title">
+                                            Title{' '}
                                             <span className="text-destructive">
                                                 *
                                             </span>
                                         </Label>
                                         <Input
-                                            id="name"
+                                            id="title"
                                             type="text"
                                             autoFocus
-                                            placeholder="e.g. Wireless Mouse"
-                                            value={data.name}
+                                            placeholder="e.g. Summer Sale"
+                                            value={data.title}
                                             onChange={(e) =>
-                                                setData('name', e.target.value)
+                                                setData('title', e.target.value)
                                             }
                                         />
-                                        <InputError message={errors.name} />
+                                        <InputError message={errors.title} />
                                     </div>
 
                                     <div className="grid gap-2">
@@ -189,69 +182,6 @@ export default function EditProduct({
                                     </div>
 
                                     <div className="grid gap-2">
-                                        <div className="flex items-center justify-between">
-                                            <Label htmlFor="category_id">
-                                                Category{' '}
-                                                <span className="text-destructive">
-                                                    *
-                                                </span>
-                                            </Label>
-                                            <Link
-                                                href={
-                                                    productCategoriesRoutes.create()
-                                                        .url
-                                                }
-                                                title="Create product category"
-                                                className="text-muted-foreground hover:text-foreground bg-secondary inline-flex items-center"
-                                            >
-                                                <Plus className="h-4 w-4" />
-                                            </Link>
-                                        </div>
-                                        {sortedCategories.length > 0 ? (
-                                            <Select
-                                                value={data.category_id}
-                                                onValueChange={(value) =>
-                                                    setData(
-                                                        'category_id',
-                                                        value,
-                                                    )
-                                                }
-                                            >
-                                                <SelectTrigger
-                                                    id="category_id"
-                                                    className="w-full"
-                                                >
-                                                    <SelectValue placeholder="Select category" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {sortedCategories.map(
-                                                        (category) => (
-                                                            <SelectItem
-                                                                key={
-                                                                    category.id
-                                                                }
-                                                                value={String(
-                                                                    category.id,
-                                                                )}
-                                                            >
-                                                                {category.name}
-                                                            </SelectItem>
-                                                        ),
-                                                    )}
-                                                </SelectContent>
-                                            </Select>
-                                        ) : (
-                                            <p className="border-border text-muted-foreground rounded-md border border-dashed px-3 py-2 text-sm">
-                                                No categories available. Create
-                                                a category first.
-                                            </p>
-                                        )}
-                                        <InputError
-                                            message={errors.category_id}
-                                        />
-                                    </div>
-
-                                    <div className="grid gap-2">
                                         <Label htmlFor="status">
                                             Status{' '}
                                             <span className="text-destructive">
@@ -277,32 +207,59 @@ export default function EditProduct({
                                                 <SelectItem value="active">
                                                     Active
                                                 </SelectItem>
-                                                <SelectItem
-                                                    value="inactive"
-                                                    disabled={
-                                                        isLinked
-                                                    }
-                                                >
+                                                <SelectItem value="inactive">
                                                     Inactive
                                                 </SelectItem>
-                                                <SelectItem
-                                                    value="draft"
-                                                    disabled={
-                                                        isLinked
-                                                    }
-                                                >
+                                                <SelectItem value="draft">
                                                     Draft
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        {isLinked && (
-                                            <p className="text-muted-foreground text-xs">
-                                                This product is linked to one
-                                                or more {linkedTo.join(', ')}{' '}
-                                                and must stay active.
-                                            </p>
-                                        )}
                                         <InputError message={errors.status} />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="start_date">
+                                            Start Date{' '}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
+                                        <Input
+                                            id="start_date"
+                                            type="date"
+                                            value={data.start_date}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'start_date',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.start_date}
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="end_date">
+                                            End Date{' '}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
+                                        <Input
+                                            id="end_date"
+                                            type="date"
+                                            value={data.end_date}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'end_date',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.end_date} />
                                     </div>
 
                                     <div className="flex items-center gap-2 pt-7">
@@ -320,7 +277,7 @@ export default function EditProduct({
                                             htmlFor="featured"
                                             className="font-normal"
                                         >
-                                            Featured product
+                                            Featured offer
                                         </Label>
                                         <InputError message={errors.featured} />
                                     </div>
@@ -335,7 +292,7 @@ export default function EditProduct({
                                         <textarea
                                             id="description"
                                             rows={4}
-                                            placeholder="A short description of this product"
+                                            placeholder="A short description of this offer"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
@@ -415,10 +372,10 @@ export default function EditProduct({
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },
-    { title: 'Products', href: productsRoutes.index() },
+    { title: 'Offers', href: offersRoutes.index() },
     { title: 'Edit', href: '#' },
 ];
 
-EditProduct.layout = {
+EditOffer.layout = {
     breadcrumbs,
 };

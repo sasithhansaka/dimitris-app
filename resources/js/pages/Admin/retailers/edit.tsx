@@ -28,6 +28,8 @@ export default function EditRetailer({
     retailer: Retailer;
     products: { id: number; name: string }[];
 }) {
+    const isLinked = (retailer.coupons_count ?? 0) > 0;
+
     const { data, setData, post, processing, errors } = useForm({
         name: retailer.name,
         country: retailer.country,
@@ -216,14 +218,27 @@ export default function EditRetailer({
                                                 <SelectItem value="active">
                                                     Active
                                                 </SelectItem>
-                                                <SelectItem value="inactive">
+                                                <SelectItem
+                                                    value="inactive"
+                                                    disabled={isLinked}
+                                                >
                                                     Inactive
                                                 </SelectItem>
-                                                <SelectItem value="draft">
+                                                <SelectItem
+                                                    value="draft"
+                                                    disabled={isLinked}
+                                                >
                                                     Draft
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
+                                        {isLinked && (
+                                            <p className="text-muted-foreground text-xs">
+                                                This retailer is linked to one
+                                                or more coupons and must stay
+                                                active.
+                                            </p>
+                                        )}
                                         <InputError message={errors.status} />
                                     </div>
 

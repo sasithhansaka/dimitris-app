@@ -1,4 +1,5 @@
 import type { Distributor } from './distributor';
+import type { Offer } from './offer';
 import type { Product } from './product';
 
 export type Brand = {
@@ -11,6 +12,8 @@ export type Brand = {
     distributors?: Distributor[];
     products?: Product[];
     products_count?: number;
+    offers?: Offer[];
+    offers_count?: number;
     created_at: string;
     updated_at: string;
     [key: string]: unknown;

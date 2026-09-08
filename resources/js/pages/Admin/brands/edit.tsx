@@ -27,7 +27,11 @@ export default function EditBrand({
     brand: Brand;
     distributors: { id: number; name: string }[];
 }) {
-    const isLinkedToProducts = (brand.products_count ?? 0) > 0;
+    const linkedTo = [
+        (brand.products_count ?? 0) > 0 ? 'products' : null,
+        (brand.offers_count ?? 0) > 0 ? 'offers' : null,
+    ].filter((item): item is string => item !== null);
+    const isLinkedToProducts = linkedTo.length > 0;
 
     const { data, setData, post, processing, errors } = useForm({
         name: brand.name,
@@ -180,8 +184,8 @@ export default function EditBrand({
                                         {isLinkedToProducts && (
                                             <p className="text-muted-foreground text-xs">
                                                 This brand is linked to one or
-                                                more products and must stay
-                                                active.
+                                                more {linkedTo.join(', ')} and
+                                                must stay active.
                                             </p>
                                         )}
                                         <InputError message={errors.status} />

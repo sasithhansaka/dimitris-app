@@ -104,7 +104,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product): Response
     {
-        $product->loadCount('retailers');
+        $product->loadCount(['retailers', 'coupons']);
 
         return Inertia::render('Admin/products/edit', [
             'product' => $product,
@@ -155,10 +155,17 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
-        if ($product->retailers()->exists()) {
+        $linkedTo = array_filter([
+            $product->retailers()->exists() ? 'retailers' : null,
+            $product->coupons()->exists() ? 'coupons' : null,
+        ]);
+
+        if ($linkedTo !== []) {
             Inertia::flash('toast', [
                 'type' => 'error',
-                'message' => __('This product cannot be deleted because it is linked to one or more retailers.'),
+                'message' => __('This product cannot be deleted because it is linked to one or more :items.', [
+                    'items' => implode(', ', $linkedTo),
+                ]),
             ]);
 
             return to_route('products.index');

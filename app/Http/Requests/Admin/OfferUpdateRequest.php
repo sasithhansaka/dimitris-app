@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Models\Product;
+use App\Models\Offer;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
-class ProductUpdateRequest extends FormRequest
+class OfferUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,20 +18,21 @@ class ProductUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
-            'category_id' => ['required', 'integer', 'exists:product_categories,id'],
+            'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'image' => [
-                $this->route('product')?->image ? 'nullable' : 'required',
+                $this->route('offer')?->image ? 'nullable' : 'required',
                 'image',
                 'max:5120',
             ],
             'remove_image' => ['nullable', 'boolean'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'status' => ['required', Rule::in([
-                Product::STATUS_ACTIVE,
-                Product::STATUS_INACTIVE,
-                Product::STATUS_DRAFT,
+                Offer::STATUS_ACTIVE,
+                Offer::STATUS_INACTIVE,
+                Offer::STATUS_DRAFT,
             ])],
             'featured' => ['boolean'],
         ];
@@ -45,9 +46,7 @@ class ProductUpdateRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'product name',
             'brand_id' => 'brand',
-            'category_id' => 'category',
         ];
     }
 
@@ -57,25 +56,6 @@ class ProductUpdateRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
-            /** @var Product $product */
-            $product = $this->route('product');
-
-            if ($this->input('status') !== Product::STATUS_ACTIVE) {
-                $linkedTo = array_filter([
-                    $product->retailers()->exists() ? 'retailers' : null,
-                    $product->coupons()->exists() ? 'coupons' : null,
-                ]);
-
-                if ($linkedTo !== []) {
-                    $validator->errors()->add(
-                        'status',
-                        __('This product is linked to one or more :items and must stay active.', [
-                            'items' => implode(', ', $linkedTo),
-                        ]),
-                    );
-                }
-            }
-
             if ($this->boolean('remove_image') && ! $this->hasFile('image')) {
                 $validator->errors()->add(
                     'image',

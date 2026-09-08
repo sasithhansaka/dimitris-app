@@ -60,13 +60,21 @@ class BrandUpdateRequest extends FormRequest
             /** @var Brand $brand */
             $brand = $this->route('brand');
 
-            if (
-                $this->input('status') !== Brand::STATUS_ACTIVE
-                && $brand->products()->exists()
-            ) {
+            if ($this->input('status') === Brand::STATUS_ACTIVE) {
+                return;
+            }
+
+            $linkedTo = array_filter([
+                $brand->products()->exists() ? 'products' : null,
+                $brand->offers()->exists() ? 'offers' : null,
+            ]);
+
+            if ($linkedTo !== []) {
                 $validator->errors()->add(
                     'status',
-                    __('This brand is linked to one or more products and must stay active.'),
+                    __('This brand is linked to one or more :items and must stay active.', [
+                        'items' => implode(', ', $linkedTo),
+                    ]),
                 );
             }
         });

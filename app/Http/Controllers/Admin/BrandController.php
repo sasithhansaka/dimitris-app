@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\BrandStoreRequest;
 use App\Http\Requests\Admin\BrandUpdateRequest;
 use App\Models\Brand;
 use App\Models\Distributor;
+use App\Models\Offer;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -92,6 +93,7 @@ class BrandController extends Controller
             'brand' => $brand->load([
                 'distributors' => fn ($query) => $query->where('status', Distributor::STATUS_ACTIVE),
                 'products' => fn ($query) => $query->where('status', Product::STATUS_ACTIVE),
+                'offers' => fn ($query) => $query->where('status', Offer::STATUS_ACTIVE),
             ]),
         ]);
     }
@@ -101,7 +103,7 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand): Response
     {
-        $brand->load('distributors:id')->loadCount('products');
+        $brand->load('distributors:id')->loadCount(['products', 'offers']);
         $linkedIds = $brand->distributors->pluck('id');
 
         return Inertia::render('Admin/brands/edit', [
@@ -146,10 +148,17 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand): RedirectResponse
     {
-        if ($brand->products()->exists()) {
+        $linkedTo = array_filter([
+            $brand->products()->exists() ? 'products' : null,
+            $brand->offers()->exists() ? 'offers' : null,
+        ]);
+
+        if ($linkedTo !== []) {
             Inertia::flash('toast', [
                 'type' => 'error',
-                'message' => __('This brand cannot be deleted because it is linked to one or more products.'),
+                'message' => __('This brand cannot be deleted because it is linked to one or more :items.', [
+                    'items' => implode(', ', $linkedTo),
+                ]),
             ]);
 
             return to_route('brands.index');
