@@ -6,6 +6,7 @@ import {
     LayoutGrid,
     Newspaper,
     Package,
+    Percent,
     ScrollText,
     Store,
     Tag,
@@ -31,6 +32,7 @@ import articlesRoutes from "@/routes/articles";
 import brandsRoutes from "@/routes/brands";
 import distributorsRoutes from "@/routes/distributors";
 import logsRoutes from "@/routes/logs";
+import offersRoutes from "@/routes/offers";
 import productCategoriesRoutes from "@/routes/product-categories";
 import productsRoutes from "@/routes/products";
 import retailersRoutes from "@/routes/retailers";
@@ -47,6 +49,11 @@ const mainNavItems: NavItem[] = [
         title: "Users",
         href: usersRoutes.index(),
         icon: Users,
+    },
+    {
+        title: "Offers",
+        href: offersRoutes.index(),
+        icon: Percent,
     },
     // {
     //     title: 'System Logs',
@@ -91,6 +98,14 @@ const retailerNavItems: NavItem[] = [
         icon: Store,
     },
 ];
+
+// const offerNavItems: NavItem[] = [
+//     {
+//         title: "Offers",
+//         href: offersRoutes.index(),
+//         icon: Percent,
+//     },
+// ];
 
 const articleNavItems: NavItem[] = [
     {
@@ -147,6 +162,7 @@ export function AppSidebar() {
                 <NavMain items={brandNavItems} label="Brands" />
                 <NavMain items={retailerNavItems} label="Retailers" />
                 <NavMain items={distributorNavItems} label="Distributors" />
+                {/* <NavMain items={offerNavItems} label="Offers" /> */}
                 <NavMain items={articleNavItems} label="Articles" />
                 <NavMain items={LogsNavItems} label="Logs" />
             </SidebarContent>

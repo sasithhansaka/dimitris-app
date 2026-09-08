@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\DistributorController;
+use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RetailerController;
@@ -64,6 +65,14 @@ Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(functio
     Route::get('admin/brands/{brand}/edit', [BrandController::class, 'edit'])->name('brands.edit');
     Route::put('admin/brands/{brand}', [BrandController::class, 'update'])->name('brands.update');
     Route::delete('admin/brands/{brand}', [BrandController::class, 'destroy'])->name('brands.destroy');
+
+    Route::get('admin/offers', [OfferController::class, 'index'])->name('offers.index');
+    Route::get('admin/offers/create', [OfferController::class, 'create'])->name('offers.create');
+    Route::post('admin/offers', [OfferController::class, 'store'])->name('offers.store');
+    Route::get('admin/offers/{offer}', [OfferController::class, 'show'])->name('offers.show');
+    Route::get('admin/offers/{offer}/edit', [OfferController::class, 'edit'])->name('offers.edit');
+    Route::put('admin/offers/{offer}', [OfferController::class, 'update'])->name('offers.update');
+    Route::delete('admin/offers/{offer}', [OfferController::class, 'destroy'])->name('offers.destroy');
 
     Route::get('admin/product-categories', [ProductCategoryController::class, 'index'])->name('product-categories.index');
     Route::get('admin/product-categories/create', [ProductCategoryController::class, 'create'])->name('product-categories.create');

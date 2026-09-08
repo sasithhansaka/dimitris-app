@@ -43,4 +43,9 @@ class Brand extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function offers(): HasMany
+    {
+        return $this->hasMany(Offer::class);
+    }
 }
