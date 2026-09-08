@@ -15,10 +15,11 @@ use Illuminate\Support\Carbon;
  * @property string|null $description
  * @property string|null $logo
  * @property string $status
+ * @property bool $featured
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'description', 'logo', 'status'])]
+#[Fillable(['name', 'description', 'logo', 'status', 'featured'])]
 class Brand extends Model
 {
     use LogsActivity;
@@ -28,6 +29,10 @@ class Brand extends Model
     public const STATUS_INACTIVE = 'inactive';
 
     public const STATUS_DRAFT = 'draft';
+
+    protected $casts = [
+        'featured' => 'boolean',
+    ];
 
     public function distributors(): BelongsToMany
     {

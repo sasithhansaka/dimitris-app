@@ -1,3 +1,4 @@
+import { BrandMark } from '@/components/BrandMark';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -6,7 +7,7 @@ import { dashboard } from '@/routes';
 import brandsRoutes from '@/routes/brands';
 import type { Brand, BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { Package, PencilIcon, Tag, Truck } from 'lucide-react';
+import { Package, PencilIcon, Truck } from 'lucide-react';
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -102,22 +103,23 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
                         <CardHeader className="border-border border-b px-6 py-5">
                             <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-3">
-                                    {brand.logo ? (
-                                        <img
-                                            src={`/storage/${brand.logo}`}
-                                            alt={brand.name}
-                                            className="border-border size-10 rounded-md border object-cover"
-                                        />
-                                    ) : (
-                                        <div className="border-border bg-muted flex size-10 items-center justify-center rounded-md border">
-                                            <Tag className="text-muted-foreground size-4.5" />
-                                        </div>
-                                    )}
+                                    <BrandMark
+                                        name={brand.name}
+                                        logo={brand.logo}
+                                        className="size-10 text-base"
+                                    />
                                     <span className="text-foreground text-sm font-semibold">
                                         {brand.name}
                                     </span>
                                 </div>
-                                <StatusBadge status={brand.status} />
+                                <div className="flex items-center gap-2">
+                                    {brand.featured && (
+                                        <Badge className="border-transparent bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400">
+                                            Featured Product
+                                        </Badge>
+                                    )}
+                                    <StatusBadge status={brand.status} />
+                                </div>
                             </div>
                         </CardHeader>
 

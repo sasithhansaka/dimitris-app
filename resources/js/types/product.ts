@@ -8,8 +8,9 @@ export type Product = {
     category_id: number;
     name: string;
     description: string | null;
-    image: string | null;
+    image: string;
     status: 'active' | 'inactive' | 'draft';
+    featured: boolean;
     brand?: Brand;
     category?: ProductCategory;
     retailers?: Retailer[];

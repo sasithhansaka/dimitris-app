@@ -25,6 +25,7 @@ class BrandStoreRequest extends FormRequest
                 Brand::STATUS_INACTIVE,
                 Brand::STATUS_DRAFT,
             ])],
+            'featured' => ['boolean'],
             'distributor_ids' => ['required', 'array', 'min:1'],
             'distributor_ids.*' => ['integer', 'exists:distributors,id'],
         ];

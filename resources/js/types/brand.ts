@@ -7,6 +7,7 @@ export type Brand = {
     description: string | null;
     logo: string | null;
     status: 'active' | 'inactive' | 'draft';
+    featured: boolean;
     distributors?: Distributor[];
     products?: Product[];
     products_count?: number;

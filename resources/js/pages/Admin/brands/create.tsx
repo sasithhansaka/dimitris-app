@@ -30,6 +30,7 @@ export default function CreateBrand({
         description: "",
         logo: null as File | null,
         status: "active",
+        featured: false,
         distributor_ids: [] as number[],
     });
 
@@ -149,6 +150,26 @@ export default function CreateBrand({
                                             </SelectContent>
                                         </Select>
                                         <InputError message={errors.status} />
+                                    </div>
+
+                                    <div className="flex items-center gap-2 pt-7">
+                                        <Checkbox
+                                            id="featured"
+                                            checked={data.featured}
+                                            onCheckedChange={(checked) =>
+                                                setData(
+                                                    "featured",
+                                                    checked === true,
+                                                )
+                                            }
+                                        />
+                                        <Label
+                                            htmlFor="featured"
+                                            className="font-normal"
+                                        >
+                                            Featured brand
+                                        </Label>
+                                        <InputError message={errors.featured} />
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">

@@ -15,12 +15,13 @@ use Illuminate\Support\Carbon;
  * @property int $category_id
  * @property string $name
  * @property string|null $description
- * @property string|null $image
+ * @property string $image
  * @property string $status
+ * @property bool $featured
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['brand_id', 'category_id', 'name', 'description', 'image', 'status'])]
+#[Fillable(['brand_id', 'category_id', 'name', 'description', 'image', 'status', 'featured'])]
 class Product extends Model
 {
     use LogsActivity;
@@ -30,6 +31,10 @@ class Product extends Model
     public const STATUS_INACTIVE = 'inactive';
 
     public const STATUS_DRAFT = 'draft';
+
+    protected $casts = [
+        'featured' => 'boolean',
+    ];
 
     public function brand(): BelongsTo
     {

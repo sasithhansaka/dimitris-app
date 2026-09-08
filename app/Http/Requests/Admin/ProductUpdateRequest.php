@@ -22,13 +22,18 @@ class ProductUpdateRequest extends FormRequest
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
             'category_id' => ['required', 'integer', 'exists:product_categories,id'],
             'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'max:5120'],
+            'image' => [
+                $this->route('product')?->image ? 'nullable' : 'required',
+                'image',
+                'max:5120',
+            ],
             'remove_image' => ['nullable', 'boolean'],
             'status' => ['required', Rule::in([
                 Product::STATUS_ACTIVE,
                 Product::STATUS_INACTIVE,
                 Product::STATUS_DRAFT,
             ])],
+            'featured' => ['boolean'],
         ];
     }
 
@@ -62,6 +67,13 @@ class ProductUpdateRequest extends FormRequest
                 $validator->errors()->add(
                     'status',
                     __('This product is linked to one or more retailers and must stay active.'),
+                );
+            }
+
+            if ($this->boolean('remove_image') && ! $this->hasFile('image')) {
+                $validator->errors()->add(
+                    'image',
+                    __('An image is required. Upload a new one to remove the current image.'),
                 );
             }
         });

@@ -116,7 +116,14 @@ export default function ProductsShow({ product }: { product: Product }) {
                                         {product.name}
                                     </span>
                                 </div>
-                                <StatusBadge status={product.status} />
+                                <div className="flex items-center gap-2">
+                                    {product.featured && (
+                                        <Badge className="border-transparent bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400">
+                                            Featured Product
+                                        </Badge>
+                                    )}
+                                    <StatusBadge status={product.status} />
+                                </div>
                             </div>
                         </CardHeader>
 

@@ -1,6 +1,7 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -38,6 +39,7 @@ export default function EditProduct({
         description: product.description ?? '',
         image: null as File | null,
         status: product.status,
+        featured: product.featured,
         remove_image: false,
         _method: 'put',
     });
@@ -299,6 +301,26 @@ export default function EditProduct({
                                         <InputError message={errors.status} />
                                     </div>
 
+                                    <div className="flex items-center gap-2 pt-7">
+                                        <Checkbox
+                                            id="featured"
+                                            checked={data.featured}
+                                            onCheckedChange={(checked) =>
+                                                setData(
+                                                    'featured',
+                                                    checked === true,
+                                                )
+                                            }
+                                        />
+                                        <Label
+                                            htmlFor="featured"
+                                            className="font-normal"
+                                        >
+                                            Featured product
+                                        </Label>
+                                        <InputError message={errors.featured} />
+                                    </div>
+
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
                                             Description
@@ -322,7 +344,12 @@ export default function EditProduct({
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">
-                                        <Label htmlFor="image">Image</Label>
+                                        <Label htmlFor="image">
+                                            Image{' '}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
                                         <Input
                                             id="image"
                                             type="file"
