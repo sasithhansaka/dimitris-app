@@ -323,7 +323,10 @@ export default function EditProduct({
 
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
-                                            Description
+                                            Description{' '}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
                                         </Label>
                                         <textarea
                                             id="description"

@@ -21,7 +21,7 @@ class ProductUpdateRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
             'category_id' => ['required', 'integer', 'exists:product_categories,id'],
-            'description' => ['nullable', 'string'],
+            'description' => ['required', 'string'],
             'image' => [
                 $this->route('product')?->image ? 'nullable' : 'required',
                 'image',

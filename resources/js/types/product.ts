@@ -7,7 +7,7 @@ export type Product = {
     brand_id: number;
     category_id: number;
     name: string;
-    description: string | null;
+    description: string;
     image: string;
     status: 'active' | 'inactive' | 'draft';
     featured: boolean;

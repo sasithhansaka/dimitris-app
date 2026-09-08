@@ -20,7 +20,7 @@ class ProductStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
             'category_id' => ['required', 'integer', 'exists:product_categories,id'],
-            'description' => ['nullable', 'string'],
+            'description' => ['required', 'string'],
             'image' => ['required', 'image', 'max:5120'],
             'status' => ['required', Rule::in([
                 Product::STATUS_ACTIVE,
