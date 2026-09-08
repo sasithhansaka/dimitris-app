@@ -7,7 +7,7 @@ import { dashboard } from '@/routes';
 import brandsRoutes from '@/routes/brands';
 import type { Brand, BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { Package, PencilIcon, Truck } from 'lucide-react';
+import { PencilIcon, Truck } from 'lucide-react';
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -175,9 +175,13 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
                                         {products.map((product) => (
                                             <span
                                                 key={product.id}
-                                                className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                                                className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 py-1 pr-3 pl-1 text-xs font-medium text-gray-700"
                                             >
-                                                <Package className="text-muted-foreground size-3.5" />
+                                                <img
+                                                    src={`/storage/${product.image}`}
+                                                    alt={product.name}
+                                                    className="size-5 shrink-0 rounded-full object-cover"
+                                                />
                                                 {product.name}
                                             </span>
                                         ))}

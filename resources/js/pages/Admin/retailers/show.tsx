@@ -6,7 +6,7 @@ import { dashboard } from '@/routes';
 import retailersRoutes from '@/routes/retailers';
 import type { BreadcrumbItem, Retailer } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { Mail, MapPin, Package, PencilIcon, Phone, Store } from 'lucide-react';
+import { Mail, MapPin, PencilIcon, Phone, Store } from 'lucide-react';
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -186,9 +186,13 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
                                         {products.map((product) => (
                                             <span
                                                 key={product.id}
-                                                className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                                                className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 py-1 pr-3 pl-1 text-xs font-medium text-gray-700"
                                             >
-                                                <Package className="text-muted-foreground size-3.5" />
+                                                <img
+                                                    src={`/storage/${product.image}`}
+                                                    alt={product.name}
+                                                    className="size-5 shrink-0 rounded-full object-cover"
+                                                />
                                                 {product.name}
                                             </span>
                                         ))}
