@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DistributorController;
+use App\Http\Controllers\Admin\GiftCardController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
@@ -74,6 +75,14 @@ Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(functio
     Route::get('admin/offers/{offer}/edit', [OfferController::class, 'edit'])->name('offers.edit');
     Route::put('admin/offers/{offer}', [OfferController::class, 'update'])->name('offers.update');
     Route::delete('admin/offers/{offer}', [OfferController::class, 'destroy'])->name('offers.destroy');
+
+    Route::get('admin/gift-cards', [GiftCardController::class, 'index'])->name('gift-cards.index');
+    Route::get('admin/gift-cards/create', [GiftCardController::class, 'create'])->name('gift-cards.create');
+    Route::post('admin/gift-cards', [GiftCardController::class, 'store'])->name('gift-cards.store');
+    Route::get('admin/gift-cards/{giftCard}', [GiftCardController::class, 'show'])->name('gift-cards.show');
+    Route::get('admin/gift-cards/{giftCard}/edit', [GiftCardController::class, 'edit'])->name('gift-cards.edit');
+    Route::put('admin/gift-cards/{giftCard}', [GiftCardController::class, 'update'])->name('gift-cards.update');
+    Route::delete('admin/gift-cards/{giftCard}', [GiftCardController::class, 'destroy'])->name('gift-cards.destroy');
 
     Route::get('admin/coupons', [CouponController::class, 'index'])->name('coupons.index');
     Route::get('admin/coupons/create', [CouponController::class, 'create'])->name('coupons.create');

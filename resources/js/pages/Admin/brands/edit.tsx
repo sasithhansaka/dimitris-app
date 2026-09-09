@@ -30,6 +30,7 @@ export default function EditBrand({
     const linkedTo = [
         (brand.products_count ?? 0) > 0 ? "products" : null,
         (brand.offers_count ?? 0) > 0 ? "offers" : null,
+        (brand.gift_cards_count ?? 0) > 0 ? "gift cards" : null,
     ].filter((item): item is string => item !== null);
     const isLinkedToProducts = linkedTo.length > 0;
 
