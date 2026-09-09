@@ -10,20 +10,20 @@ import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
 const tableColumns = [
-    { label: "ID", sortField: "id", sortable: false, width: 4 },
-    { label: "Name", sortField: "name", sortable: false, width: "18%" },
     {
-        label: "Featured",
-        sortField: "featured",
+        label: "Brand ID",
+        sortField: "brand_code",
         sortable: false,
-        width: "18%",
+        width: "12%",
     },
+    { label: "Name", sortField: "name", sortable: false, width: "23%" },
     {
-        label: "Distributors",
+        label: "Distributor",
         sortField: "distributors",
         sortable: false,
         width: "22%",
     },
+    { label: "Country", sortField: "country", sortable: false, width: "16%" },
     { label: "Status", sortField: "status", sortable: false, width: "12%" },
     { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
 ];
@@ -121,7 +121,7 @@ export default function BrandsIndex({
                                 </>
                             }
                         >
-                            <TableTd width={80}>{brand.id}</TableTd>
+                            <TableTd width={110}>{brand.brand_code}</TableTd>
                             <TableTd>
                                 <div className="flex items-center gap-2">
                                     <BrandMark
@@ -134,16 +134,12 @@ export default function BrandsIndex({
                                     >
                                         {brand.name}
                                     </span>
+                                    {brand.featured && (
+                                        <Badge className="border-transparent bg-gray-100 text-black dark:text-black">
+                                            Featured
+                                        </Badge>
+                                    )}
                                 </div>
-                            </TableTd>
-                            <TableTd>
-                                {brand.featured ? (
-                                    <Badge className="border-transparent text-black bg-gray-100 dark:text-black">
-                                        Featured
-                                    </Badge>
-                                ) : (
-                                    "-"
-                                )}
                             </TableTd>
                             <TableTd>
                                 {brand.distributors &&
@@ -155,6 +151,23 @@ export default function BrandsIndex({
                                             .join(", ")}
                                     >
                                         {brand.distributors[0].name}
+                                        {brand.distributors.length > 1 &&
+                                            ` +${brand.distributors.length - 1} more`}
+                                    </span>
+                                ) : (
+                                    "-"
+                                )}
+                            </TableTd>
+                            <TableTd>
+                                {brand.distributors &&
+                                brand.distributors.length > 0 ? (
+                                    <span
+                                        className="block truncate"
+                                        title={brand.distributors
+                                            .map((d) => d.country)
+                                            .join(", ")}
+                                    >
+                                        {brand.distributors[0].country}
                                         {brand.distributors.length > 1 &&
                                             ` +${brand.distributors.length - 1} more`}
                                     </span>

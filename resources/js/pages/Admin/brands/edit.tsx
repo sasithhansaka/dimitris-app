@@ -1,24 +1,24 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { dashboard } from '@/routes';
-import brandsRoutes from '@/routes/brands';
-import distributorsRoutes from '@/routes/distributors';
-import type { Brand, BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { Plus, Tag, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { dashboard } from "@/routes";
+import brandsRoutes from "@/routes/brands";
+import distributorsRoutes from "@/routes/distributors";
+import type { Brand, BreadcrumbItem } from "@/types";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Plus, Tag, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 export default function EditBrand({
     brand,
@@ -28,20 +28,21 @@ export default function EditBrand({
     distributors: { id: number; name: string }[];
 }) {
     const linkedTo = [
-        (brand.products_count ?? 0) > 0 ? 'products' : null,
-        (brand.offers_count ?? 0) > 0 ? 'offers' : null,
+        (brand.products_count ?? 0) > 0 ? "products" : null,
+        (brand.offers_count ?? 0) > 0 ? "offers" : null,
     ].filter((item): item is string => item !== null);
     const isLinkedToProducts = linkedTo.length > 0;
 
     const { data, setData, post, processing, errors } = useForm({
         name: brand.name,
-        description: brand.description ?? '',
+        description: brand.description ?? "",
         logo: null as File | null,
+        website: brand.website ?? "",
         status: brand.status,
         featured: brand.featured,
         distributor_ids: (brand.distributors ?? []).map((d) => d.id),
         remove_logo: false,
-        _method: 'put',
+        _method: "put",
     });
 
     const originalLogo = brand.logo ? `/storage/${brand.logo}` : null;
@@ -54,7 +55,7 @@ export default function EditBrand({
 
     const toggleDistributor = (id: number, checked: boolean) => {
         setData(
-            'distributor_ids',
+            "distributor_ids",
             checked
                 ? [...data.distributor_ids, id]
                 : data.distributor_ids.filter(
@@ -81,7 +82,7 @@ export default function EditBrand({
         }));
         setLogoPreview(null);
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = "";
         }
     };
 
@@ -118,8 +119,21 @@ export default function EditBrand({
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
+                                        <Label htmlFor="brand_code">
+                                            Brand ID
+                                        </Label>
+                                        <Input
+                                            id="brand_code"
+                                            type="text"
+                                            value={brand.brand_code}
+                                            disabled
+                                            readOnly
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Brand Name{' '}
+                                            Brand Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -131,7 +145,7 @@ export default function EditBrand({
                                             placeholder="e.g. Acme Corp"
                                             value={data.name}
                                             onChange={(e) =>
-                                                setData('name', e.target.value)
+                                                setData("name", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.name} />
@@ -139,7 +153,7 @@ export default function EditBrand({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="status">
-                                            Status{' '}
+                                            Status{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -148,7 +162,7 @@ export default function EditBrand({
                                             value={data.status}
                                             onValueChange={(value) =>
                                                 setData(
-                                                    'status',
+                                                    "status",
                                                     value as typeof data.status,
                                                 )
                                             }
@@ -184,7 +198,7 @@ export default function EditBrand({
                                         {isLinkedToProducts && (
                                             <p className="text-muted-foreground text-xs">
                                                 This brand is linked to one or
-                                                more {linkedTo.join(', ')} and
+                                                more {linkedTo.join(", ")} and
                                                 must stay active.
                                             </p>
                                         )}
@@ -197,7 +211,7 @@ export default function EditBrand({
                                             checked={data.featured}
                                             onCheckedChange={(checked) =>
                                                 setData(
-                                                    'featured',
+                                                    "featured",
                                                     checked === true,
                                                 )
                                             }
@@ -211,6 +225,25 @@ export default function EditBrand({
                                         <InputError message={errors.featured} />
                                     </div>
 
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="website">
+                                            Website URL
+                                        </Label>
+                                        <Input
+                                            id="website"
+                                            type="url"
+                                            placeholder="e.g. https://www.brand.com"
+                                            value={data.website}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "website",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.website} />
+                                    </div>
+
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
                                             Description
@@ -222,7 +255,7 @@ export default function EditBrand({
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'description',
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
@@ -236,7 +269,7 @@ export default function EditBrand({
                                     <div className="grid gap-2 sm:col-span-2">
                                         <div className="flex items-center gap-3">
                                             <Label>
-                                                Distributors{' '}
+                                                Distributors{" "}
                                                 <span className="text-destructive">
                                                     *
                                                 </span>
@@ -363,9 +396,9 @@ export default function EditBrand({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Brands', href: brandsRoutes.index() },
-    { title: 'Edit', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Brands", href: brandsRoutes.index() },
+    { title: "Edit", href: "#" },
 ];
 
 EditBrand.layout = {

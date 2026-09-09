@@ -20,6 +20,7 @@ class BrandStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', 'unique:brands,name'],
             'description' => ['nullable', 'string'],
             'logo' => ['nullable', 'image', 'max:5120'],
+            'website' => ['nullable', 'url', 'max:255'],
             'status' => ['required', Rule::in([
                 Brand::STATUS_ACTIVE,
                 Brand::STATUS_INACTIVE,
