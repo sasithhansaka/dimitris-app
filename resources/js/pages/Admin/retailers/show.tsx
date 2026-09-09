@@ -1,12 +1,20 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { dashboard } from '@/routes';
-import retailersRoutes from '@/routes/retailers';
-import type { BreadcrumbItem, Retailer } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { Mail, MapPin, PencilIcon, Phone, Store } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { dashboard } from "@/routes";
+import retailersRoutes from "@/routes/retailers";
+import type { BreadcrumbItem, Retailer } from "@/types";
+import { Head, Link } from "@inertiajs/react";
+import {
+    Globe,
+    Mail,
+    MapPin,
+    PencilIcon,
+    Phone,
+    Store,
+    User,
+} from "lucide-react";
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -19,8 +27,8 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     );
 }
 
-function StatusBadge({ status }: { status: Retailer['status'] }) {
-    if (status === 'active') {
+function StatusBadge({ status }: { status: Retailer["status"] }) {
+    if (status === "active") {
         return (
             <Badge className="border-transparent bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
                 Active
@@ -28,7 +36,7 @@ function StatusBadge({ status }: { status: Retailer['status'] }) {
         );
     }
 
-    if (status === 'inactive') {
+    if (status === "inactive") {
         return (
             <Badge className="border-transparent bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400">
                 Inactive
@@ -45,9 +53,9 @@ function StatusBadge({ status }: { status: Retailer['status'] }) {
 
 function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+        year: "numeric",
+        month: "short",
+        day: "numeric",
     });
 }
 
@@ -112,9 +120,14 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
                                             <Store className="text-muted-foreground size-4.5" />
                                         </div>
                                     )}
-                                    <span className="text-foreground text-sm font-semibold">
-                                        {retailer.name}
-                                    </span>
+                                    <div className="flex flex-col">
+                                        <span className="text-foreground text-sm font-semibold">
+                                            {retailer.name}
+                                        </span>
+                                        <span className="text-muted-foreground text-xs">
+                                            {retailer.retailer_code}
+                                        </span>
+                                    </div>
                                 </div>
                                 <StatusBadge status={retailer.status} />
                             </div>
@@ -122,6 +135,10 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
 
                         <CardContent className="space-y-8 px-6 py-6">
                             <div className="grid gap-5 sm:grid-cols-2">
+                                <InfoRow
+                                    label="Retailer ID"
+                                    value={retailer.retailer_code}
+                                />
                                 <InfoRow label="Name" value={retailer.name} />
                                 <InfoRow
                                     label="Country"
@@ -133,6 +150,37 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
                                     }
                                 />
                                 <InfoRow
+                                    label="Website"
+                                    value={
+                                        retailer.website ? (
+                                            <a
+                                                href={retailer.website}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 text-[#073BBC] hover:underline"
+                                            >
+                                                <Globe className="size-3.5" />
+                                                {retailer.website}
+                                            </a>
+                                        ) : (
+                                            "-"
+                                        )
+                                    }
+                                />
+                                <InfoRow
+                                    label="Primary Contact"
+                                    value={
+                                        retailer.primary_contact ? (
+                                            <span className="inline-flex items-center gap-1.5">
+                                                <User className="text-muted-foreground size-3.5" />
+                                                {retailer.primary_contact}
+                                            </span>
+                                        ) : (
+                                            "-"
+                                        )
+                                    }
+                                />
+                                <InfoRow
                                     label="Email address"
                                     value={
                                         retailer.email ? (
@@ -141,7 +189,7 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
                                                 {retailer.email}
                                             </span>
                                         ) : (
-                                            '-'
+                                            "-"
                                         )
                                     }
                                 />
@@ -154,13 +202,13 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
                                                 {retailer.phone}
                                             </span>
                                         ) : (
-                                            '-'
+                                            "-"
                                         )
                                     }
                                 />
                                 <InfoRow
                                     label="Address"
-                                    value={retailer.address ?? '-'}
+                                    value={retailer.address ?? "-"}
                                 />
                                 <InfoRow
                                     label="Created"
@@ -172,7 +220,7 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
 
                             <InfoRow
                                 label="Description"
-                                value={retailer.description ?? '-'}
+                                value={retailer.description ?? "-"}
                             />
 
                             <Separator />
@@ -212,9 +260,9 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Retailers', href: retailersRoutes.index() },
-    { title: 'View Retailer', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Retailers", href: retailersRoutes.index() },
+    { title: "View Retailer", href: "#" },
 ];
 
 RetailersShow.layout = {

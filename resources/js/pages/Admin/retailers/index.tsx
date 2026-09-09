@@ -1,41 +1,46 @@
-import Confirm from '@/components/Models/Confirm';
-import MasterTab, { TableBody, TableTd } from '@/components/shared/masterTab';
-import { Badge } from '@/components/ui/badge';
-import { dashboard } from '@/routes';
-import retailersRoutes from '@/routes/retailers';
-import type { BreadcrumbItem, Retailer } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
-import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import Confirm from "@/components/Models/Confirm";
+import MasterTab, { TableBody, TableTd } from "@/components/shared/masterTab";
+import { Badge } from "@/components/ui/badge";
+import { dashboard } from "@/routes";
+import retailersRoutes from "@/routes/retailers";
+import type { BreadcrumbItem, Retailer } from "@/types";
+import { Head, Link, router } from "@inertiajs/react";
+import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 
 const tableColumns = [
-    { label: 'ID', sortField: 'id', sortable: false, width: 4 },
-    { label: 'Name', sortField: 'name', sortable: false, width: '16%' },
     {
-        label: 'Description',
-        sortField: 'description',
+        label: "Retailer ID",
+        sortField: "retailer_code",
         sortable: false,
-        width: '22%',
+        width: "12%",
     },
-    { label: 'Phone', sortField: 'phone', sortable: false, width: '14%' },
+    { label: "Name", sortField: "name", sortable: false, width: "14%" },
     {
-        label: 'Products',
-        sortField: 'products',
+        label: "Description",
+        sortField: "description",
         sortable: false,
-        width: '20%',
+        width: "22%",
     },
-    { label: 'Status', sortField: 'status', sortable: false, width: '12%' },
-    { label: 'Actions', sortField: 'actions', sortable: false, width: '15%' },
+    { label: "Phone", sortField: "phone", sortable: false, width: "14%" },
+    {
+        label: "Products",
+        sortField: "products",
+        sortable: false,
+        width: "20%",
+    },
+    { label: "Status", sortField: "status", sortable: false, width: "12%" },
+    { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
 ];
 
 function statusClassName(status: string): string {
     switch (status) {
-        case 'active':
-            return 'bg-gray-100 text-[#073BBC]';
-        case 'inactive':
-            return 'bg-gray-100 text-black';
+        case "active":
+            return "bg-gray-100 text-[#073BBC]";
+        case "inactive":
+            return "bg-gray-100 text-black";
         default:
-            return 'bg-gray-100 text-red-500';
+            return "bg-gray-100 text-red-500";
     }
 }
 
@@ -44,7 +49,7 @@ function truncateWords(text: string, limit: number): string {
     if (words.length <= limit) {
         return text;
     }
-    return `${words.slice(0, limit).join(' ')} ...`;
+    return `${words.slice(0, limit).join(" ")} ...`;
 }
 
 export default function RetailersIndex({
@@ -87,18 +92,18 @@ export default function RetailersIndex({
                     filters={filters}
                     url={retailersRoutes.index().url}
                     createLink={{
-                        label: 'Create Retailer',
+                        label: "Create Retailer",
                         url: retailersRoutes.create().url,
                     }}
                     search={{
-                        placeholder: 'Search by name, description or email...',
+                        placeholder: "Search by name, description or email...",
                     }}
                     statusFilter={{
                         options: [
-                            { label: 'All', value: '' },
-                            { label: 'Active', value: 'active' },
-                            { label: 'Inactive', value: 'inactive' },
-                            { label: 'Draft', value: 'draft' },
+                            { label: "All", value: "" },
+                            { label: "Active", value: "active" },
+                            { label: "Inactive", value: "inactive" },
+                            { label: "Draft", value: "draft" },
                         ],
                     }}
                     links={retailers.links}
@@ -141,7 +146,9 @@ export default function RetailersIndex({
                                 </>
                             }
                         >
-                            <TableTd width={80}>{retailer.id}</TableTd>
+                            <TableTd width={110}>
+                                {retailer.retailer_code}
+                            </TableTd>
                             <TableTd>
                                 <span
                                     className="line-clamp-2"
@@ -157,10 +164,10 @@ export default function RetailersIndex({
                                 >
                                     {retailer.description
                                         ? truncateWords(retailer.description, 6)
-                                        : '-'}
+                                        : "-"}
                                 </span>
                             </TableTd>
-                            <TableTd>{retailer.phone ?? '-'}</TableTd>
+                            <TableTd>{retailer.phone ?? "-"}</TableTd>
                             <TableTd>
                                 {retailer.products &&
                                 retailer.products.length > 0 ? (
@@ -168,14 +175,14 @@ export default function RetailersIndex({
                                         className="block truncate"
                                         title={retailer.products
                                             .map((p) => p.name)
-                                            .join(', ')}
+                                            .join(", ")}
                                     >
                                         {retailer.products[0].name}
                                         {retailer.products.length > 1 &&
                                             ` +${retailer.products.length - 1} more`}
                                     </span>
                                 ) : (
-                                    '-'
+                                    "-"
                                 )}
                             </TableTd>
                             <TableTd>
@@ -232,7 +239,7 @@ export default function RetailersIndex({
                 message={
                     retailerToDelete
                         ? `Are you sure you want to delete "${retailerToDelete.name}"?`
-                        : ''
+                        : ""
                 }
                 confirmText="Delete"
                 variant="danger"
@@ -243,8 +250,8 @@ export default function RetailersIndex({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Retailers', href: retailersRoutes.index() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Retailers", href: retailersRoutes.index() },
 ];
 
 RetailersIndex.layout = {

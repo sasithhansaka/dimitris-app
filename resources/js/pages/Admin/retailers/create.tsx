@@ -1,40 +1,44 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { COUNTRIES } from '@/lib/countries';
-import { dashboard } from '@/routes';
-import productsRoutes from '@/routes/products';
-import retailersRoutes from '@/routes/retailers';
-import type { BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { Plus, Store, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { COUNTRIES } from "@/lib/countries";
+import { dashboard } from "@/routes";
+import productsRoutes from "@/routes/products";
+import retailersRoutes from "@/routes/retailers";
+import type { BreadcrumbItem } from "@/types";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Plus, Store, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 export default function CreateRetailer({
     products,
+    nextRetailerCode,
 }: {
     products: { id: number; name: string }[];
+    nextRetailerCode: string;
 }) {
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        country: '',
-        description: '',
+        name: "",
+        country: "",
+        description: "",
         logo: null as File | null,
-        email: '',
-        phone: '',
-        address: '',
-        status: 'active',
+        website: "",
+        primary_contact: "",
+        email: "",
+        phone: "",
+        address: "",
+        status: "active",
         product_ids: [] as number[],
     });
 
@@ -47,7 +51,7 @@ export default function CreateRetailer({
 
     const toggleProduct = (id: number, checked: boolean) => {
         setData(
-            'product_ids',
+            "product_ids",
             checked
                 ? [...data.product_ids, id]
                 : data.product_ids.filter((productId) => productId !== id),
@@ -56,15 +60,15 @@ export default function CreateRetailer({
 
     const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
-        setData('logo', file);
+        setData("logo", file);
         setLogoPreview(file ? URL.createObjectURL(file) : null);
     };
 
     const removeLogo = () => {
-        setData('logo', null);
+        setData("logo", null);
         setLogoPreview(null);
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = "";
         }
     };
 
@@ -101,8 +105,25 @@ export default function CreateRetailer({
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
+                                        <Label htmlFor="retailer_code">
+                                            Retailer ID
+                                        </Label>
+                                        <Input
+                                            id="retailer_code"
+                                            type="text"
+                                            value={nextRetailerCode}
+                                            disabled
+                                            readOnly
+                                        />
+                                        <p className="text-muted-foreground text-xs">
+                                            Automatically assigned when the
+                                            retailer is created.
+                                        </p>
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Retailer Name{' '}
+                                            Retailer Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -114,7 +135,7 @@ export default function CreateRetailer({
                                             placeholder="e.g. ABC Supermarket"
                                             value={data.name}
                                             onChange={(e) =>
-                                                setData('name', e.target.value)
+                                                setData("name", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.name} />
@@ -122,7 +143,7 @@ export default function CreateRetailer({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="country">
-                                            Country{' '}
+                                            Country{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -130,7 +151,7 @@ export default function CreateRetailer({
                                         <Select
                                             value={data.country}
                                             onValueChange={(value) =>
-                                                setData('country', value)
+                                                setData("country", value)
                                             }
                                         >
                                             <SelectTrigger
@@ -164,7 +185,7 @@ export default function CreateRetailer({
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'description',
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
@@ -177,7 +198,7 @@ export default function CreateRetailer({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="status">
-                                            Status{' '}
+                                            Status{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -185,7 +206,7 @@ export default function CreateRetailer({
                                         <Select
                                             value={data.status}
                                             onValueChange={(value) =>
-                                                setData('status', value)
+                                                setData("status", value)
                                             }
                                         >
                                             <SelectTrigger
@@ -210,6 +231,46 @@ export default function CreateRetailer({
                                     </div>
 
                                     <div className="grid gap-2">
+                                        <Label htmlFor="website">
+                                            Website URL
+                                        </Label>
+                                        <Input
+                                            id="website"
+                                            type="url"
+                                            placeholder="e.g. https://www.retailer.com"
+                                            value={data.website}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "website",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.website} />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="primary_contact">
+                                            Primary Contact
+                                        </Label>
+                                        <Input
+                                            id="primary_contact"
+                                            type="text"
+                                            placeholder="e.g. Jane Doe"
+                                            value={data.primary_contact}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "primary_contact",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.primary_contact}
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="email">Email</Label>
                                         <Input
                                             id="email"
@@ -217,7 +278,7 @@ export default function CreateRetailer({
                                             placeholder="e.g. contact@retailer.com"
                                             value={data.email}
                                             onChange={(e) =>
-                                                setData('email', e.target.value)
+                                                setData("email", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.email} />
@@ -233,10 +294,10 @@ export default function CreateRetailer({
                                             value={data.phone}
                                             onChange={(e) =>
                                                 setData(
-                                                    'phone',
+                                                    "phone",
                                                     e.target.value.replace(
                                                         /[^0-9+\-()\s]/g,
-                                                        '',
+                                                        "",
                                                     ),
                                                 )
                                             }
@@ -253,7 +314,7 @@ export default function CreateRetailer({
                                             value={data.address}
                                             onChange={(e) =>
                                                 setData(
-                                                    'address',
+                                                    "address",
                                                     e.target.value,
                                                 )
                                             }
@@ -264,7 +325,7 @@ export default function CreateRetailer({
                                     <div className="grid gap-2 sm:col-span-2">
                                         <div className="flex items-center gap-3">
                                             <Label>
-                                                Products{' '}
+                                                Products{" "}
                                                 <span className="text-destructive">
                                                     *
                                                 </span>
@@ -387,9 +448,9 @@ export default function CreateRetailer({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Retailers', href: retailersRoutes.index() },
-    { title: 'Create', href: retailersRoutes.create() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Retailers", href: retailersRoutes.index() },
+    { title: "Create", href: retailersRoutes.create() },
 ];
 
 CreateRetailer.layout = {

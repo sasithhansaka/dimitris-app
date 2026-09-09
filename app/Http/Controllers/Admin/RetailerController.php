@@ -26,7 +26,8 @@ class RetailerController extends Controller
 
         if ($search = $request->string('searchParam')->toString()) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->where('retailer_code', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             });
@@ -59,6 +60,7 @@ class RetailerController extends Controller
                 ->where('status', Product::STATUS_ACTIVE)
                 ->orderBy('name')
                 ->get(['id', 'name']),
+            'nextRetailerCode' => Retailer::nextRetailerCode(),
         ]);
     }
 
