@@ -1,12 +1,12 @@
-import { BrandMark } from '@/components/BrandMark';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { dashboard } from '@/routes';
-import offersRoutes from '@/routes/offers';
-import type { BreadcrumbItem, Offer } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { BrandMark } from "@/components/BrandMark";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { dashboard } from "@/routes";
+import offersRoutes from "@/routes/offers";
+import type { BreadcrumbItem, Offer } from "@/types";
+import { Head, Link } from "@inertiajs/react";
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -19,8 +19,8 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     );
 }
 
-function StatusBadge({ status }: { status: Offer['status'] }) {
-    if (status === 'active') {
+function StatusBadge({ status }: { status: Offer["status"] }) {
+    if (status === "active") {
         return (
             <Badge className="border-transparent bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
                 Active
@@ -28,7 +28,7 @@ function StatusBadge({ status }: { status: Offer['status'] }) {
         );
     }
 
-    if (status === 'inactive') {
+    if (status === "inactive") {
         return (
             <Badge className="border-transparent bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400">
                 Inactive
@@ -45,9 +45,9 @@ function StatusBadge({ status }: { status: Offer['status'] }) {
 
 function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+        year: "numeric",
+        month: "short",
+        day: "numeric",
     });
 }
 
@@ -89,9 +89,14 @@ export default function OffersShow({ offer }: { offer: Offer }) {
                                         alt={offer.title}
                                         className="border-border size-10 rounded-md border object-cover"
                                     />
-                                    <span className="text-foreground text-sm font-semibold">
-                                        {offer.title}
-                                    </span>
+                                    <div className="flex flex-col">
+                                        <span className="text-foreground text-sm font-semibold">
+                                            {offer.title}
+                                        </span>
+                                        <span className="text-muted-foreground text-xs">
+                                            {offer.offer_code}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {offer.featured && (
@@ -106,6 +111,10 @@ export default function OffersShow({ offer }: { offer: Offer }) {
 
                         <CardContent className="space-y-8 px-6 py-6">
                             <div className="grid gap-5 sm:grid-cols-2">
+                                <InfoRow
+                                    label="Offer ID"
+                                    value={offer.offer_code}
+                                />
                                 <InfoRow label="Title" value={offer.title} />
                                 <InfoRow
                                     label="Brand"
@@ -120,7 +129,7 @@ export default function OffersShow({ offer }: { offer: Offer }) {
                                                 {offer.brand.name}
                                             </span>
                                         ) : (
-                                            '-'
+                                            "-"
                                         )
                                     }
                                 />
@@ -153,9 +162,9 @@ export default function OffersShow({ offer }: { offer: Offer }) {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Offers', href: offersRoutes.index() },
-    { title: 'View Offer', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Offers", href: offersRoutes.index() },
+    { title: "View Offer", href: "#" },
 ];
 
 OffersShow.layout = {

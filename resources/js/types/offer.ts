@@ -1,14 +1,15 @@
-import type { Brand } from './brand';
+import type { Brand } from "./brand";
 
 export type Offer = {
     id: number;
+    offer_code: string;
     brand_id: number;
     title: string;
     description: string;
     image: string;
     start_date: string;
     end_date: string;
-    status: 'active' | 'inactive' | 'draft';
+    status: "active" | "inactive" | "draft";
     featured: boolean;
     brand?: Brand;
     created_at: string;

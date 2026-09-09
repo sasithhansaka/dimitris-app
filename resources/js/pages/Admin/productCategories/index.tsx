@@ -13,14 +13,20 @@ const tableColumns = [
         label: "Category ID",
         sortField: "category_code",
         sortable: false,
-        width: "12%",
+        width: "10%",
     },
     { label: "Name", sortField: "name", sortable: false, width: "22%" },
     {
         label: "Description",
         sortField: "description",
         sortable: false,
-        width: "40%",
+        width: "30%",
+    },
+    {
+        label: "Order",
+        sortField: "display_order",
+        sortable: false,
+        width: "8%",
     },
     { label: "Status", sortField: "status", sortable: false, width: "15%" },
     { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
@@ -147,12 +153,25 @@ export default function ProductCategoriesIndex({
                                 {productCategory.category_code}
                             </TableTd>
                             <TableTd>
-                                <span
-                                    className="line-clamp-2"
-                                    title={productCategory.name}
-                                >
-                                    {productCategory.name}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    {productCategory.image ? (
+                                        <img
+                                            src={`/storage/${productCategory.image}`}
+                                            alt={productCategory.name}
+                                            className="border-border size-8 shrink-0 rounded-md border object-cover"
+                                        />
+                                    ) : (
+                                        <div className="border-border bg-muted flex size-8 shrink-0 items-center justify-center rounded-md border text-xs text-muted-foreground">
+                                            -
+                                        </div>
+                                    )}
+                                    <span
+                                        className="line-clamp-2"
+                                        title={productCategory.name}
+                                    >
+                                        {productCategory.name}
+                                    </span>
+                                </div>
                             </TableTd>
                             <TableTd>
                                 <span
@@ -168,6 +187,9 @@ export default function ProductCategoriesIndex({
                                           )
                                         : "-"}
                                 </span>
+                            </TableTd>
+                            <TableTd width={70}>
+                                {productCategory.display_order ?? "-"}
                             </TableTd>
                             <TableTd>
                                 <Badge

@@ -111,8 +111,16 @@ export default function ProductCategoriesShow({
                         <CardHeader className="border-border border-b px-6 py-5">
                             <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="border-border bg-muted flex size-10 items-center justify-center rounded-md border">
-                                        <Tags className="text-muted-foreground size-4.5" />
+                                    <div className="border-border bg-muted flex size-10 items-center justify-center overflow-hidden rounded-md border">
+                                        {productCategory.image ? (
+                                            <img
+                                                src={`/storage/${productCategory.image}`}
+                                                alt={productCategory.name}
+                                                className="h-full w-full object-cover"
+                                            />
+                                        ) : (
+                                            <Tags className="text-muted-foreground size-4.5" />
+                                        )}
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="text-foreground text-sm font-semibold">
@@ -136,6 +144,10 @@ export default function ProductCategoriesShow({
                                 <InfoRow
                                     label="Name"
                                     value={productCategory.name}
+                                />
+                                <InfoRow
+                                    label="Display Order"
+                                    value={productCategory.display_order}
                                 />
                                 <InfoRow
                                     label="Created"

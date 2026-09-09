@@ -1,49 +1,54 @@
-import Confirm from '@/components/Models/Confirm';
-import MasterTab, { TableBody, TableTd } from '@/components/shared/masterTab';
-import { Badge } from '@/components/ui/badge';
-import { dashboard } from '@/routes';
-import offersRoutes from '@/routes/offers';
-import type { BreadcrumbItem, Offer } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
-import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import Confirm from "@/components/Models/Confirm";
+import MasterTab, { TableBody, TableTd } from "@/components/shared/masterTab";
+import { Badge } from "@/components/ui/badge";
+import { dashboard } from "@/routes";
+import offersRoutes from "@/routes/offers";
+import type { BreadcrumbItem, Offer } from "@/types";
+import { Head, Link, router } from "@inertiajs/react";
+import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 
 const tableColumns = [
-    { label: 'ID', sortField: 'id', sortable: false, width: 4 },
-    { label: 'Title', sortField: 'title', sortable: false, width: '22%' },
-    { label: 'Brand', sortField: 'brand', sortable: false, width: '16%' },
     {
-        label: 'Start Date',
-        sortField: 'start_date',
+        label: "Offer ID",
+        sortField: "offer_code",
         sortable: false,
-        width: '14%',
+        width: "12%",
+    },
+    { label: "Title", sortField: "title", sortable: false, width: "18%" },
+    { label: "Brand", sortField: "brand", sortable: false, width: "16%" },
+    {
+        label: "Start Date",
+        sortField: "start_date",
+        sortable: false,
+        width: "14%",
     },
     {
-        label: 'End Date',
-        sortField: 'end_date',
+        label: "End Date",
+        sortField: "end_date",
         sortable: false,
-        width: '14%',
+        width: "14%",
     },
-    { label: 'Status', sortField: 'status', sortable: false, width: '12%' },
-    { label: 'Actions', sortField: 'actions', sortable: false, width: '15%' },
+    { label: "Status", sortField: "status", sortable: false, width: "12%" },
+    { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
 ];
 
 function statusClassName(status: string): string {
     switch (status) {
-        case 'active':
-            return 'bg-gray-100 text-[#073BBC]';
-        case 'inactive':
-            return 'bg-gray-100 text-black';
+        case "active":
+            return "bg-gray-100 text-[#073BBC]";
+        case "inactive":
+            return "bg-gray-100 text-black";
         default:
-            return 'bg-gray-100 text-red-500';
+            return "bg-gray-100 text-red-500";
     }
 }
 
 function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+        year: "numeric",
+        month: "short",
+        day: "numeric",
     });
 }
 
@@ -85,16 +90,18 @@ export default function OffersIndex({
                     filters={filters}
                     url={offersRoutes.index().url}
                     createLink={{
-                        label: 'Create Offer',
+                        label: "Create Offer",
                         url: offersRoutes.create().url,
                     }}
-                    search={{ placeholder: 'Search by title or description...' }}
+                    search={{
+                        placeholder: "Search by title or description...",
+                    }}
                     statusFilter={{
                         options: [
-                            { label: 'All', value: '' },
-                            { label: 'Active', value: 'active' },
-                            { label: 'Inactive', value: 'inactive' },
-                            { label: 'Draft', value: 'draft' },
+                            { label: "All", value: "" },
+                            { label: "Active", value: "active" },
+                            { label: "Inactive", value: "inactive" },
+                            { label: "Draft", value: "draft" },
                         ],
                     }}
                     links={offers.links}
@@ -129,7 +136,7 @@ export default function OffersIndex({
                                 </>
                             }
                         >
-                            <TableTd width={80}>{offer.id}</TableTd>
+                            <TableTd width={110}>{offer.offer_code}</TableTd>
                             <TableTd>
                                 <div className="flex items-center gap-2">
                                     <img
@@ -145,7 +152,7 @@ export default function OffersIndex({
                                     </span>
                                 </div>
                             </TableTd>
-                            <TableTd>{offer.brand?.name ?? '-'}</TableTd>
+                            <TableTd>{offer.brand?.name ?? "-"}</TableTd>
                             <TableTd>{formatDate(offer.start_date)}</TableTd>
                             <TableTd>{formatDate(offer.end_date)}</TableTd>
                             <TableTd>
@@ -194,7 +201,7 @@ export default function OffersIndex({
                 message={
                     offerToDelete
                         ? `Are you sure you want to delete "${offerToDelete.title}"?`
-                        : ''
+                        : ""
                 }
                 confirmText="Delete"
                 variant="danger"
@@ -205,8 +212,8 @@ export default function OffersIndex({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Offers', href: offersRoutes.index() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Offers", href: offersRoutes.index() },
 ];
 
 OffersIndex.layout = {

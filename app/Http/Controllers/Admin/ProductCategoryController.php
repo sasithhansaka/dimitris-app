@@ -9,6 +9,9 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -53,6 +56,7 @@ class ProductCategoryController extends Controller
     {
         return Inertia::render('Admin/productCategories/create', [
             'nextCategoryCode' => ProductCategory::nextCategoryCode(),
+            'nextDisplayOrder' => ProductCategory::nextDisplayOrder(),
         ]);
     }
 
@@ -61,7 +65,13 @@ class ProductCategoryController extends Controller
      */
     public function store(ProductCategoryStoreRequest $request): RedirectResponse
     {
-        ProductCategory::create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->storeImage($request->file('image'));
+        }
+
+        ProductCategory::create($data);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Product category created.')]);
 
@@ -97,7 +107,20 @@ class ProductCategoryController extends Controller
      */
     public function update(ProductCategoryUpdateRequest $request, ProductCategory $productCategory): RedirectResponse
     {
-        $productCategory->update($request->validated());
+        $data = $request->validated();
+        unset($data['remove_image']);
+
+        if ($request->hasFile('image')) {
+            $this->deleteImage($productCategory);
+            $data['image'] = $this->storeImage($request->file('image'));
+        } elseif ($request->boolean('remove_image')) {
+            $this->deleteImage($productCategory);
+            $data['image'] = null;
+        } else {
+            unset($data['image']);
+        }
+
+        $productCategory->update($data);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Product category updated.')]);
 
@@ -123,5 +146,27 @@ class ProductCategoryController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Product category deleted.')]);
 
         return to_route('product-categories.index');
+    }
+
+    /**
+     * Store the uploaded image and return its public storage path.
+     */
+    private function storeImage(UploadedFile $file): string
+    {
+        $filename = time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
+
+        $file->storeAs('product-categories', $filename, 'public');
+
+        return "product-categories/{$filename}";
+    }
+
+    /**
+     * Delete the product category's current image file from storage, if any.
+     */
+    private function deleteImage(ProductCategory $productCategory): void
+    {
+        if ($productCategory->image) {
+            Storage::disk('public')->delete($productCategory->image);
+        }
     }
 }

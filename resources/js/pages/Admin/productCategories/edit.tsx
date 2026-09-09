@@ -15,7 +15,8 @@ import { dashboard } from "@/routes";
 import productCategoriesRoutes from "@/routes/product-categories";
 import type { BreadcrumbItem, ProductCategory } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
-import { Tags } from "lucide-react";
+import { Tags, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 export default function EditProductCategory({
     productCategory,
@@ -24,15 +25,51 @@ export default function EditProductCategory({
 }) {
     const isLinkedToProducts = (productCategory.products_count ?? 0) > 0;
 
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         name: productCategory.name,
         description: productCategory.description ?? "",
+        image: null as File | null,
+        display_order: String(productCategory.display_order),
         status: productCategory.status,
+        remove_image: false,
+        _method: "put",
     });
+
+    const originalImage = productCategory.image
+        ? `/storage/${productCategory.image}`
+        : null;
+    const [imagePreview, setImagePreview] = useState<string | null>(
+        originalImage,
+    );
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        setData((prevData) => ({
+            ...prevData,
+            image: file,
+            remove_image: false,
+        }));
+        setImagePreview(file ? URL.createObjectURL(file) : imagePreview);
+    };
+
+    const removeImage = () => {
+        setData((prevData) => ({
+            ...prevData,
+            image: null,
+            remove_image: true,
+        }));
+        setImagePreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(productCategoriesRoutes.update(productCategory.id).url);
+        post(productCategoriesRoutes.update(productCategory.id).url, {
+            forceFormData: true,
+        });
     };
 
     return (
@@ -151,6 +188,31 @@ export default function EditProductCategory({
                                         <InputError message={errors.status} />
                                     </div>
 
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="display_order">
+                                            Display Order{" "}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
+                                        <Input
+                                            id="display_order"
+                                            type="number"
+                                            min={1}
+                                            placeholder="e.g. 1"
+                                            value={data.display_order}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "display_order",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.display_order}
+                                        />
+                                    </div>
+
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
                                             Description
@@ -171,6 +233,35 @@ export default function EditProductCategory({
                                         <InputError
                                             message={errors.description}
                                         />
+                                    </div>
+
+                                    <div className="grid gap-2 sm:col-span-2">
+                                        <Label htmlFor="image">Image</Label>
+                                        <Input
+                                            id="image"
+                                            type="file"
+                                            accept="image/*"
+                                            ref={fileInputRef}
+                                            onChange={handleImageChange}
+                                        />
+                                        {imagePreview && (
+                                            <div className="relative mt-2 w-fit">
+                                                <img
+                                                    src={imagePreview}
+                                                    alt="Image preview"
+                                                    className="border-border h-40 w-40 rounded-md border object-cover"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={removeImage}
+                                                    title="Remove image"
+                                                    className="absolute -top-2 -right-2 cursor-pointer rounded-full bg-gray-100 p-1 text-black hover:opacity-90"
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </button>
+                                            </div>
+                                        )}
+                                        <InputError message={errors.image} />
                                     </div>
                                 </div>
                             </CardContent>

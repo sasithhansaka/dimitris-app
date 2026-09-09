@@ -19,6 +19,8 @@ class ProductCategoryStoreRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', 'unique:product_categories,name'],
             'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'max:5120'],
+            'display_order' => ['required', 'integer', 'min:1', 'unique:product_categories,display_order'],
             'status' => ['required', Rule::in([
                 ProductCategory::STATUS_ACTIVE,
                 ProductCategory::STATUS_INACTIVE,

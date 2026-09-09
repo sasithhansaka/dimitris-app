@@ -38,8 +38,10 @@ function brandOptionLabel(brand: OfferBrandOption): string {
 
 export default function CreateOffer({
     brands,
+    nextOfferCode,
 }: {
     brands: OfferBrandOption[];
+    nextOfferCode: string;
 }) {
     const { data, setData, post, processing, errors } = useForm({
         title: "",
@@ -105,7 +107,24 @@ export default function CreateOffer({
 
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
-                                    <div className="grid gap-2 sm:col-span-2">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="offer_code">
+                                            Offer ID
+                                        </Label>
+                                        <Input
+                                            id="offer_code"
+                                            type="text"
+                                            value={nextOfferCode}
+                                            disabled
+                                            readOnly
+                                        />
+                                        <p className="text-muted-foreground text-xs">
+                                            Automatically assigned when the
+                                            offer is created.
+                                        </p>
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="title">
                                             Title{" "}
                                             <span className="text-destructive">

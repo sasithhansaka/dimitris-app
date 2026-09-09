@@ -13,11 +13,13 @@ use Illuminate\Support\Carbon;
  * @property string $category_code
  * @property string $name
  * @property string|null $description
+ * @property string|null $image
+ * @property int $display_order
  * @property string $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['category_code', 'name', 'description', 'status'])]
+#[Fillable(['category_code', 'name', 'description', 'image', 'display_order', 'status'])]
 class ProductCategory extends Model
 {
     use LogsActivity;
@@ -56,6 +58,14 @@ class ProductCategory extends Model
         }
 
         return 'PCA-'.str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Suggest the next display order (one greater than the current highest).
+     */
+    public static function nextDisplayOrder(): int
+    {
+        return (int) static::query()->max('display_order') + 1;
     }
 
     public function products(): HasMany
