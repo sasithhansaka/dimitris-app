@@ -213,12 +213,12 @@ export default function CreateBrand({
 
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
-                                            Description
+                                            Internal Notes
                                         </Label>
                                         <textarea
                                             id="description"
                                             rows={4}
-                                            placeholder="A short description of this brand"
+                                            placeholder="Internal notes about this brand"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(

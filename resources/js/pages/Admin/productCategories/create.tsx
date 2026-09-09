@@ -1,27 +1,31 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { dashboard } from '@/routes';
-import productCategoriesRoutes from '@/routes/product-categories';
-import type { BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import { Tags } from 'lucide-react';
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { dashboard } from "@/routes";
+import productCategoriesRoutes from "@/routes/product-categories";
+import type { BreadcrumbItem } from "@/types";
+import { Head, useForm } from "@inertiajs/react";
+import { Tags } from "lucide-react";
 
-export default function CreateProductCategory() {
+export default function CreateProductCategory({
+    nextCategoryCode,
+}: {
+    nextCategoryCode: string;
+}) {
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        description: '',
-        status: 'active',
+        name: "",
+        description: "",
+        status: "active",
     });
 
     const submit = (e: React.FormEvent) => {
@@ -57,8 +61,25 @@ export default function CreateProductCategory() {
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
+                                        <Label htmlFor="category_code">
+                                            Category ID
+                                        </Label>
+                                        <Input
+                                            id="category_code"
+                                            type="text"
+                                            value={nextCategoryCode}
+                                            disabled
+                                            readOnly
+                                        />
+                                        <p className="text-muted-foreground text-xs">
+                                            Automatically assigned when the
+                                            category is created.
+                                        </p>
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Category Name{' '}
+                                            Category Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -70,7 +91,7 @@ export default function CreateProductCategory() {
                                             placeholder="e.g. Electronics"
                                             value={data.name}
                                             onChange={(e) =>
-                                                setData('name', e.target.value)
+                                                setData("name", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.name} />
@@ -78,7 +99,7 @@ export default function CreateProductCategory() {
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="status">
-                                            Status{' '}
+                                            Status{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -86,7 +107,7 @@ export default function CreateProductCategory() {
                                         <Select
                                             value={data.status}
                                             onValueChange={(value) =>
-                                                setData('status', value)
+                                                setData("status", value)
                                             }
                                         >
                                             <SelectTrigger
@@ -121,7 +142,7 @@ export default function CreateProductCategory() {
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'description',
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
@@ -162,9 +183,9 @@ export default function CreateProductCategory() {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Product Categories', href: productCategoriesRoutes.index() },
-    { title: 'Create', href: productCategoriesRoutes.create() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Product Categories", href: productCategoriesRoutes.index() },
+    { title: "Create", href: productCategoriesRoutes.create() },
 ];
 
 CreateProductCategory.layout = {

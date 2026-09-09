@@ -1,12 +1,12 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { dashboard } from '@/routes';
-import productCategoriesRoutes from '@/routes/product-categories';
-import type { BreadcrumbItem, ProductCategory } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { Package, PencilIcon, Tags } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { dashboard } from "@/routes";
+import productCategoriesRoutes from "@/routes/product-categories";
+import type { BreadcrumbItem, ProductCategory } from "@/types";
+import { Head, Link } from "@inertiajs/react";
+import { Package, PencilIcon, Tags } from "lucide-react";
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -19,8 +19,8 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     );
 }
 
-function StatusBadge({ status }: { status: ProductCategory['status'] }) {
-    if (status === 'active') {
+function StatusBadge({ status }: { status: ProductCategory["status"] }) {
+    if (status === "active") {
         return (
             <Badge className="border-transparent bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
                 Active
@@ -28,7 +28,7 @@ function StatusBadge({ status }: { status: ProductCategory['status'] }) {
         );
     }
 
-    if (status === 'inactive') {
+    if (status === "inactive") {
         return (
             <Badge className="border-transparent bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400">
                 Inactive
@@ -45,9 +45,9 @@ function StatusBadge({ status }: { status: ProductCategory['status'] }) {
 
 function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+        year: "numeric",
+        month: "short",
+        day: "numeric",
     });
 }
 
@@ -114,9 +114,14 @@ export default function ProductCategoriesShow({
                                     <div className="border-border bg-muted flex size-10 items-center justify-center rounded-md border">
                                         <Tags className="text-muted-foreground size-4.5" />
                                     </div>
-                                    <span className="text-foreground text-sm font-semibold">
-                                        {productCategory.name}
-                                    </span>
+                                    <div className="flex flex-col">
+                                        <span className="text-foreground text-sm font-semibold">
+                                            {productCategory.name}
+                                        </span>
+                                        <span className="text-muted-foreground text-xs">
+                                            {productCategory.category_code}
+                                        </span>
+                                    </div>
                                 </div>
                                 <StatusBadge status={productCategory.status} />
                             </div>
@@ -124,6 +129,10 @@ export default function ProductCategoriesShow({
 
                         <CardContent className="space-y-8 px-6 py-6">
                             <div className="grid gap-5 sm:grid-cols-2">
+                                <InfoRow
+                                    label="Category ID"
+                                    value={productCategory.category_code}
+                                />
                                 <InfoRow
                                     label="Name"
                                     value={productCategory.name}
@@ -140,7 +149,7 @@ export default function ProductCategoriesShow({
 
                             <InfoRow
                                 label="Description"
-                                value={productCategory.description ?? '-'}
+                                value={productCategory.description ?? "-"}
                             />
 
                             <Separator />
@@ -176,9 +185,9 @@ export default function ProductCategoriesShow({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Product Categories', href: productCategoriesRoutes.index() },
-    { title: 'View Product Category', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Product Categories", href: productCategoriesRoutes.index() },
+    { title: "View Product Category", href: "#" },
 ];
 
 ProductCategoriesShow.layout = {

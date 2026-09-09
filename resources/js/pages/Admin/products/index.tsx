@@ -1,30 +1,35 @@
-import Confirm from '@/components/Models/Confirm';
-import MasterTab, { TableBody, TableTd } from '@/components/shared/masterTab';
-import { Badge } from '@/components/ui/badge';
-import { dashboard } from '@/routes';
-import productsRoutes from '@/routes/products';
-import type { BreadcrumbItem, Product } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
-import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import Confirm from "@/components/Models/Confirm";
+import MasterTab, { TableBody, TableTd } from "@/components/shared/masterTab";
+import { Badge } from "@/components/ui/badge";
+import { dashboard } from "@/routes";
+import productsRoutes from "@/routes/products";
+import type { BreadcrumbItem, Product } from "@/types";
+import { Head, Link, router } from "@inertiajs/react";
+import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 
 const tableColumns = [
-    { label: 'ID', sortField: 'id', sortable: false, width: 4 },
-    { label: 'Name', sortField: 'name', sortable: false, width: '22%' },
-    { label: 'Brand', sortField: 'brand', sortable: false, width: '18%' },
-    { label: 'Category', sortField: 'category', sortable: false, width: '18%' },
-    { label: 'Status', sortField: 'status', sortable: false, width: '12%' },
-    { label: 'Actions', sortField: 'actions', sortable: false, width: '15%' },
+    {
+        label: "Product ID",
+        sortField: "product_code",
+        sortable: false,
+        width: "12%",
+    },
+    { label: "Name", sortField: "name", sortable: false, width: "20%" },
+    { label: "Brand", sortField: "brand", sortable: false, width: "18%" },
+    { label: "Category", sortField: "category", sortable: false, width: "18%" },
+    { label: "Status", sortField: "status", sortable: false, width: "12%" },
+    { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
 ];
 
 function statusClassName(status: string): string {
     switch (status) {
-        case 'active':
-            return 'bg-gray-100 text-[#073BBC]';
-        case 'inactive':
-            return 'bg-gray-100 text-black';
+        case "active":
+            return "bg-gray-100 text-[#073BBC]";
+        case "inactive":
+            return "bg-gray-100 text-black";
         default:
-            return 'bg-gray-100 text-red-500';
+            return "bg-gray-100 text-red-500";
     }
 }
 
@@ -68,16 +73,16 @@ export default function ProductsIndex({
                     filters={filters}
                     url={productsRoutes.index().url}
                     createLink={{
-                        label: 'Create Product',
+                        label: "Create Product",
                         url: productsRoutes.create().url,
                     }}
-                    search={{ placeholder: 'Search by name or description...' }}
+                    search={{ placeholder: "Search by name or description..." }}
                     statusFilter={{
                         options: [
-                            { label: 'All', value: '' },
-                            { label: 'Active', value: 'active' },
-                            { label: 'Inactive', value: 'inactive' },
-                            { label: 'Draft', value: 'draft' },
+                            { label: "All", value: "" },
+                            { label: "Active", value: "active" },
+                            { label: "Inactive", value: "inactive" },
+                            { label: "Draft", value: "draft" },
                         ],
                     }}
                     links={products.links}
@@ -118,7 +123,9 @@ export default function ProductsIndex({
                                 </>
                             }
                         >
-                            <TableTd width={80}>{product.id}</TableTd>
+                            <TableTd width={110}>
+                                {product.product_code}
+                            </TableTd>
                             <TableTd>
                                 <div className="flex items-center gap-2">
                                     <img
@@ -134,8 +141,8 @@ export default function ProductsIndex({
                                     </span>
                                 </div>
                             </TableTd>
-                            <TableTd>{product.brand?.name ?? '-'}</TableTd>
-                            <TableTd>{product.category?.name ?? '-'}</TableTd>
+                            <TableTd>{product.brand?.name ?? "-"}</TableTd>
+                            <TableTd>{product.category?.name ?? "-"}</TableTd>
                             <TableTd>
                                 <Badge
                                     className={`capitalize ${statusClassName(product.status)}`}
@@ -188,7 +195,7 @@ export default function ProductsIndex({
                 message={
                     productToDelete
                         ? `Are you sure you want to delete "${productToDelete.name}"?`
-                        : ''
+                        : ""
                 }
                 confirmText="Delete"
                 variant="danger"
@@ -199,8 +206,8 @@ export default function ProductsIndex({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Products', href: productsRoutes.index() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Products", href: productsRoutes.index() },
 ];
 
 ProductsIndex.layout = {

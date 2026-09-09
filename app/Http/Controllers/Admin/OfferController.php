@@ -56,6 +56,7 @@ class OfferController extends Controller
         return Inertia::render('Admin/offers/create', [
             'brands' => Brand::query()
                 ->where('status', Brand::STATUS_ACTIVE)
+                ->with('distributors:id,name')
                 ->orderBy('name')
                 ->get(['id', 'name']),
         ]);
@@ -101,6 +102,7 @@ class OfferController extends Controller
                     $query->where('status', Brand::STATUS_ACTIVE)
                         ->orWhere('id', $offer->brand_id);
                 })
+                ->with('distributors:id,name')
                 ->orderBy('name')
                 ->get(['id', 'name']),
         ]);

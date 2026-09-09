@@ -165,7 +165,7 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
                             <Separator />
 
                             <InfoRow
-                                label="Description"
+                                label="Internal Notes"
                                 value={brand.description ?? "-"}
                             />
 

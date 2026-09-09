@@ -28,7 +28,8 @@ class ProductController extends Controller
 
         if ($search = $request->string('searchParam')->toString()) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->where('product_code', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
             });
         }
@@ -58,12 +59,14 @@ class ProductController extends Controller
         return Inertia::render('Admin/products/create', [
             'brands' => Brand::query()
                 ->where('status', Brand::STATUS_ACTIVE)
+                ->with('distributors:id,name')
                 ->orderBy('name')
                 ->get(['id', 'name']),
             'categories' => ProductCategory::query()
                 ->where('status', ProductCategory::STATUS_ACTIVE)
                 ->orderBy('name')
                 ->get(['id', 'name']),
+            'nextProductCode' => Product::nextProductCode(),
         ]);
     }
 
@@ -113,6 +116,7 @@ class ProductController extends Controller
                     $query->where('status', Brand::STATUS_ACTIVE)
                         ->orWhere('id', $product->brand_id);
                 })
+                ->with('distributors:id,name')
                 ->orderBy('name')
                 ->get(['id', 'name']),
             'categories' => ProductCategory::query()

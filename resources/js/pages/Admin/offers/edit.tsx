@@ -1,27 +1,43 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { dashboard } from '@/routes';
-import brandsRoutes from '@/routes/brands';
-import offersRoutes from '@/routes/offers';
-import type { BreadcrumbItem, Offer } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { Percent, Plus, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { dashboard } from "@/routes";
+import brandsRoutes from "@/routes/brands";
+import offersRoutes from "@/routes/offers";
+import type { BreadcrumbItem, Offer } from "@/types";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Percent, Plus, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 function toDateInputValue(date: string): string {
     return date.slice(0, 10);
+}
+
+type OfferBrandOption = {
+    id: number;
+    name: string;
+    distributors?: { id: number; name: string }[];
+};
+
+function brandOptionLabel(brand: OfferBrandOption): string {
+    const distributorNames = (brand.distributors ?? [])
+        .map((d) => d.name)
+        .join(", ");
+
+    return distributorNames
+        ? `${brand.name} - Distributor: ${distributorNames}`
+        : brand.name;
 }
 
 export default function EditOffer({
@@ -29,7 +45,7 @@ export default function EditOffer({
     brands,
 }: {
     offer: Offer;
-    brands: { id: number; name: string }[];
+    brands: OfferBrandOption[];
 }) {
     const { data, setData, post, processing, errors } = useForm({
         title: offer.title,
@@ -41,7 +57,7 @@ export default function EditOffer({
         start_date: toDateInputValue(offer.start_date),
         end_date: toDateInputValue(offer.end_date),
         remove_image: false,
-        _method: 'put',
+        _method: "put",
     });
 
     const originalImage = offer.image ? `/storage/${offer.image}` : null;
@@ -72,7 +88,7 @@ export default function EditOffer({
         }));
         setImagePreview(null);
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = "";
         }
     };
 
@@ -110,7 +126,7 @@ export default function EditOffer({
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="title">
-                                            Title{' '}
+                                            Title{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -122,7 +138,7 @@ export default function EditOffer({
                                             placeholder="e.g. Summer Sale"
                                             value={data.title}
                                             onChange={(e) =>
-                                                setData('title', e.target.value)
+                                                setData("title", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.title} />
@@ -131,7 +147,7 @@ export default function EditOffer({
                                     <div className="grid gap-2">
                                         <div className="flex items-center gap-3">
                                             <Label htmlFor="brand_id">
-                                                Brand{' '}
+                                                Brand{" "}
                                                 <span className="text-destructive">
                                                     *
                                                 </span>
@@ -148,7 +164,7 @@ export default function EditOffer({
                                             <Select
                                                 value={data.brand_id}
                                                 onValueChange={(value) =>
-                                                    setData('brand_id', value)
+                                                    setData("brand_id", value)
                                                 }
                                             >
                                                 <SelectTrigger
@@ -166,7 +182,9 @@ export default function EditOffer({
                                                                     brand.id,
                                                                 )}
                                                             >
-                                                                {brand.name}
+                                                                {brandOptionLabel(
+                                                                    brand,
+                                                                )}
                                                             </SelectItem>
                                                         ),
                                                     )}
@@ -183,7 +201,7 @@ export default function EditOffer({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="status">
-                                            Status{' '}
+                                            Status{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -192,7 +210,7 @@ export default function EditOffer({
                                             value={data.status}
                                             onValueChange={(value) =>
                                                 setData(
-                                                    'status',
+                                                    "status",
                                                     value as typeof data.status,
                                                 )
                                             }
@@ -220,7 +238,7 @@ export default function EditOffer({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="start_date">
-                                            Start Date{' '}
+                                            Start Date{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -231,7 +249,7 @@ export default function EditOffer({
                                             value={data.start_date}
                                             onChange={(e) =>
                                                 setData(
-                                                    'start_date',
+                                                    "start_date",
                                                     e.target.value,
                                                 )
                                             }
@@ -243,7 +261,7 @@ export default function EditOffer({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="end_date">
-                                            End Date{' '}
+                                            End Date{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -254,7 +272,7 @@ export default function EditOffer({
                                             value={data.end_date}
                                             onChange={(e) =>
                                                 setData(
-                                                    'end_date',
+                                                    "end_date",
                                                     e.target.value,
                                                 )
                                             }
@@ -268,7 +286,7 @@ export default function EditOffer({
                                             checked={data.featured}
                                             onCheckedChange={(checked) =>
                                                 setData(
-                                                    'featured',
+                                                    "featured",
                                                     checked === true,
                                                 )
                                             }
@@ -284,7 +302,7 @@ export default function EditOffer({
 
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
-                                            Description{' '}
+                                            Description{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -296,7 +314,7 @@ export default function EditOffer({
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'description',
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
@@ -309,7 +327,7 @@ export default function EditOffer({
 
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="image">
-                                            Image{' '}
+                                            Image{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -371,9 +389,9 @@ export default function EditOffer({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Offers', href: offersRoutes.index() },
-    { title: 'Edit', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Offers", href: offersRoutes.index() },
+    { title: "Edit", href: "#" },
 ];
 
 EditOffer.layout = {

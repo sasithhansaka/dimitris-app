@@ -1,34 +1,39 @@
-import Confirm from '@/components/Models/Confirm';
-import MasterTab, { TableBody, TableTd } from '@/components/shared/masterTab';
-import { Badge } from '@/components/ui/badge';
-import { dashboard } from '@/routes';
-import productCategoriesRoutes from '@/routes/product-categories';
-import type { BreadcrumbItem, ProductCategory } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
-import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import Confirm from "@/components/Models/Confirm";
+import MasterTab, { TableBody, TableTd } from "@/components/shared/masterTab";
+import { Badge } from "@/components/ui/badge";
+import { dashboard } from "@/routes";
+import productCategoriesRoutes from "@/routes/product-categories";
+import type { BreadcrumbItem, ProductCategory } from "@/types";
+import { Head, Link, router } from "@inertiajs/react";
+import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 
 const tableColumns = [
-    { label: 'ID', sortField: 'id', sortable: false, width: 4 },
-    { label: 'Name', sortField: 'name', sortable: false, width: '25%' },
     {
-        label: 'Description',
-        sortField: 'description',
+        label: "Category ID",
+        sortField: "category_code",
         sortable: false,
-        width: '40%',
+        width: "12%",
     },
-    { label: 'Status', sortField: 'status', sortable: false, width: '15%' },
-    { label: 'Actions', sortField: 'actions', sortable: false, width: '15%' },
+    { label: "Name", sortField: "name", sortable: false, width: "22%" },
+    {
+        label: "Description",
+        sortField: "description",
+        sortable: false,
+        width: "40%",
+    },
+    { label: "Status", sortField: "status", sortable: false, width: "15%" },
+    { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
 ];
 
 function statusClassName(status: string): string {
     switch (status) {
-        case 'active':
-            return 'bg-gray-100 text-[#073BBC]';
-        case 'inactive':
-            return 'bg-gray-100 text-black';
+        case "active":
+            return "bg-gray-100 text-[#073BBC]";
+        case "inactive":
+            return "bg-gray-100 text-black";
         default:
-            return 'bg-gray-100 text-red-500';
+            return "bg-gray-100 text-red-500";
     }
 }
 
@@ -37,7 +42,7 @@ function truncateWords(text: string, limit: number): string {
     if (words.length <= limit) {
         return text;
     }
-    return `${words.slice(0, limit).join(' ')} ...`;
+    return `${words.slice(0, limit).join(" ")} ...`;
 }
 
 export default function ProductCategoriesIndex({
@@ -82,16 +87,16 @@ export default function ProductCategoriesIndex({
                     filters={filters}
                     url={productCategoriesRoutes.index().url}
                     createLink={{
-                        label: 'Create Product Category',
+                        label: "Create Product Category",
                         url: productCategoriesRoutes.create().url,
                     }}
-                    search={{ placeholder: 'Search by name or description...' }}
+                    search={{ placeholder: "Search by name or description..." }}
                     statusFilter={{
                         options: [
-                            { label: 'All', value: '' },
-                            { label: 'Active', value: 'active' },
-                            { label: 'Inactive', value: 'inactive' },
-                            { label: 'Draft', value: 'draft' },
+                            { label: "All", value: "" },
+                            { label: "Active", value: "active" },
+                            { label: "Inactive", value: "inactive" },
+                            { label: "Draft", value: "draft" },
                         ],
                     }}
                     links={productCategories.links}
@@ -138,7 +143,9 @@ export default function ProductCategoriesIndex({
                                 </>
                             }
                         >
-                            <TableTd width={80}>{productCategory.id}</TableTd>
+                            <TableTd width={110}>
+                                {productCategory.category_code}
+                            </TableTd>
                             <TableTd>
                                 <span
                                     className="line-clamp-2"
@@ -159,7 +166,7 @@ export default function ProductCategoriesIndex({
                                               productCategory.description,
                                               6,
                                           )
-                                        : '-'}
+                                        : "-"}
                                 </span>
                             </TableTd>
                             <TableTd>
@@ -220,7 +227,7 @@ export default function ProductCategoriesIndex({
                 message={
                     productCategoryToDelete
                         ? `Are you sure you want to delete "${productCategoryToDelete.name}"?`
-                        : ''
+                        : ""
                 }
                 confirmText="Delete"
                 variant="danger"
@@ -231,8 +238,8 @@ export default function ProductCategoriesIndex({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Product Categories', href: productCategoriesRoutes.index() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Product Categories", href: productCategoriesRoutes.index() },
 ];
 
 ProductCategoriesIndex.layout = {
