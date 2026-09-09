@@ -187,12 +187,12 @@ export default function EditRetailer({
 
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
-                                            Description
+                                            Internal Notes
                                         </Label>
                                         <textarea
                                             id="description"
                                             rows={4}
-                                            placeholder="A short description of this retailer"
+                                            placeholder="Internal notes for this retailer"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(

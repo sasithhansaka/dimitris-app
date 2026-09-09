@@ -16,12 +16,12 @@ const tableColumns = [
         width: "12%",
     },
     { label: "Name", sortField: "name", sortable: false, width: "14%" },
-    {
-        label: "Description",
-        sortField: "description",
-        sortable: false,
-        width: "22%",
-    },
+    // {
+    //     label: "Description",
+    //     sortField: "description",
+    //     sortable: false,
+    //     width: "22%",
+    // },
     { label: "Phone", sortField: "phone", sortable: false, width: "14%" },
     {
         label: "Products",
@@ -157,7 +157,7 @@ export default function RetailersIndex({
                                     {retailer.name}
                                 </span>
                             </TableTd>
-                            <TableTd>
+                            {/* <TableTd>
                                 <span
                                     className="block truncate"
                                     title={retailer.description ?? undefined}
@@ -166,7 +166,7 @@ export default function RetailersIndex({
                                         ? truncateWords(retailer.description, 6)
                                         : "-"}
                                 </span>
-                            </TableTd>
+                            </TableTd> */}
                             <TableTd>{retailer.phone ?? "-"}</TableTd>
                             <TableTd>
                                 {retailer.products &&

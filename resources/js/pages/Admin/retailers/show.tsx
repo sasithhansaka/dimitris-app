@@ -219,7 +219,7 @@ export default function RetailersShow({ retailer }: { retailer: Retailer }) {
                             <Separator />
 
                             <InfoRow
-                                label="Description"
+                                label="Internal Notes"
                                 value={retailer.description ?? "-"}
                             />
 
