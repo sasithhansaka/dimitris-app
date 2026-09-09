@@ -13,24 +13,24 @@ const tableColumns = [
         label: "Retailer ID",
         sortField: "retailer_code",
         sortable: false,
-        width: "12%",
+        width: "17%",
     },
-    { label: "Name", sortField: "name", sortable: false, width: "14%" },
+    { label: "Name", sortField: "name", sortable: false, width: "22%" },
     // {
     //     label: "Description",
     //     sortField: "description",
     //     sortable: false,
     //     width: "22%",
     // },
-    { label: "Phone", sortField: "phone", sortable: false, width: "14%" },
+    { label: "Phone", sortField: "phone", sortable: false, width: "21%" },
     {
         label: "Products",
         sortField: "products",
         sortable: false,
         width: "20%",
     },
-    { label: "Status", sortField: "status", sortable: false, width: "12%" },
-    { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
+    { label: "Status", sortField: "status", sortable: false, width: "21%" },
+    { label: "Actions", sortField: "actions", sortable: false, width: "21%" },
 ];
 
 function statusClassName(status: string): string {
