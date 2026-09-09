@@ -1,12 +1,12 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { dashboard } from '@/routes';
-import distributorsRoutes from '@/routes/distributors';
-import type { BreadcrumbItem, Distributor } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { Building2, Mail, MapPin, Phone, Tag } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { dashboard } from "@/routes";
+import distributorsRoutes from "@/routes/distributors";
+import type { BreadcrumbItem, Distributor } from "@/types";
+import { Head, Link } from "@inertiajs/react";
+import { Building2, Globe, Mail, MapPin, Phone, Tag, User } from "lucide-react";
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -19,8 +19,8 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     );
 }
 
-function StatusBadge({ status }: { status: Distributor['status'] }) {
-    if (status === 'active') {
+function StatusBadge({ status }: { status: Distributor["status"] }) {
+    if (status === "active") {
         return (
             <Badge className="border-transparent bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
                 Active
@@ -28,7 +28,7 @@ function StatusBadge({ status }: { status: Distributor['status'] }) {
         );
     }
 
-    if (status === 'inactive') {
+    if (status === "inactive") {
         return (
             <Badge className="border-transparent bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400">
                 Inactive
@@ -45,9 +45,9 @@ function StatusBadge({ status }: { status: Distributor['status'] }) {
 
 function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+        year: "numeric",
+        month: "short",
+        day: "numeric",
     });
 }
 
@@ -103,9 +103,14 @@ export default function DistributorsShow({
                                             <Building2 className="text-muted-foreground size-4.5" />
                                         </div>
                                     )}
-                                    <span className="text-foreground text-sm font-semibold">
-                                        {distributor.name}
-                                    </span>
+                                    <div className="flex flex-col">
+                                        <span className="text-foreground text-sm font-semibold">
+                                            {distributor.name}
+                                        </span>
+                                        <span className="text-muted-foreground text-xs">
+                                            {distributor.distributor_code}
+                                        </span>
+                                    </div>
                                 </div>
                                 <StatusBadge status={distributor.status} />
                             </div>
@@ -114,8 +119,18 @@ export default function DistributorsShow({
                         <CardContent className="space-y-8 px-6 py-6">
                             <div className="grid gap-5 sm:grid-cols-2">
                                 <InfoRow
+                                    label="Distributor ID"
+                                    value={distributor.distributor_code}
+                                />
+                                <InfoRow
                                     label="Name"
                                     value={distributor.name}
+                                />
+                                <InfoRow
+                                    label="Legal Company Name"
+                                    value={
+                                        distributor.legal_company_name ?? "-"
+                                    }
                                 />
                                 <InfoRow
                                     label="Country"
@@ -127,6 +142,41 @@ export default function DistributorsShow({
                                     }
                                 />
                                 <InfoRow
+                                    label="Tax ID Number"
+                                    value={distributor.tax_id ?? "-"}
+                                />
+                                <InfoRow
+                                    label="Website"
+                                    value={
+                                        distributor.website ? (
+                                            <a
+                                                href={distributor.website}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 text-[#073BBC] hover:underline"
+                                            >
+                                                <Globe className="size-3.5" />
+                                                {distributor.website}
+                                            </a>
+                                        ) : (
+                                            "-"
+                                        )
+                                    }
+                                />
+                                <InfoRow
+                                    label="Primary Contact"
+                                    value={
+                                        distributor.primary_contact ? (
+                                            <span className="inline-flex items-center gap-1.5">
+                                                <User className="text-muted-foreground size-3.5" />
+                                                {distributor.primary_contact}
+                                            </span>
+                                        ) : (
+                                            "-"
+                                        )
+                                    }
+                                />
+                                <InfoRow
                                     label="Email address"
                                     value={
                                         distributor.email ? (
@@ -135,7 +185,7 @@ export default function DistributorsShow({
                                                 {distributor.email}
                                             </span>
                                         ) : (
-                                            '-'
+                                            "-"
                                         )
                                     }
                                 />
@@ -148,13 +198,13 @@ export default function DistributorsShow({
                                                 {distributor.phone}
                                             </span>
                                         ) : (
-                                            '-'
+                                            "-"
                                         )
                                     }
                                 />
                                 <InfoRow
                                     label="Address"
-                                    value={distributor.address ?? '-'}
+                                    value={distributor.address ?? "-"}
                                 />
                                 <InfoRow
                                     label="Created"
@@ -166,7 +216,7 @@ export default function DistributorsShow({
 
                             <InfoRow
                                 label="Description"
-                                value={distributor.description ?? '-'}
+                                value={distributor.description ?? "-"}
                             />
 
                             <Separator />
@@ -202,9 +252,9 @@ export default function DistributorsShow({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Distributors', href: distributorsRoutes.index() },
-    { title: 'View Distributor', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Distributors", href: distributorsRoutes.index() },
+    { title: "View Distributor", href: "#" },
 ];
 
 DistributorsShow.layout = {

@@ -1,31 +1,34 @@
-import Confirm from '@/components/Models/Confirm';
-import MasterTab, { TableBody, TableTd } from '@/components/shared/masterTab';
-import { Badge } from '@/components/ui/badge';
-import { dashboard } from '@/routes';
-import distributorsRoutes from '@/routes/distributors';
-import type { BreadcrumbItem, Distributor } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
-import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import Confirm from "@/components/Models/Confirm";
+import MasterTab, { TableBody, TableTd } from "@/components/shared/masterTab";
+import { Badge } from "@/components/ui/badge";
+import { dashboard } from "@/routes";
+import distributorsRoutes from "@/routes/distributors";
+import type { BreadcrumbItem, Distributor } from "@/types";
+import { Head, Link, router } from "@inertiajs/react";
+import { Building2, EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 
 const tableColumns = [
-    { label: 'ID', sortField: 'id', sortable: false, width: 4 },
-    { label: 'Name', sortField: 'name', sortable: false, width: '18%' },
-    { label: 'Country', sortField: 'country', sortable: false, width: '15%' },
-    { label: 'Email', sortField: 'email', sortable: false, width: '20%' },
-    { label: 'Phone', sortField: 'phone', sortable: false, width: '15%' },
-    { label: 'Status', sortField: 'status', sortable: false, width: '12%' },
-    { label: 'Actions', sortField: 'actions', sortable: false, width: '15%' },
+    {
+        label: "Distributor ID",
+        sortField: "distributor_code",
+        sortable: false,
+        width: "20%",
+    },
+    { label: "Name", sortField: "name", sortable: false, width: "28%" },
+    { label: "Country", sortField: "country", sortable: false, width: "20%" },
+    { label: "Status", sortField: "status", sortable: false, width: "15%" },
+    { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
 ];
 
 function statusClassName(status: string): string {
     switch (status) {
-        case 'active':
-            return 'bg-gray-100 text-[#073BBC]';
-        case 'inactive':
-            return 'bg-gray-100 text-black';
+        case "active":
+            return "bg-gray-100 text-[#073BBC]";
+        case "inactive":
+            return "bg-gray-100 text-black";
         default:
-            return 'bg-gray-100 text-red-500';
+            return "bg-gray-100 text-red-500";
     }
 }
 
@@ -68,18 +71,19 @@ export default function DistributorsIndex({
                     filters={filters}
                     url={distributorsRoutes.index().url}
                     createLink={{
-                        label: 'Create Distributor',
+                        label: "Create Distributor",
                         url: distributorsRoutes.create().url,
                     }}
                     search={{
-                        placeholder: 'Search by name, country or email...',
+                        placeholder:
+                            "Search by distributor ID, name, country or email...",
                     }}
                     statusFilter={{
                         options: [
-                            { label: 'All', value: '' },
-                            { label: 'Active', value: 'active' },
-                            { label: 'Inactive', value: 'inactive' },
-                            { label: 'Draft', value: 'draft' },
+                            { label: "All", value: "" },
+                            { label: "Active", value: "active" },
+                            { label: "Inactive", value: "inactive" },
+                            { label: "Draft", value: "draft" },
                         ],
                     }}
                     links={distributors.links}
@@ -124,25 +128,31 @@ export default function DistributorsIndex({
                                 </>
                             }
                         >
-                            <TableTd width={80}>{distributor.id}</TableTd>
+                            <TableTd width={120}>
+                                {distributor.distributor_code}
+                            </TableTd>
                             <TableTd>
-                                <span
-                                    className="line-clamp-2"
-                                    title={distributor.name}
-                                >
-                                    {distributor.name}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    {distributor.logo ? (
+                                        <img
+                                            src={`/storage/${distributor.logo}`}
+                                            alt={distributor.name}
+                                            className="border-border size-8 shrink-0 rounded-md border object-cover"
+                                        />
+                                    ) : (
+                                        <div className="border-border bg-muted flex size-8 shrink-0 items-center justify-center rounded-md border">
+                                            <Building2 className="text-muted-foreground size-4" />
+                                        </div>
+                                    )}
+                                    <span
+                                        className="line-clamp-2"
+                                        title={distributor.name}
+                                    >
+                                        {distributor.name}
+                                    </span>
+                                </div>
                             </TableTd>
                             <TableTd>{distributor.country}</TableTd>
-                            <TableTd>
-                                <span
-                                    className="block truncate"
-                                    title={distributor.email ?? undefined}
-                                >
-                                    {distributor.email ?? '-'}
-                                </span>
-                            </TableTd>
-                            <TableTd>{distributor.phone ?? '-'}</TableTd>
                             <TableTd>
                                 <Badge
                                     className={`capitalize ${statusClassName(distributor.status)}`}
@@ -199,7 +209,7 @@ export default function DistributorsIndex({
                 message={
                     distributorToDelete
                         ? `Are you sure you want to delete "${distributorToDelete.name}"?`
-                        : ''
+                        : ""
                 }
                 confirmText="Delete"
                 variant="danger"
@@ -210,8 +220,8 @@ export default function DistributorsIndex({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Distributors', href: distributorsRoutes.index() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Distributors", href: distributorsRoutes.index() },
 ];
 
 DistributorsIndex.layout = {

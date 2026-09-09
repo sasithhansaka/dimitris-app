@@ -18,9 +18,13 @@ class DistributorStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', 'unique:distributors,name'],
+            'legal_company_name' => ['nullable', 'string', 'max:255'],
             'country' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'logo' => ['nullable', 'image', 'max:5120'],
+            'tax_id' => ['nullable', 'string', 'max:255'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'primary_contact' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50', 'regex:/^[0-9+\-()\s]+$/'],
             'address' => ['nullable', 'string', 'max:255'],

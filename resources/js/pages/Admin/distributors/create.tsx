@@ -1,34 +1,42 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { COUNTRIES } from '@/lib/countries';
-import { dashboard } from '@/routes';
-import distributorsRoutes from '@/routes/distributors';
-import type { BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import { Building2, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { COUNTRIES } from "@/lib/countries";
+import { dashboard } from "@/routes";
+import distributorsRoutes from "@/routes/distributors";
+import type { BreadcrumbItem } from "@/types";
+import { Head, useForm } from "@inertiajs/react";
+import { Building2, X } from "lucide-react";
+import { useRef, useState } from "react";
 
-export default function CreateDistributor() {
+export default function CreateDistributor({
+    nextDistributorCode,
+}: {
+    nextDistributorCode: string;
+}) {
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        country: '',
-        description: '',
+        name: "",
+        legal_company_name: "",
+        country: "",
+        description: "",
         logo: null as File | null,
-        email: '',
-        phone: '',
-        address: '',
-        status: 'active',
+        tax_id: "",
+        website: "",
+        primary_contact: "",
+        email: "",
+        phone: "",
+        address: "",
+        status: "active",
     });
 
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -36,15 +44,15 @@ export default function CreateDistributor() {
 
     const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
-        setData('logo', file);
+        setData("logo", file);
         setLogoPreview(file ? URL.createObjectURL(file) : null);
     };
 
     const removeLogo = () => {
-        setData('logo', null);
+        setData("logo", null);
         setLogoPreview(null);
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = "";
         }
     };
 
@@ -81,8 +89,25 @@ export default function CreateDistributor() {
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
+                                        <Label htmlFor="distributor_code">
+                                            Distributor ID
+                                        </Label>
+                                        <Input
+                                            id="distributor_code"
+                                            type="text"
+                                            value={nextDistributorCode}
+                                            disabled
+                                            readOnly
+                                        />
+                                        <p className="text-muted-foreground text-xs">
+                                            Automatically assigned when the
+                                            distributor is created.
+                                        </p>
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Distributor Name{' '}
+                                            Distributor Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -94,15 +119,36 @@ export default function CreateDistributor() {
                                             placeholder="e.g. Acme Distribution Ltd"
                                             value={data.name}
                                             onChange={(e) =>
-                                                setData('name', e.target.value)
+                                                setData("name", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.name} />
                                     </div>
 
                                     <div className="grid gap-2">
+                                        <Label htmlFor="legal_company_name">
+                                            Legal Company Name
+                                        </Label>
+                                        <Input
+                                            id="legal_company_name"
+                                            type="text"
+                                            placeholder="e.g. Acme Distribution Ltd."
+                                            value={data.legal_company_name}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "legal_company_name",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.legal_company_name}
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="country">
-                                            Country{' '}
+                                            Country{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -110,7 +156,7 @@ export default function CreateDistributor() {
                                         <Select
                                             value={data.country}
                                             onValueChange={(value) =>
-                                                setData('country', value)
+                                                setData("country", value)
                                             }
                                         >
                                             <SelectTrigger
@@ -144,7 +190,7 @@ export default function CreateDistributor() {
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'description',
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
@@ -157,7 +203,7 @@ export default function CreateDistributor() {
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="status">
-                                            Status{' '}
+                                            Status{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -165,7 +211,7 @@ export default function CreateDistributor() {
                                         <Select
                                             value={data.status}
                                             onValueChange={(value) =>
-                                                setData('status', value)
+                                                setData("status", value)
                                             }
                                         >
                                             <SelectTrigger
@@ -190,6 +236,65 @@ export default function CreateDistributor() {
                                     </div>
 
                                     <div className="grid gap-2">
+                                        <Label htmlFor="tax_id">
+                                            Tax ID Number
+                                        </Label>
+                                        <Input
+                                            id="tax_id"
+                                            type="text"
+                                            placeholder="e.g. VAT-123456789"
+                                            value={data.tax_id}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "tax_id",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.tax_id} />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="website">
+                                            Website URL
+                                        </Label>
+                                        <Input
+                                            id="website"
+                                            type="url"
+                                            placeholder="e.g. https://www.distributor.com"
+                                            value={data.website}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "website",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.website} />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="primary_contact">
+                                            Primary Contact
+                                        </Label>
+                                        <Input
+                                            id="primary_contact"
+                                            type="text"
+                                            placeholder="e.g. Jane Doe"
+                                            value={data.primary_contact}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "primary_contact",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.primary_contact}
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="email">Email</Label>
                                         <Input
                                             id="email"
@@ -197,7 +302,7 @@ export default function CreateDistributor() {
                                             placeholder="e.g. contact@distributor.com"
                                             value={data.email}
                                             onChange={(e) =>
-                                                setData('email', e.target.value)
+                                                setData("email", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.email} />
@@ -213,10 +318,10 @@ export default function CreateDistributor() {
                                             value={data.phone}
                                             onChange={(e) =>
                                                 setData(
-                                                    'phone',
+                                                    "phone",
                                                     e.target.value.replace(
                                                         /[^0-9+\-()\s]/g,
-                                                        '',
+                                                        "",
                                                     ),
                                                 )
                                             }
@@ -233,7 +338,7 @@ export default function CreateDistributor() {
                                             value={data.address}
                                             onChange={(e) =>
                                                 setData(
-                                                    'address',
+                                                    "address",
                                                     e.target.value,
                                                 )
                                             }
@@ -300,9 +405,9 @@ export default function CreateDistributor() {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Distributors', href: distributorsRoutes.index() },
-    { title: 'Create', href: distributorsRoutes.create() },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Distributors", href: distributorsRoutes.index() },
+    { title: "Create", href: distributorsRoutes.create() },
 ];
 
 CreateDistributor.layout = {
