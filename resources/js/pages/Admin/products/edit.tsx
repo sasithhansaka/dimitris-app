@@ -1,25 +1,41 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { dashboard } from '@/routes';
-import brandsRoutes from '@/routes/brands';
-import productCategoriesRoutes from '@/routes/product-categories';
-import productsRoutes from '@/routes/products';
-import type { BreadcrumbItem, Product } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { Package, Plus, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { dashboard } from "@/routes";
+import brandsRoutes from "@/routes/brands";
+import productCategoriesRoutes from "@/routes/product-categories";
+import productsRoutes from "@/routes/products";
+import type { BreadcrumbItem, Product } from "@/types";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Package, Plus, X } from "lucide-react";
+import { useRef, useState } from "react";
+
+type ProductBrandOption = {
+    id: number;
+    name: string;
+    distributors?: { id: number; name: string }[];
+};
+
+function brandOptionLabel(brand: ProductBrandOption): string {
+    const distributorNames = (brand.distributors ?? [])
+        .map((d) => d.name)
+        .join(", ");
+
+    return distributorNames
+        ? `${brand.name} - Distributor: ${distributorNames}`
+        : brand.name;
+}
 
 export default function EditProduct({
     product,
@@ -27,12 +43,12 @@ export default function EditProduct({
     categories,
 }: {
     product: Product;
-    brands: { id: number; name: string }[];
+    brands: ProductBrandOption[];
     categories: { id: number; name: string }[];
 }) {
     const linkedTo = [
-        (product.retailers_count ?? 0) > 0 ? 'retailers' : null,
-        (product.coupons_count ?? 0) > 0 ? 'coupons' : null,
+        (product.retailers_count ?? 0) > 0 ? "retailers" : null,
+        (product.coupons_count ?? 0) > 0 ? "coupons" : null,
     ].filter((item): item is string => item !== null);
     const isLinked = linkedTo.length > 0;
 
@@ -40,12 +56,17 @@ export default function EditProduct({
         name: product.name,
         brand_id: String(product.brand_id),
         category_id: String(product.category_id),
-        description: product.description ?? '',
+        description: product.description ?? "",
+        pack_size: product.pack_size ?? "",
+        sku: product.sku ?? "",
+        barcode: product.barcode ?? "",
+        variant: product.variant ?? "",
+        receipt_aliases: product.receipt_aliases ?? "",
         image: null as File | null,
         status: product.status,
         featured: product.featured,
         remove_image: false,
-        _method: 'put',
+        _method: "put",
     });
 
     const originalImage = product.image ? `/storage/${product.image}` : null;
@@ -53,6 +74,39 @@ export default function EditProduct({
         originalImage,
     );
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [receiptAliasInput, setReceiptAliasInput] = useState("");
+
+    const receiptAliasList = data.receipt_aliases
+        ? data.receipt_aliases.split(",").filter((k) => k.trim() !== "")
+        : [];
+
+    const addReceiptAlias = () => {
+        const value = receiptAliasInput.trim();
+        if (!value) {
+            return;
+        }
+        if (receiptAliasList.includes(value)) {
+            setReceiptAliasInput("");
+            return;
+        }
+        setData("receipt_aliases", [...receiptAliasList, value].join(","));
+        setReceiptAliasInput("");
+    };
+
+    const removeReceiptAlias = (alias: string) => {
+        setData(
+            "receipt_aliases",
+            receiptAliasList.filter((k) => k !== alias).join(","),
+        );
+    };
+
+    const handleReceiptAliasKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            addReceiptAlias();
+        }
+    };
 
     const sortedBrands = [...brands].sort((a, b) =>
         a.name.localeCompare(b.name),
@@ -79,7 +133,7 @@ export default function EditProduct({
         }));
         setImagePreview(null);
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = "";
         }
     };
 
@@ -115,9 +169,22 @@ export default function EditProduct({
 
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
-                                    <div className="grid gap-2 sm:col-span-2">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="product_code">
+                                            Product ID
+                                        </Label>
+                                        <Input
+                                            id="product_code"
+                                            type="text"
+                                            value={product.product_code}
+                                            disabled
+                                            readOnly
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Product Name{' '}
+                                            Product Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -129,7 +196,7 @@ export default function EditProduct({
                                             placeholder="e.g. Wireless Mouse"
                                             value={data.name}
                                             onChange={(e) =>
-                                                setData('name', e.target.value)
+                                                setData("name", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.name} />
@@ -138,7 +205,7 @@ export default function EditProduct({
                                     <div className="grid gap-2">
                                         <div className="flex items-center gap-3">
                                             <Label htmlFor="brand_id">
-                                                Brand{' '}
+                                                Brand{" "}
                                                 <span className="text-destructive">
                                                     *
                                                 </span>
@@ -155,7 +222,7 @@ export default function EditProduct({
                                             <Select
                                                 value={data.brand_id}
                                                 onValueChange={(value) =>
-                                                    setData('brand_id', value)
+                                                    setData("brand_id", value)
                                                 }
                                             >
                                                 <SelectTrigger
@@ -173,7 +240,9 @@ export default function EditProduct({
                                                                     brand.id,
                                                                 )}
                                                             >
-                                                                {brand.name}
+                                                                {brandOptionLabel(
+                                                                    brand,
+                                                                )}
                                                             </SelectItem>
                                                         ),
                                                     )}
@@ -191,7 +260,7 @@ export default function EditProduct({
                                     <div className="grid gap-2">
                                         <div className="flex items-center justify-between">
                                             <Label htmlFor="category_id">
-                                                Category{' '}
+                                                Category{" "}
                                                 <span className="text-destructive">
                                                     *
                                                 </span>
@@ -212,7 +281,7 @@ export default function EditProduct({
                                                 value={data.category_id}
                                                 onValueChange={(value) =>
                                                     setData(
-                                                        'category_id',
+                                                        "category_id",
                                                         value,
                                                     )
                                                 }
@@ -253,7 +322,7 @@ export default function EditProduct({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="status">
-                                            Status{' '}
+                                            Status{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -262,7 +331,7 @@ export default function EditProduct({
                                             value={data.status}
                                             onValueChange={(value) =>
                                                 setData(
-                                                    'status',
+                                                    "status",
                                                     value as typeof data.status,
                                                 )
                                             }
@@ -279,17 +348,13 @@ export default function EditProduct({
                                                 </SelectItem>
                                                 <SelectItem
                                                     value="inactive"
-                                                    disabled={
-                                                        isLinked
-                                                    }
+                                                    disabled={isLinked}
                                                 >
                                                     Inactive
                                                 </SelectItem>
                                                 <SelectItem
                                                     value="draft"
-                                                    disabled={
-                                                        isLinked
-                                                    }
+                                                    disabled={isLinked}
                                                 >
                                                     Draft
                                                 </SelectItem>
@@ -297,9 +362,9 @@ export default function EditProduct({
                                         </Select>
                                         {isLinked && (
                                             <p className="text-muted-foreground text-xs">
-                                                This product is linked to one
-                                                or more {linkedTo.join(', ')}{' '}
-                                                and must stay active.
+                                                This product is linked to one or
+                                                more {linkedTo.join(", ")} and
+                                                must stay active.
                                             </p>
                                         )}
                                         <InputError message={errors.status} />
@@ -311,7 +376,7 @@ export default function EditProduct({
                                             checked={data.featured}
                                             onCheckedChange={(checked) =>
                                                 setData(
-                                                    'featured',
+                                                    "featured",
                                                     checked === true,
                                                 )
                                             }
@@ -327,7 +392,7 @@ export default function EditProduct({
 
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
-                                            Description{' '}
+                                            Description
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -335,11 +400,11 @@ export default function EditProduct({
                                         <textarea
                                             id="description"
                                             rows={4}
-                                            placeholder="A short description of this product"
+                                            placeholder="Description of this product"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'description',
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
@@ -350,9 +415,126 @@ export default function EditProduct({
                                         />
                                     </div>
 
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="pack_size">
+                                            Pack Size
+                                        </Label>
+                                        <Input
+                                            id="pack_size"
+                                            type="text"
+                                            placeholder="e.g. 500ml, 12-pack"
+                                            value={data.pack_size}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "pack_size",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.pack_size}
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="variant">Variant</Label>
+                                        <Input
+                                            id="variant"
+                                            type="text"
+                                            placeholder="e.g. Original, Blue"
+                                            value={data.variant}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "variant",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.variant} />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="sku">SKU</Label>
+                                        <Input
+                                            id="sku"
+                                            type="text"
+                                            placeholder="e.g. SKU-12345"
+                                            value={data.sku}
+                                            onChange={(e) =>
+                                                setData("sku", e.target.value)
+                                            }
+                                        />
+                                        <InputError message={errors.sku} />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="barcode">Barcode</Label>
+                                        <Input
+                                            id="barcode"
+                                            type="text"
+                                            placeholder="e.g. 0123456789012"
+                                            value={data.barcode}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "barcode",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.barcode} />
+                                    </div>
+
+                                    <div className="grid gap-2 sm:col-span-2">
+                                        <Label htmlFor="receipt_aliases">
+                                            Receipt Aliases
+                                        </Label>
+                                        <Input
+                                            id="receipt_aliases"
+                                            type="text"
+                                            placeholder="Type an alias and press Enter"
+                                            value={receiptAliasInput}
+                                            onChange={(e) =>
+                                                setReceiptAliasInput(
+                                                    e.target.value,
+                                                )
+                                            }
+                                            onKeyDown={
+                                                handleReceiptAliasKeyDown
+                                            }
+                                        />
+                                        {receiptAliasList.length > 0 && (
+                                            <div className="flex flex-wrap gap-2">
+                                                {receiptAliasList.map(
+                                                    (alias) => (
+                                                        <span
+                                                            key={alias}
+                                                            className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                                                        >
+                                                            {alias}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    removeReceiptAlias(
+                                                                        alias,
+                                                                    )
+                                                                }
+                                                                className="cursor-pointer text-gray-500 hover:text-red-600"
+                                                            >
+                                                                <X className="h-3 w-3" />
+                                                            </button>
+                                                        </span>
+                                                    ),
+                                                )}
+                                            </div>
+                                        )}
+                                        <InputError
+                                            message={errors.receipt_aliases}
+                                        />
+                                    </div>
+
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="image">
-                                            Image{' '}
+                                            Image{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -414,9 +596,9 @@ export default function EditProduct({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Products', href: productsRoutes.index() },
-    { title: 'Edit', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Products", href: productsRoutes.index() },
+    { title: "Edit", href: "#" },
 ];
 
 EditProduct.layout = {

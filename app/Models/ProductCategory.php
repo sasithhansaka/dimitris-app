@@ -10,13 +10,14 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property string $category_code
  * @property string $name
  * @property string|null $description
  * @property string $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'description', 'status'])]
+#[Fillable(['category_code', 'name', 'description', 'status'])]
 class ProductCategory extends Model
 {
     use LogsActivity;
@@ -28,6 +29,34 @@ class ProductCategory extends Model
     public const STATUS_INACTIVE = 'inactive';
 
     public const STATUS_DRAFT = 'draft';
+
+    protected static function booted(): void
+    {
+        static::creating(function (ProductCategory $productCategory) {
+            if (empty($productCategory->category_code)) {
+                $productCategory->category_code = static::nextCategoryCode();
+            }
+        });
+    }
+
+    /**
+     * Generate the next sequential category code (e.g. PCA-001).
+     */
+    public static function nextCategoryCode(): string
+    {
+        $lastCode = static::query()
+            ->whereNotNull('category_code')
+            ->orderByDesc('id')
+            ->value('category_code');
+
+        $nextNumber = 1;
+
+        if ($lastCode && preg_match('/(\d+)$/', $lastCode, $matches)) {
+            $nextNumber = ((int) $matches[1]) + 1;
+        }
+
+        return 'PCA-'.str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
+    }
 
     public function products(): HasMany
     {

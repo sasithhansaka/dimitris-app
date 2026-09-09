@@ -1,25 +1,25 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { COUNTRIES } from '@/lib/countries';
-import { dashboard } from '@/routes';
-import productsRoutes from '@/routes/products';
-import retailersRoutes from '@/routes/retailers';
-import type { BreadcrumbItem, Retailer } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { Plus, Store, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { COUNTRIES } from "@/lib/countries";
+import { dashboard } from "@/routes";
+import productsRoutes from "@/routes/products";
+import retailersRoutes from "@/routes/retailers";
+import type { BreadcrumbItem, Retailer } from "@/types";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Plus, Store, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 export default function EditRetailer({
     retailer,
@@ -33,15 +33,17 @@ export default function EditRetailer({
     const { data, setData, post, processing, errors } = useForm({
         name: retailer.name,
         country: retailer.country,
-        description: retailer.description ?? '',
+        description: retailer.description ?? "",
         logo: null as File | null,
-        email: retailer.email ?? '',
-        phone: retailer.phone ?? '',
-        address: retailer.address ?? '',
+        website: retailer.website ?? "",
+        primary_contact: retailer.primary_contact ?? "",
+        email: retailer.email ?? "",
+        phone: retailer.phone ?? "",
+        address: retailer.address ?? "",
         status: retailer.status,
         product_ids: (retailer.products ?? []).map((p) => p.id),
         remove_logo: false,
-        _method: 'put',
+        _method: "put",
     });
 
     const originalLogo = retailer.logo ? `/storage/${retailer.logo}` : null;
@@ -54,7 +56,7 @@ export default function EditRetailer({
 
     const toggleProduct = (id: number, checked: boolean) => {
         setData(
-            'product_ids',
+            "product_ids",
             checked
                 ? [...data.product_ids, id]
                 : data.product_ids.filter((productId) => productId !== id),
@@ -79,7 +81,7 @@ export default function EditRetailer({
         }));
         setLogoPreview(null);
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = "";
         }
     };
 
@@ -118,8 +120,21 @@ export default function EditRetailer({
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
+                                        <Label htmlFor="retailer_code">
+                                            Retailer ID
+                                        </Label>
+                                        <Input
+                                            id="retailer_code"
+                                            type="text"
+                                            value={retailer.retailer_code}
+                                            disabled
+                                            readOnly
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Retailer Name{' '}
+                                            Retailer Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -131,7 +146,7 @@ export default function EditRetailer({
                                             placeholder="e.g. ABC Supermarket"
                                             value={data.name}
                                             onChange={(e) =>
-                                                setData('name', e.target.value)
+                                                setData("name", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.name} />
@@ -139,7 +154,7 @@ export default function EditRetailer({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="country">
-                                            Country{' '}
+                                            Country{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -147,7 +162,7 @@ export default function EditRetailer({
                                         <Select
                                             value={data.country}
                                             onValueChange={(value) =>
-                                                setData('country', value)
+                                                setData("country", value)
                                             }
                                         >
                                             <SelectTrigger
@@ -172,16 +187,16 @@ export default function EditRetailer({
 
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
-                                            Description
+                                            Internal Notes
                                         </Label>
                                         <textarea
                                             id="description"
                                             rows={4}
-                                            placeholder="A short description of this retailer"
+                                            placeholder="Internal notes for this retailer"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'description',
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
@@ -194,7 +209,7 @@ export default function EditRetailer({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="status">
-                                            Status{' '}
+                                            Status{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -203,7 +218,7 @@ export default function EditRetailer({
                                             value={data.status}
                                             onValueChange={(value) =>
                                                 setData(
-                                                    'status',
+                                                    "status",
                                                     value as typeof data.status,
                                                 )
                                             }
@@ -243,6 +258,46 @@ export default function EditRetailer({
                                     </div>
 
                                     <div className="grid gap-2">
+                                        <Label htmlFor="website">
+                                            Website URL
+                                        </Label>
+                                        <Input
+                                            id="website"
+                                            type="url"
+                                            placeholder="e.g. https://www.retailer.com"
+                                            value={data.website}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "website",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.website} />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="primary_contact">
+                                            Primary Contact
+                                        </Label>
+                                        <Input
+                                            id="primary_contact"
+                                            type="text"
+                                            placeholder="e.g. Jane Doe"
+                                            value={data.primary_contact}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "primary_contact",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.primary_contact}
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="email">Email</Label>
                                         <Input
                                             id="email"
@@ -250,7 +305,7 @@ export default function EditRetailer({
                                             placeholder="e.g. contact@retailer.com"
                                             value={data.email}
                                             onChange={(e) =>
-                                                setData('email', e.target.value)
+                                                setData("email", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.email} />
@@ -266,10 +321,10 @@ export default function EditRetailer({
                                             value={data.phone}
                                             onChange={(e) =>
                                                 setData(
-                                                    'phone',
+                                                    "phone",
                                                     e.target.value.replace(
                                                         /[^0-9+\-()\s]/g,
-                                                        '',
+                                                        "",
                                                     ),
                                                 )
                                             }
@@ -286,7 +341,7 @@ export default function EditRetailer({
                                             value={data.address}
                                             onChange={(e) =>
                                                 setData(
-                                                    'address',
+                                                    "address",
                                                     e.target.value,
                                                 )
                                             }
@@ -297,7 +352,7 @@ export default function EditRetailer({
                                     <div className="grid gap-2 sm:col-span-2">
                                         <div className="flex items-center gap-3">
                                             <Label>
-                                                Products{' '}
+                                                Products{" "}
                                                 <span className="text-destructive">
                                                     *
                                                 </span>
@@ -420,9 +475,9 @@ export default function EditRetailer({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Retailers', href: retailersRoutes.index() },
-    { title: 'Edit', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Retailers", href: retailersRoutes.index() },
+    { title: "Edit", href: "#" },
 ];
 
 EditRetailer.layout = {

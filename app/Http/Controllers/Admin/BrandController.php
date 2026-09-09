@@ -24,7 +24,7 @@ class BrandController extends Controller
      */
     public function index(Request $request): Response
     {
-        $query = Brand::query()->with('distributors');
+        $query = Brand::query()->with(['distributors:id,name,country']);
 
         if ($search = $request->string('searchParam')->toString()) {
             $query->where(function ($q) use ($search) {
@@ -60,6 +60,7 @@ class BrandController extends Controller
                 ->where('status', Distributor::STATUS_ACTIVE)
                 ->orderBy('name')
                 ->get(['id', 'name']),
+            'nextBrandCode' => Brand::nextBrandCode(),
         ]);
     }
 

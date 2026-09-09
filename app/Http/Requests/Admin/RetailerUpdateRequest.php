@@ -28,6 +28,8 @@ class RetailerUpdateRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'logo' => ['nullable', 'image', 'max:5120'],
             'remove_logo' => ['nullable', 'boolean'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'primary_contact' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50', 'regex:/^[0-9+\-()\s]+$/'],
             'address' => ['nullable', 'string', 'max:255'],

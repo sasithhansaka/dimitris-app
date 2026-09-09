@@ -27,6 +27,7 @@ class BrandUpdateRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'logo' => ['nullable', 'image', 'max:5120'],
             'remove_logo' => ['nullable', 'boolean'],
+            'website' => ['nullable', 'url', 'max:255'],
             'status' => ['required', Rule::in([
                 Brand::STATUS_ACTIVE,
                 Brand::STATUS_INACTIVE,

@@ -1,13 +1,13 @@
-import { BrandMark } from '@/components/BrandMark';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { dashboard } from '@/routes';
-import brandsRoutes from '@/routes/brands';
-import type { Brand, BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { PencilIcon, Truck } from 'lucide-react';
+import { BrandMark } from "@/components/BrandMark";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { dashboard } from "@/routes";
+import brandsRoutes from "@/routes/brands";
+import type { Brand, BreadcrumbItem } from "@/types";
+import { Head, Link } from "@inertiajs/react";
+import { Globe, PencilIcon, Truck } from "lucide-react";
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -20,8 +20,8 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     );
 }
 
-function StatusBadge({ status }: { status: Brand['status'] }) {
-    if (status === 'active') {
+function StatusBadge({ status }: { status: Brand["status"] }) {
+    if (status === "active") {
         return (
             <Badge className="border-transparent bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
                 Active
@@ -29,7 +29,7 @@ function StatusBadge({ status }: { status: Brand['status'] }) {
         );
     }
 
-    if (status === 'inactive') {
+    if (status === "inactive") {
         return (
             <Badge className="border-transparent bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400">
                 Inactive
@@ -46,9 +46,9 @@ function StatusBadge({ status }: { status: Brand['status'] }) {
 
 function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+        year: "numeric",
+        month: "short",
+        day: "numeric",
     });
 }
 
@@ -111,9 +111,14 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
                                         logo={brand.logo}
                                         className="size-10 text-base"
                                     />
-                                    <span className="text-foreground text-sm font-semibold">
-                                        {brand.name}
-                                    </span>
+                                    <div className="flex flex-col">
+                                        <span className="text-foreground text-sm font-semibold">
+                                            {brand.name}
+                                        </span>
+                                        <span className="text-muted-foreground text-xs">
+                                            {brand.brand_code}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {brand.featured && (
@@ -128,7 +133,29 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
 
                         <CardContent className="space-y-8 px-6 py-6">
                             <div className="grid gap-5 sm:grid-cols-2">
+                                <InfoRow
+                                    label="Brand ID"
+                                    value={brand.brand_code}
+                                />
                                 <InfoRow label="Name" value={brand.name} />
+                                <InfoRow
+                                    label="Website"
+                                    value={
+                                        brand.website ? (
+                                            <a
+                                                href={brand.website}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 text-[#073BBC] hover:underline"
+                                            >
+                                                <Globe className="size-3.5" />
+                                                {brand.website}
+                                            </a>
+                                        ) : (
+                                            "-"
+                                        )
+                                    }
+                                />
                                 <InfoRow
                                     label="Created"
                                     value={formatDate(brand.created_at)}
@@ -138,8 +165,8 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
                             <Separator />
 
                             <InfoRow
-                                label="Description"
-                                value={brand.description ?? '-'}
+                                label="Internal Notes"
+                                value={brand.description ?? "-"}
                             />
 
                             <Separator />
@@ -233,9 +260,9 @@ export default function BrandsShow({ brand }: { brand: Brand }) {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Brands', href: brandsRoutes.index() },
-    { title: 'View Brand', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Brands", href: brandsRoutes.index() },
+    { title: "View Brand", href: "#" },
 ];
 
 BrandsShow.layout = {

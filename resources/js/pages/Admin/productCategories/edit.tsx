@@ -1,21 +1,21 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { dashboard } from '@/routes';
-import productCategoriesRoutes from '@/routes/product-categories';
-import type { BreadcrumbItem, ProductCategory } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import { Tags } from 'lucide-react';
+} from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { dashboard } from "@/routes";
+import productCategoriesRoutes from "@/routes/product-categories";
+import type { BreadcrumbItem, ProductCategory } from "@/types";
+import { Head, useForm } from "@inertiajs/react";
+import { Tags } from "lucide-react";
 
 export default function EditProductCategory({
     productCategory,
@@ -26,7 +26,7 @@ export default function EditProductCategory({
 
     const { data, setData, put, processing, errors } = useForm({
         name: productCategory.name,
-        description: productCategory.description ?? '',
+        description: productCategory.description ?? "",
         status: productCategory.status,
     });
 
@@ -63,8 +63,23 @@ export default function EditProductCategory({
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
+                                        <Label htmlFor="category_code">
+                                            Category ID
+                                        </Label>
+                                        <Input
+                                            id="category_code"
+                                            type="text"
+                                            value={
+                                                productCategory.category_code
+                                            }
+                                            disabled
+                                            readOnly
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Category Name{' '}
+                                            Category Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -76,7 +91,7 @@ export default function EditProductCategory({
                                             placeholder="e.g. Electronics"
                                             value={data.name}
                                             onChange={(e) =>
-                                                setData('name', e.target.value)
+                                                setData("name", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.name} />
@@ -84,7 +99,7 @@ export default function EditProductCategory({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="status">
-                                            Status{' '}
+                                            Status{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -93,7 +108,7 @@ export default function EditProductCategory({
                                             value={data.status}
                                             onValueChange={(value) =>
                                                 setData(
-                                                    'status',
+                                                    "status",
                                                     value as typeof data.status,
                                                 )
                                             }
@@ -147,7 +162,7 @@ export default function EditProductCategory({
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
-                                                    'description',
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
@@ -188,9 +203,9 @@ export default function EditProductCategory({
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Product Categories', href: productCategoriesRoutes.index() },
-    { title: 'Edit', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Product Categories", href: productCategoriesRoutes.index() },
+    { title: "Edit", href: "#" },
 ];
 
 EditProductCategory.layout = {

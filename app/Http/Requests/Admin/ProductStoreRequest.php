@@ -21,6 +21,11 @@ class ProductStoreRequest extends FormRequest
             'brand_id' => ['required', 'integer', 'exists:brands,id'],
             'category_id' => ['required', 'integer', 'exists:product_categories,id'],
             'description' => ['required', 'string'],
+            'pack_size' => ['nullable', 'string', 'max:255'],
+            'sku' => ['nullable', 'string', 'max:255'],
+            'barcode' => ['nullable', 'string', 'max:255'],
+            'variant' => ['nullable', 'string', 'max:255'],
+            'receipt_aliases' => ['nullable', 'string'],
             'image' => ['required', 'image', 'max:5120'],
             'status' => ['required', Rule::in([
                 Product::STATUS_ACTIVE,

@@ -1,12 +1,12 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { dashboard } from '@/routes';
-import productsRoutes from '@/routes/products';
-import type { BreadcrumbItem, Product } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { PencilIcon, Package, Store, Tags, Truck } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { dashboard } from "@/routes";
+import productsRoutes from "@/routes/products";
+import type { BreadcrumbItem, Product } from "@/types";
+import { Head, Link } from "@inertiajs/react";
+import { PencilIcon, Package, Store, Tags, Truck } from "lucide-react";
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     return (
@@ -19,8 +19,8 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
     );
 }
 
-function StatusBadge({ status }: { status: Product['status'] }) {
-    if (status === 'active') {
+function StatusBadge({ status }: { status: Product["status"] }) {
+    if (status === "active") {
         return (
             <Badge className="border-transparent bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
                 Active
@@ -28,7 +28,7 @@ function StatusBadge({ status }: { status: Product['status'] }) {
         );
     }
 
-    if (status === 'inactive') {
+    if (status === "inactive") {
         return (
             <Badge className="border-transparent bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400">
                 Inactive
@@ -45,9 +45,9 @@ function StatusBadge({ status }: { status: Product['status'] }) {
 
 function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+        year: "numeric",
+        month: "short",
+        day: "numeric",
     });
 }
 
@@ -55,6 +55,10 @@ export default function ProductsShow({ product }: { product: Product }) {
     const retailers = [...(product.retailers ?? [])].sort((a, b) =>
         a.name.localeCompare(b.name),
     );
+    const receiptAliases = (product.receipt_aliases ?? "")
+        .split(",")
+        .map((alias) => alias.trim())
+        .filter(Boolean);
 
     return (
         <>
@@ -112,9 +116,14 @@ export default function ProductsShow({ product }: { product: Product }) {
                                             <Package className="text-muted-foreground size-4.5" />
                                         </div>
                                     )}
-                                    <span className="text-foreground text-sm font-semibold">
-                                        {product.name}
-                                    </span>
+                                    <div className="flex flex-col">
+                                        <span className="text-foreground text-sm font-semibold">
+                                            {product.name}
+                                        </span>
+                                        <span className="text-muted-foreground text-xs">
+                                            {product.product_code}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {product.featured && (
@@ -129,6 +138,10 @@ export default function ProductsShow({ product }: { product: Product }) {
 
                         <CardContent className="space-y-8 px-6 py-6">
                             <div className="grid gap-5 sm:grid-cols-2">
+                                <InfoRow
+                                    label="Product ID"
+                                    value={product.product_code}
+                                />
                                 <InfoRow label="Name" value={product.name} />
                                 <InfoRow
                                     label="Brand"
@@ -139,7 +152,7 @@ export default function ProductsShow({ product }: { product: Product }) {
                                                 {product.brand.name}
                                             </span>
                                         ) : (
-                                            '-'
+                                            "-"
                                         )
                                     }
                                 />
@@ -152,9 +165,25 @@ export default function ProductsShow({ product }: { product: Product }) {
                                                 {product.category.name}
                                             </span>
                                         ) : (
-                                            '-'
+                                            "-"
                                         )
                                     }
+                                />
+                                <InfoRow
+                                    label="Pack Size"
+                                    value={product.pack_size ?? "-"}
+                                />
+                                <InfoRow
+                                    label="Variant"
+                                    value={product.variant ?? "-"}
+                                />
+                                <InfoRow
+                                    label="SKU"
+                                    value={product.sku ?? "-"}
+                                />
+                                <InfoRow
+                                    label="Barcode"
+                                    value={product.barcode ?? "-"}
                                 />
                                 <InfoRow
                                     label="Created"
@@ -166,8 +195,32 @@ export default function ProductsShow({ product }: { product: Product }) {
 
                             <InfoRow
                                 label="Description"
-                                value={product.description ?? '-'}
+                                value={product.description ?? "-"}
                             />
+
+                            <Separator />
+
+                            <div className="grid gap-2">
+                                <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                                    Receipt Aliases
+                                </span>
+                                {receiptAliases.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2 pt-1">
+                                        {receiptAliases.map((alias) => (
+                                            <span
+                                                key={alias}
+                                                className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                                            >
+                                                {alias}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <span className="text-foreground text-sm">
+                                        -
+                                    </span>
+                                )}
+                            </div>
 
                             <Separator />
 
@@ -202,9 +255,9 @@ export default function ProductsShow({ product }: { product: Product }) {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-    { title: 'Products', href: productsRoutes.index() },
-    { title: 'View Product', href: '#' },
+    { title: "Dashboard", href: dashboard() },
+    { title: "Products", href: productsRoutes.index() },
+    { title: "View Product", href: "#" },
 ];
 
 ProductsShow.layout = {

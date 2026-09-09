@@ -26,9 +26,9 @@ class DistributorController extends Controller
 
         if ($search = $request->string('searchParam')->toString()) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('country', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                $q->where('distributor_code', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
+                    ->orWhere('country', 'like', "%{$search}%");
             });
         }
 
@@ -54,7 +54,9 @@ class DistributorController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Admin/distributors/create');
+        return Inertia::render('Admin/distributors/create', [
+            'nextDistributorCode' => Distributor::nextDistributorCode(),
+        ]);
     }
 
     /**

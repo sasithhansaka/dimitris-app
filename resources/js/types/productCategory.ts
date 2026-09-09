@@ -1,10 +1,11 @@
-import type { Product } from './product';
+import type { Product } from "./product";
 
 export type ProductCategory = {
     id: number;
+    category_code: string;
     name: string;
     description: string | null;
-    status: 'active' | 'inactive' | 'draft';
+    status: "active" | "inactive" | "draft";
     products?: Product[];
     products_count?: number;
     created_at: string;

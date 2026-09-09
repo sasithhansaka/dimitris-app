@@ -22,13 +22,16 @@ import { useRef, useState } from "react";
 
 export default function CreateBrand({
     distributors,
+    nextBrandCode,
 }: {
     distributors: { id: number; name: string }[];
+    nextBrandCode: string;
 }) {
     const { data, setData, post, processing, errors } = useForm({
         name: "",
         description: "",
         logo: null as File | null,
+        website: "",
         status: "active",
         featured: false,
         distributor_ids: [] as number[],
@@ -98,6 +101,23 @@ export default function CreateBrand({
 
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="brand_code">
+                                            Brand ID
+                                        </Label>
+                                        <Input
+                                            id="brand_code"
+                                            type="text"
+                                            value={nextBrandCode}
+                                            disabled
+                                            readOnly
+                                        />
+                                        <p className="text-muted-foreground text-xs">
+                                            Automatically assigned when the
+                                            brand is created.
+                                        </p>
+                                    </div>
+
                                     <div className="grid gap-2">
                                         <Label htmlFor="name">
                                             Brand Name{" "}
@@ -172,14 +192,33 @@ export default function CreateBrand({
                                         <InputError message={errors.featured} />
                                     </div>
 
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="website">
+                                            Website URL
+                                        </Label>
+                                        <Input
+                                            id="website"
+                                            type="url"
+                                            placeholder="e.g. https://www.brand.com"
+                                            value={data.website}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "website",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.website} />
+                                    </div>
+
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
-                                            Description
+                                            Internal Notes
                                         </Label>
                                         <textarea
                                             id="description"
                                             rows={4}
-                                            placeholder="A short description of this brand"
+                                            placeholder="Internal notes about this brand"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(

@@ -23,7 +23,8 @@ class ProductCategoryController extends Controller
 
         if ($search = $request->string('searchParam')->toString()) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->where('category_code', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
             });
         }
@@ -50,7 +51,9 @@ class ProductCategoryController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Admin/productCategories/create');
+        return Inertia::render('Admin/productCategories/create', [
+            'nextCategoryCode' => ProductCategory::nextCategoryCode(),
+        ]);
     }
 
     /**

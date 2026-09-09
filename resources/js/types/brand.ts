@@ -1,13 +1,15 @@
-import type { Distributor } from './distributor';
-import type { Offer } from './offer';
-import type { Product } from './product';
+import type { Distributor } from "./distributor";
+import type { Offer } from "./offer";
+import type { Product } from "./product";
 
 export type Brand = {
     id: number;
+    brand_code: string;
     name: string;
     description: string | null;
     logo: string | null;
-    status: 'active' | 'inactive' | 'draft';
+    website: string | null;
+    status: "active" | "inactive" | "draft";
     featured: boolean;
     distributors?: Distributor[];
     products?: Product[];

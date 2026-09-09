@@ -10,9 +10,12 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property string $retailer_code
  * @property string $name
  * @property string|null $description
  * @property string|null $logo
+ * @property string|null $website
+ * @property string|null $primary_contact
  * @property string|null $email
  * @property string|null $phone
  * @property string|null $address
@@ -21,7 +24,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'description', 'logo', 'email', 'phone', 'address', 'country', 'status'])]
+#[Fillable(['retailer_code', 'name', 'description', 'logo', 'website', 'primary_contact', 'email', 'phone', 'address', 'country', 'status'])]
 class Retailer extends Model
 {
     use LogsActivity;
@@ -31,6 +34,34 @@ class Retailer extends Model
     public const STATUS_INACTIVE = 'inactive';
 
     public const STATUS_DRAFT = 'draft';
+
+    protected static function booted(): void
+    {
+        static::creating(function (Retailer $retailer) {
+            if (empty($retailer->retailer_code)) {
+                $retailer->retailer_code = static::nextRetailerCode();
+            }
+        });
+    }
+
+    /**
+     * Generate the next sequential retailer code (e.g. RET-001).
+     */
+    public static function nextRetailerCode(): string
+    {
+        $lastCode = static::query()
+            ->whereNotNull('retailer_code')
+            ->orderByDesc('id')
+            ->value('retailer_code');
+
+        $nextNumber = 1;
+
+        if ($lastCode && preg_match('/(\d+)$/', $lastCode, $matches)) {
+            $nextNumber = ((int) $matches[1]) + 1;
+        }
+
+        return 'RET-'.str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
+    }
 
     public function products(): BelongsToMany
     {
