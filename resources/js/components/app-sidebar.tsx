@@ -82,13 +82,13 @@ const productNavItems: NavItem[] = [
     },
 ];
 
-const brandNavItems: NavItem[] = [
-    {
-        title: "Brands",
-        href: brandsRoutes.index(),
-        icon: Tag,
-    },
-];
+// const brandNavItems: NavItem[] = [
+//     {
+//         title: "Brands",
+//         href: brandsRoutes.index(),
+//         icon: Tag,
+//     },
+// ];
 
 const distributorNavItems: NavItem[] = [
     {
@@ -96,15 +96,25 @@ const distributorNavItems: NavItem[] = [
         href: distributorsRoutes.index(),
         icon: Building2,
     },
-];
-
-const retailerNavItems: NavItem[] = [
     {
+        title: "Brands",
+        href: brandsRoutes.index(),
+        icon: Tag,
+    },
+      {
         title: "Retailers",
         href: retailersRoutes.index(),
         icon: Store,
     },
 ];
+
+// const retailerNavItems: NavItem[] = [
+//     {
+//         title: "Retailers",
+//         href: retailersRoutes.index(),
+//         icon: Store,
+//     },
+// ];
 
 // const offerNavItems: NavItem[] = [
 //     {
@@ -154,7 +164,11 @@ export function AppSidebar() {
             <SidebarHeader className="border-b border-white/10">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                        <SidebarMenuButton
+                            size="lg"
+                            asChild
+                            className="h-auto group-data-[collapsible=icon]:p-2!"
+                        >
                             <Link href={dashboard()} prefetch>
                                 <AppLogo />
                             </Link>
@@ -166,9 +180,9 @@ export function AppSidebar() {
             <SidebarContent>
                 <NavMain items={mainNavItems} label="Platform" />
                 <NavMain items={productNavItems} label="Products" />
-                <NavMain items={brandNavItems} label="Brands" />
-                <NavMain items={retailerNavItems} label="Retailers" />
-                <NavMain items={distributorNavItems} label="Distributors" />
+                {/* <NavMain items={brandNavItems} label="Brands" /> */}
+                {/* <NavMain items={retailerNavItems} label="Retailers" /> */}
+                <NavMain items={distributorNavItems} label="B2B" />
                 {/* <NavMain items={offerNavItems} label="Offers" /> */}
                 <NavMain items={articleNavItems} label="Articles" />
                 <NavMain items={LogsNavItems} label="Logs" />
