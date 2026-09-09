@@ -215,7 +215,7 @@ export default function DistributorsShow({
                             <Separator />
 
                             <InfoRow
-                                label="Description"
+                                label="Internal Notes"
                                 value={distributor.description ?? "-"}
                             />
 

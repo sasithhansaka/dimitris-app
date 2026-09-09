@@ -194,7 +194,7 @@ export default function EditDistributor({
 
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
-                                            Description
+                                            Internal Notes
                                         </Label>
                                         <textarea
                                             id="description"
