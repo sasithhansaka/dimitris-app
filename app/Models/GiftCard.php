@@ -10,20 +10,19 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
- * @property string $offer_code
+ * @property string $gift_code
  * @property int $brand_id
- * @property string $title
+ * @property string $name
  * @property string $description
- * @property string $image
- * @property Carbon $start_date
- * @property Carbon $end_date
+ * @property string $amount
+ * @property string $currency
+ * @property string|null $image
  * @property string $status
- * @property bool $featured
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['offer_code', 'brand_id', 'title', 'description', 'image', 'start_date', 'end_date', 'status', 'featured'])]
-class Offer extends Model
+#[Fillable(['gift_code', 'brand_id', 'name', 'description', 'amount', 'currency', 'image', 'status'])]
+class GiftCard extends Model
 {
     use LogsActivity;
 
@@ -33,30 +32,24 @@ class Offer extends Model
 
     public const STATUS_DRAFT = 'draft';
 
-    protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
-        'featured' => 'boolean',
-    ];
-
     protected static function booted(): void
     {
-        static::creating(function (Offer $offer) {
-            if (empty($offer->offer_code)) {
-                $offer->offer_code = static::nextOfferCode();
+        static::creating(function (GiftCard $giftCard) {
+            if (empty($giftCard->gift_code)) {
+                $giftCard->gift_code = static::nextGiftCode();
             }
         });
     }
 
     /**
-     * Generate the next sequential offer code (e.g. OFF-001).
+     * Generate the next sequential gift card code (e.g. GFT-001).
      */
-    public static function nextOfferCode(): string
+    public static function nextGiftCode(): string
     {
         $lastCode = static::query()
-            ->whereNotNull('offer_code')
+            ->whereNotNull('gift_code')
             ->orderByDesc('id')
-            ->value('offer_code');
+            ->value('gift_code');
 
         $nextNumber = 1;
 
@@ -64,7 +57,7 @@ class Offer extends Model
             $nextNumber = ((int) $matches[1]) + 1;
         }
 
-        return 'OFF-'.str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
+        return 'GFT-'.str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
     }
 
     public function brand(): BelongsTo

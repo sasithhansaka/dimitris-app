@@ -1,4 +1,5 @@
 import type { Distributor } from "./distributor";
+import type { GiftCard } from "./giftCard";
 import type { Offer } from "./offer";
 import type { Product } from "./product";
 
@@ -16,6 +17,8 @@ export type Brand = {
     products_count?: number;
     offers?: Offer[];
     offers_count?: number;
+    giftCards?: GiftCard[];
+    gift_cards_count?: number;
     created_at: string;
     updated_at: string;
     [key: string]: unknown;

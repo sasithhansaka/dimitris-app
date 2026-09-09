@@ -1,34 +1,24 @@
 import Confirm from "@/components/Models/Confirm";
 import MasterTab, { TableBody, TableTd } from "@/components/shared/masterTab";
 import { Badge } from "@/components/ui/badge";
+import { currencySymbol } from "@/lib/currencies";
 import { dashboard } from "@/routes";
-import offersRoutes from "@/routes/offers";
-import type { BreadcrumbItem, Offer } from "@/types";
+import giftCardsRoutes from "@/routes/gift-cards";
+import type { BreadcrumbItem, GiftCard } from "@/types";
 import { Head, Link, router } from "@inertiajs/react";
-import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { EyeIcon, Gift, PencilIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
 const tableColumns = [
     {
-        label: "Offer ID",
-        sortField: "offer_code",
+        label: "Gift ID",
+        sortField: "gift_code",
         sortable: false,
         width: "12%",
     },
-    { label: "Title", sortField: "title", sortable: false, width: "18%" },
+    { label: "Name", sortField: "name", sortable: false, width: "20%" },
     { label: "Brand", sortField: "brand", sortable: false, width: "16%" },
-    {
-        label: "Start Date",
-        sortField: "start_date",
-        sortable: false,
-        width: "14%",
-    },
-    {
-        label: "End Date",
-        sortField: "end_date",
-        sortable: false,
-        width: "14%",
-    },
+    { label: "Amount", sortField: "amount", sortable: false, width: "20%" },
     { label: "Status", sortField: "status", sortable: false, width: "12%" },
     { label: "Actions", sortField: "actions", sortable: false, width: "15%" },
 ];
@@ -44,58 +34,60 @@ function statusClassName(status: string): string {
     }
 }
 
-function formatDate(date: string): string {
-    return new Date(date).toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-    });
+function formatAmounts(amount: string, currency: string): string {
+    const symbol = currencySymbol(currency);
+    const values = amount
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean);
+
+    return values.map((value) => `${symbol}${value}`).join(", ");
 }
 
-export default function OffersIndex({
-    offers,
+export default function GiftCardsIndex({
+    giftCards,
     filters,
 }: {
-    offers: {
-        data: Offer[];
+    giftCards: {
+        data: GiftCard[];
         links: { url: string | null; label: string; active: boolean }[];
     };
     filters: any;
 }) {
-    const [offerToDelete, setOfferToDelete] = useState<Offer | null>(null);
+    const [giftCardToDelete, setGiftCardToDelete] = useState<GiftCard | null>(
+        null,
+    );
     const [isDeleting, setIsDeleting] = useState(false);
 
     const handleDelete = () => {
-        if (!offerToDelete) {
+        if (!giftCardToDelete) {
             return;
         }
 
         setIsDeleting(true);
 
-        router.delete(offersRoutes.destroy(offerToDelete.id).url, {
+        router.delete(giftCardsRoutes.destroy(giftCardToDelete.id).url, {
             preserveScroll: true,
             onFinish: () => {
                 setIsDeleting(false);
-                setOfferToDelete(null);
+                setGiftCardToDelete(null);
             },
         });
     };
 
     return (
         <>
-            <Head title="Offers" />
+            <Head title="Gift Cards" />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <MasterTab
                     tableColumns={tableColumns}
                     filters={filters}
-                    url={offersRoutes.index().url}
+                    url={giftCardsRoutes.index().url}
                     createLink={{
-                        label: "Create Offer",
-                        url: offersRoutes.create().url,
+                        label: "Create Gift Card",
+                        url: giftCardsRoutes.create().url,
                     }}
-                    search={{
-                        placeholder: "Search by title or description...",
-                    }}
+                    search={{ placeholder: "Search by gift ID or name..." }}
                     statusFilter={{
                         options: [
                             { label: "All", value: "" },
@@ -104,22 +96,28 @@ export default function OffersIndex({
                             { label: "Draft", value: "draft" },
                         ],
                     }}
-                    links={offers.links}
+                    links={giftCards.links}
                 >
-                    {offers.data.map((offer) => (
+                    {giftCards.data.map((giftCard) => (
                         <TableBody
-                            key={offer.id}
+                            key={giftCard.id}
                             buttons={
                                 <>
                                     <Link
-                                        href={offersRoutes.show(offer.id).url}
+                                        href={
+                                            giftCardsRoutes.show(giftCard.id)
+                                                .url
+                                        }
                                         className="inline-flex items-center gap-1 text-sm font-medium text-[#073BBC] hover:underline"
                                     >
                                         <EyeIcon className="h-4 w-4" />
                                         View
                                     </Link>
                                     <Link
-                                        href={offersRoutes.edit(offer.id).url}
+                                        href={
+                                            giftCardsRoutes.edit(giftCard.id)
+                                                .url
+                                        }
                                         className="inline-flex items-center gap-1 text-sm font-medium text-[#073BBC] hover:underline"
                                     >
                                         <PencilIcon className="h-4 w-4" />
@@ -127,7 +125,9 @@ export default function OffersIndex({
                                     </Link>
                                     <button
                                         type="button"
-                                        onClick={() => setOfferToDelete(offer)}
+                                        onClick={() =>
+                                            setGiftCardToDelete(giftCard)
+                                        }
                                         className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-red-600 hover:underline"
                                     >
                                         <TrashIcon className="h-4 w-4" />
@@ -136,43 +136,67 @@ export default function OffersIndex({
                                 </>
                             }
                         >
-                            <TableTd width={110}>{offer.offer_code}</TableTd>
+                            <TableTd width={110}>{giftCard.gift_code}</TableTd>
                             <TableTd>
                                 <div className="flex items-center gap-2">
-                                    <img
-                                        src={`/storage/${offer.image}`}
-                                        alt={offer.title}
-                                        className="border-border size-8 shrink-0 rounded-md border object-cover"
-                                    />
+                                    {giftCard.image ? (
+                                        <img
+                                            src={`/storage/${giftCard.image}`}
+                                            alt={giftCard.name}
+                                            className="border-border size-8 shrink-0 rounded-md border object-cover"
+                                        />
+                                    ) : (
+                                        <div className="border-border bg-muted flex size-8 shrink-0 items-center justify-center rounded-md border">
+                                            <Gift className="text-muted-foreground size-4" />
+                                        </div>
+                                    )}
                                     <span
                                         className="line-clamp-2"
-                                        title={offer.title}
+                                        title={giftCard.name}
                                     >
-                                        {offer.title}
+                                        {giftCard.name}
                                     </span>
                                 </div>
                             </TableTd>
-                            <TableTd>{offer.brand?.name ?? "-"}</TableTd>
-                            <TableTd>{formatDate(offer.start_date)}</TableTd>
-                            <TableTd>{formatDate(offer.end_date)}</TableTd>
+                            <TableTd>{giftCard.brand?.name ?? "-"}</TableTd>
+                            <TableTd>
+                                <span
+                                    className="block truncate"
+                                    title={formatAmounts(
+                                        giftCard.amount,
+                                        giftCard.currency,
+                                    )}
+                                >
+                                    {formatAmounts(
+                                        giftCard.amount,
+                                        giftCard.currency,
+                                    )}
+                                </span>
+                            </TableTd>
                             <TableTd>
                                 <Badge
-                                    className={`capitalize ${statusClassName(offer.status)}`}
+                                    className={`capitalize ${statusClassName(giftCard.status)}`}
                                 >
-                                    {offer.status}
+                                    {giftCard.status}
                                 </Badge>
                             </TableTd>
                             <TableTd width={140}>
                                 <div className="flex items-center gap-3">
                                     <Link
-                                        href={offersRoutes.show(offer.id).url}
+                                        href={
+                                            giftCardsRoutes.show(giftCard.id)
+                                                .url
+                                        }
                                         title="View"
                                         className="text-[#073BBC] transition-colors hover:text-[#0433ac]"
                                     >
                                         <EyeIcon className="h-4 w-4" />
                                     </Link>
                                     <Link
-                                        href={offersRoutes.edit(offer.id).url}
+                                        href={
+                                            giftCardsRoutes.edit(giftCard.id)
+                                                .url
+                                        }
                                         title="Edit"
                                         className="text-[#073BBC] transition-colors hover:text-[#0433ac]"
                                     >
@@ -181,7 +205,9 @@ export default function OffersIndex({
                                     <button
                                         type="button"
                                         title="Delete"
-                                        onClick={() => setOfferToDelete(offer)}
+                                        onClick={() =>
+                                            setGiftCardToDelete(giftCard)
+                                        }
                                         className="cursor-pointer text-red-400 transition-colors hover:text-red-600"
                                     >
                                         <TrashIcon className="h-4 w-4" />
@@ -194,13 +220,13 @@ export default function OffersIndex({
             </div>
 
             <Confirm
-                isOpen={offerToDelete !== null}
-                onClose={() => setOfferToDelete(null)}
+                isOpen={giftCardToDelete !== null}
+                onClose={() => setGiftCardToDelete(null)}
                 onConfirm={handleDelete}
-                title="Delete offer"
+                title="Delete gift card"
                 message={
-                    offerToDelete
-                        ? `Are you sure you want to delete "${offerToDelete.title}"?`
+                    giftCardToDelete
+                        ? `Are you sure you want to delete "${giftCardToDelete.name}"?`
                         : ""
                 }
                 confirmText="Delete"
@@ -213,9 +239,9 @@ export default function OffersIndex({
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "Dashboard", href: dashboard() },
-    { title: "Offers", href: offersRoutes.index() },
+    { title: "Gift Cards", href: giftCardsRoutes.index() },
 ];
 
-OffersIndex.layout = {
+GiftCardsIndex.layout = {
     breadcrumbs,
 };

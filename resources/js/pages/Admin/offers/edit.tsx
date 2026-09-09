@@ -124,7 +124,20 @@ export default function EditOffer({
 
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
-                                    <div className="grid gap-2 sm:col-span-2">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="offer_code">
+                                            Offer ID
+                                        </Label>
+                                        <Input
+                                            id="offer_code"
+                                            type="text"
+                                            value={offer.offer_code}
+                                            disabled
+                                            readOnly
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
                                         <Label htmlFor="title">
                                             Title{" "}
                                             <span className="text-destructive">

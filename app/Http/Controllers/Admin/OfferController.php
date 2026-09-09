@@ -26,7 +26,8 @@ class OfferController extends Controller
 
         if ($search = $request->string('searchParam')->toString()) {
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
+                $q->where('offer_code', 'like', "%{$search}%")
+                    ->orWhere('title', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
             });
         }
@@ -59,6 +60,7 @@ class OfferController extends Controller
                 ->with('distributors:id,name')
                 ->orderBy('name')
                 ->get(['id', 'name']),
+            'nextOfferCode' => Offer::nextOfferCode(),
         ]);
     }
 

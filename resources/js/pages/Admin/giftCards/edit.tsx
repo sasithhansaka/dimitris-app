@@ -11,37 +11,72 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
+import { CURRENCIES, currencyLabel } from "@/lib/currencies";
 import { dashboard } from "@/routes";
-import productCategoriesRoutes from "@/routes/product-categories";
-import type { BreadcrumbItem, ProductCategory } from "@/types";
-import { Head, useForm } from "@inertiajs/react";
-import { Tags, X } from "lucide-react";
+import brandsRoutes from "@/routes/brands";
+import giftCardsRoutes from "@/routes/gift-cards";
+import type { BreadcrumbItem, GiftCard } from "@/types";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Gift, Plus, X } from "lucide-react";
 import { useRef, useState } from "react";
 
-export default function EditProductCategory({
-    productCategory,
+export default function EditGiftCard({
+    giftCard,
+    brands,
 }: {
-    productCategory: ProductCategory;
+    giftCard: GiftCard;
+    brands: { id: number; name: string }[];
 }) {
-    const isLinkedToProducts = (productCategory.products_count ?? 0) > 0;
-
     const { data, setData, post, processing, errors } = useForm({
-        name: productCategory.name,
-        description: productCategory.description ?? "",
+        brand_id: String(giftCard.brand_id),
+        name: giftCard.name,
+        description: giftCard.description ?? "",
+        amount: giftCard.amount,
+        currency: giftCard.currency,
         image: null as File | null,
-        display_order: String(productCategory.display_order),
-        status: productCategory.status,
+        status: giftCard.status,
         remove_image: false,
         _method: "put",
     });
 
-    const originalImage = productCategory.image
-        ? `/storage/${productCategory.image}`
-        : null;
+    const [amountInput, setAmountInput] = useState("");
+    const originalImage = giftCard.image ? `/storage/${giftCard.image}` : null;
     const [imagePreview, setImagePreview] = useState<string | null>(
         originalImage,
     );
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const sortedBrands = [...brands].sort((a, b) =>
+        a.name.localeCompare(b.name),
+    );
+
+    const amountList = data.amount
+        ? data.amount.split(",").filter((a) => a.trim() !== "")
+        : [];
+
+    const addAmount = () => {
+        const value = amountInput.trim();
+        if (!value || Number.isNaN(Number(value))) {
+            return;
+        }
+        if (amountList.includes(value)) {
+            setAmountInput("");
+            return;
+        }
+        setData("amount", [...amountList, value].join(","));
+        setAmountInput("");
+    };
+
+    const removeAmount = (amount: string) => {
+        setData("amount", amountList.filter((a) => a !== amount).join(","));
+    };
+
+    const handleAmountKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            addAmount();
+        }
+    };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
@@ -67,22 +102,22 @@ export default function EditProductCategory({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(productCategoriesRoutes.update(productCategory.id).url, {
+        post(giftCardsRoutes.update(giftCard.id).url, {
             forceFormData: true,
         });
     };
 
     return (
         <>
-            <Head title="Edit Product Category" />
+            <Head title="Edit Gift Card" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-sm p-4">
                 <div className="mx-auto w-full max-w-5xl">
                     <div className="mb-5 space-y-1">
                         <h1 className="text-foreground text-xl font-semibold tracking-tight">
-                            Edit product category
+                            Edit gift card
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Update the details of this product category.
+                            Update the details of this gift card.
                         </p>
                     </div>
 
@@ -90,9 +125,9 @@ export default function EditProductCategory({
                         <Card className="gap-0 border py-0 shadow-none">
                             <CardHeader className="border-border border-b px-6 py-5">
                                 <div className="flex items-center gap-2">
-                                    <Tags className="text-muted-foreground size-4.5" />
+                                    <Gift className="text-muted-foreground size-4.5" />
                                     <span className="text-foreground text-sm font-semibold">
-                                        Edit product category
+                                        Edit gift card
                                     </span>
                                 </div>
                             </CardHeader>
@@ -100,15 +135,13 @@ export default function EditProductCategory({
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
-                                        <Label htmlFor="category_code">
-                                            Category ID
+                                        <Label htmlFor="gift_code">
+                                            Gift ID
                                         </Label>
                                         <Input
-                                            id="category_code"
+                                            id="gift_code"
                                             type="text"
-                                            value={
-                                                productCategory.category_code
-                                            }
+                                            value={giftCard.gift_code}
                                             disabled
                                             readOnly
                                         />
@@ -116,7 +149,7 @@ export default function EditProductCategory({
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="name">
-                                            Category Name{" "}
+                                            Gift Card Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -125,13 +158,66 @@ export default function EditProductCategory({
                                             id="name"
                                             type="text"
                                             autoFocus
-                                            placeholder="e.g. Electronics"
+                                            placeholder="e.g. Acme $50 Gift Card"
                                             value={data.name}
                                             onChange={(e) =>
                                                 setData("name", e.target.value)
                                             }
                                         />
                                         <InputError message={errors.name} />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <div className="flex items-center gap-3">
+                                            <Label htmlFor="brand_id">
+                                                Brand{" "}
+                                                <span className="text-destructive">
+                                                    *
+                                                </span>
+                                            </Label>
+                                            <Link
+                                                href={brandsRoutes.create().url}
+                                                title="Create brand"
+                                                className="text-muted-foreground hover:text-foreground bg-secondary inline-flex items-center"
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Link>
+                                        </div>
+                                        {sortedBrands.length > 0 ? (
+                                            <Select
+                                                value={data.brand_id}
+                                                onValueChange={(value) =>
+                                                    setData("brand_id", value)
+                                                }
+                                            >
+                                                <SelectTrigger
+                                                    id="brand_id"
+                                                    className="w-full"
+                                                >
+                                                    <SelectValue placeholder="Select brand" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {sortedBrands.map(
+                                                        (brand) => (
+                                                            <SelectItem
+                                                                key={brand.id}
+                                                                value={String(
+                                                                    brand.id,
+                                                                )}
+                                                            >
+                                                                {brand.name}
+                                                            </SelectItem>
+                                                        ),
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        ) : (
+                                            <p className="border-border text-muted-foreground rounded-md border border-dashed px-3 py-2 text-sm">
+                                                No brands available. Create a
+                                                brand first.
+                                            </p>
+                                        )}
+                                        <InputError message={errors.brand_id} />
                                     </div>
 
                                     <div className="grid gap-2">
@@ -160,67 +246,105 @@ export default function EditProductCategory({
                                                 <SelectItem value="active">
                                                     Active
                                                 </SelectItem>
-                                                <SelectItem
-                                                    value="inactive"
-                                                    disabled={
-                                                        isLinkedToProducts
-                                                    }
-                                                >
+                                                <SelectItem value="inactive">
                                                     Inactive
                                                 </SelectItem>
-                                                <SelectItem
-                                                    value="draft"
-                                                    disabled={
-                                                        isLinkedToProducts
-                                                    }
-                                                >
+                                                <SelectItem value="draft">
                                                     Draft
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        {isLinkedToProducts && (
-                                            <p className="text-muted-foreground text-xs">
-                                                This product category is linked
-                                                to one or more products and must
-                                                stay active.
-                                            </p>
-                                        )}
                                         <InputError message={errors.status} />
                                     </div>
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="display_order">
-                                            Display Order{" "}
+                                        <Label htmlFor="currency">
+                                            Currency{" "}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
+                                        <Select
+                                            value={data.currency}
+                                            onValueChange={(value) =>
+                                                setData("currency", value)
+                                            }
+                                        >
+                                            <SelectTrigger
+                                                id="currency"
+                                                className="w-full"
+                                            >
+                                                <SelectValue placeholder="Select currency" />
+                                            </SelectTrigger>
+                                            <SelectContent className="max-h-72">
+                                                {CURRENCIES.map((code) => (
+                                                    <SelectItem
+                                                        key={code}
+                                                        value={code}
+                                                    >
+                                                        {currencyLabel(code)}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <InputError message={errors.currency} />
+                                    </div>
+
+                                    <div className="grid gap-2 sm:col-span-2">
+                                        <Label htmlFor="amount">
+                                            Amounts{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
                                         </Label>
                                         <Input
-                                            id="display_order"
-                                            type="number"
-                                            min={1}
-                                            placeholder="e.g. 1"
-                                            value={data.display_order}
+                                            id="amount"
+                                            type="text"
+                                            inputMode="decimal"
+                                            placeholder="Type an amount and press Enter (e.g. 25)"
+                                            value={amountInput}
                                             onChange={(e) =>
-                                                setData(
-                                                    "display_order",
-                                                    e.target.value,
-                                                )
+                                                setAmountInput(e.target.value)
                                             }
+                                            onKeyDown={handleAmountKeyDown}
                                         />
-                                        <InputError
-                                            message={errors.display_order}
-                                        />
+                                        {amountList.length > 0 && (
+                                            <div className="flex flex-wrap gap-2">
+                                                {amountList.map((amount) => (
+                                                    <span
+                                                        key={amount}
+                                                        className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                                                    >
+                                                        {data.currency} {amount}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                removeAmount(
+                                                                    amount,
+                                                                )
+                                                            }
+                                                            className="cursor-pointer text-gray-500 hover:text-red-600"
+                                                        >
+                                                            <X className="h-3 w-3" />
+                                                        </button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                        <InputError message={errors.amount} />
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
-                                            Description
+                                            Description{" "}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
                                         </Label>
                                         <textarea
                                             id="description"
                                             rows={4}
-                                            placeholder="A short description of this category"
+                                            placeholder="A short description of this gift card"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
@@ -236,7 +360,12 @@ export default function EditProductCategory({
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">
-                                        <Label htmlFor="image">Image</Label>
+                                        <Label htmlFor="image">
+                                            Image{" "}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
                                         <Input
                                             id="image"
                                             type="file"
@@ -295,10 +424,10 @@ export default function EditProductCategory({
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "Dashboard", href: dashboard() },
-    { title: "Product Categories", href: productCategoriesRoutes.index() },
+    { title: "Gift Cards", href: giftCardsRoutes.index() },
     { title: "Edit", href: "#" },
 ];
 
-EditProductCategory.layout = {
+EditGiftCard.layout = {
     breadcrumbs,
 };

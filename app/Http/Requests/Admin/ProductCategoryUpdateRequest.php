@@ -25,6 +25,14 @@ class ProductCategoryUpdateRequest extends FormRequest
                 Rule::unique('product_categories', 'name')->ignore($this->route('productCategory')),
             ],
             'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'max:5120'],
+            'remove_image' => ['nullable', 'boolean'],
+            'display_order' => [
+                'required',
+                'integer',
+                'min:1',
+                Rule::unique('product_categories', 'display_order')->ignore($this->route('productCategory')),
+            ],
             'status' => ['required', Rule::in([
                 ProductCategory::STATUS_ACTIVE,
                 ProductCategory::STATUS_INACTIVE,

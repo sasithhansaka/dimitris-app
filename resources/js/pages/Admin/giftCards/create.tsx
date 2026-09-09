@@ -1,7 +1,6 @@
 import InputError from "@/components/input-error";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,54 +11,67 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
+import { CURRENCIES, currencyLabel } from "@/lib/currencies";
 import { dashboard } from "@/routes";
 import brandsRoutes from "@/routes/brands";
-import offersRoutes from "@/routes/offers";
+import giftCardsRoutes from "@/routes/gift-cards";
 import type { BreadcrumbItem } from "@/types";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { Percent, Plus, X } from "lucide-react";
+import { Gift, Plus, X } from "lucide-react";
 import { useRef, useState } from "react";
 
-type OfferBrandOption = {
-    id: number;
-    name: string;
-    distributors?: { id: number; name: string }[];
-};
-
-function brandOptionLabel(brand: OfferBrandOption): string {
-    const distributorNames = (brand.distributors ?? [])
-        .map((d) => d.name)
-        .join(", ");
-
-    return distributorNames
-        ? `${brand.name} - Distributor: ${distributorNames}`
-        : brand.name;
-}
-
-export default function CreateOffer({
+export default function CreateGiftCard({
     brands,
-    nextOfferCode,
+    nextGiftCode,
 }: {
-    brands: OfferBrandOption[];
-    nextOfferCode: string;
+    brands: { id: number; name: string }[];
+    nextGiftCode: string;
 }) {
     const { data, setData, post, processing, errors } = useForm({
-        title: "",
         brand_id: "",
+        name: "",
         description: "",
+        amount: "",
+        currency: "USD",
         image: null as File | null,
         status: "active",
-        featured: false,
-        start_date: "",
-        end_date: "",
     });
 
+    const [amountInput, setAmountInput] = useState("");
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const sortedBrands = [...brands].sort((a, b) =>
         a.name.localeCompare(b.name),
     );
+
+    const amountList = data.amount
+        ? data.amount.split(",").filter((a) => a.trim() !== "")
+        : [];
+
+    const addAmount = () => {
+        const value = amountInput.trim();
+        if (!value || Number.isNaN(Number(value))) {
+            return;
+        }
+        if (amountList.includes(value)) {
+            setAmountInput("");
+            return;
+        }
+        setData("amount", [...amountList, value].join(","));
+        setAmountInput("");
+    };
+
+    const removeAmount = (amount: string) => {
+        setData("amount", amountList.filter((a) => a !== amount).join(","));
+    };
+
+    const handleAmountKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            addAmount();
+        }
+    };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
@@ -77,20 +89,20 @@ export default function CreateOffer({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(offersRoutes.store().url, { forceFormData: true });
+        post(giftCardsRoutes.store().url, { forceFormData: true });
     };
 
     return (
         <>
-            <Head title="Create Offer" />
+            <Head title="Create Gift Card" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-sm p-4">
                 <div className="mx-auto w-full max-w-5xl">
                     <div className="mb-5 space-y-1">
                         <h1 className="text-foreground text-xl font-semibold tracking-tight">
-                            Create offer
+                            Create gift card
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Add a new offer and assign its brand.
+                            Add a new gift card and assign its brand.
                         </p>
                     </div>
 
@@ -98,9 +110,9 @@ export default function CreateOffer({
                         <Card className="gap-0 border py-0 shadow-none">
                             <CardHeader className="border-border border-b px-6 py-5">
                                 <div className="flex items-center gap-2">
-                                    <Percent className="text-muted-foreground size-4.5" />
+                                    <Gift className="text-muted-foreground size-4.5" />
                                     <span className="text-foreground text-sm font-semibold">
-                                        New offer
+                                        New gift card
                                     </span>
                                 </div>
                             </CardHeader>
@@ -108,40 +120,40 @@ export default function CreateOffer({
                             <CardContent className="space-y-8 px-6 py-6">
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="grid gap-2">
-                                        <Label htmlFor="offer_code">
-                                            Offer ID
+                                        <Label htmlFor="gift_code">
+                                            Gift ID
                                         </Label>
                                         <Input
-                                            id="offer_code"
+                                            id="gift_code"
                                             type="text"
-                                            value={nextOfferCode}
+                                            value={nextGiftCode}
                                             disabled
                                             readOnly
                                         />
                                         <p className="text-muted-foreground text-xs">
-                                            Automatically assigned when the
-                                            offer is created.
+                                            Automatically assigned when the gift
+                                            card is created.
                                         </p>
                                     </div>
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="title">
-                                            Title{" "}
+                                        <Label htmlFor="name">
+                                            Gift Card Name{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
                                         </Label>
                                         <Input
-                                            id="title"
+                                            id="name"
                                             type="text"
                                             autoFocus
-                                            placeholder="e.g. Summer Sale"
-                                            value={data.title}
+                                            placeholder="e.g. Acme $50 Gift Card"
+                                            value={data.name}
                                             onChange={(e) =>
-                                                setData("title", e.target.value)
+                                                setData("name", e.target.value)
                                             }
                                         />
-                                        <InputError message={errors.title} />
+                                        <InputError message={errors.name} />
                                     </div>
 
                                     <div className="grid gap-2">
@@ -182,9 +194,7 @@ export default function CreateOffer({
                                                                     brand.id,
                                                                 )}
                                                             >
-                                                                {brandOptionLabel(
-                                                                    brand,
-                                                                )}
+                                                                {brand.name}
                                                             </SelectItem>
                                                         ),
                                                     )}
@@ -234,67 +244,80 @@ export default function CreateOffer({
                                     </div>
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="start_date">
-                                            Start Date{" "}
+                                        <Label htmlFor="currency">
+                                            Currency{" "}
                                             <span className="text-destructive">
                                                 *
                                             </span>
                                         </Label>
-                                        <Input
-                                            id="start_date"
-                                            type="date"
-                                            value={data.start_date}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "start_date",
-                                                    e.target.value,
-                                                )
+                                        <Select
+                                            value={data.currency}
+                                            onValueChange={(value) =>
+                                                setData("currency", value)
                                             }
-                                        />
-                                        <InputError
-                                            message={errors.start_date}
-                                        />
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="end_date">
-                                            End Date{" "}
-                                            <span className="text-destructive">
-                                                *
-                                            </span>
-                                        </Label>
-                                        <Input
-                                            id="end_date"
-                                            type="date"
-                                            value={data.end_date}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "end_date",
-                                                    e.target.value,
-                                                )
-                                            }
-                                        />
-                                        <InputError message={errors.end_date} />
-                                    </div>
-
-                                    <div className="flex items-center gap-2 pt-7">
-                                        <Checkbox
-                                            id="featured"
-                                            checked={data.featured}
-                                            onCheckedChange={(checked) =>
-                                                setData(
-                                                    "featured",
-                                                    checked === true,
-                                                )
-                                            }
-                                        />
-                                        <Label
-                                            htmlFor="featured"
-                                            className="font-normal"
                                         >
-                                            Featured offer
+                                            <SelectTrigger
+                                                id="currency"
+                                                className="w-full"
+                                            >
+                                                <SelectValue placeholder="Select currency" />
+                                            </SelectTrigger>
+                                            <SelectContent className="max-h-72">
+                                                {CURRENCIES.map((code) => (
+                                                    <SelectItem
+                                                        key={code}
+                                                        value={code}
+                                                    >
+                                                        {currencyLabel(code)}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <InputError message={errors.currency} />
+                                    </div>
+
+                                    <div className="grid gap-2 sm:col-span-2">
+                                        <Label htmlFor="amount">
+                                            Amounts{" "}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
                                         </Label>
-                                        <InputError message={errors.featured} />
+                                        <Input
+                                            id="amount"
+                                            type="text"
+                                            inputMode="decimal"
+                                            placeholder="Type an amount and press Enter (e.g. 25)"
+                                            value={amountInput}
+                                            onChange={(e) =>
+                                                setAmountInput(e.target.value)
+                                            }
+                                            onKeyDown={handleAmountKeyDown}
+                                        />
+                                        {amountList.length > 0 && (
+                                            <div className="flex flex-wrap gap-2">
+                                                {amountList.map((amount) => (
+                                                    <span
+                                                        key={amount}
+                                                        className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                                                    >
+                                                        {data.currency} {amount}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                removeAmount(
+                                                                    amount,
+                                                                )
+                                                            }
+                                                            className="cursor-pointer text-gray-500 hover:text-red-600"
+                                                        >
+                                                            <X className="h-3 w-3" />
+                                                        </button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                        <InputError message={errors.amount} />
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">
@@ -307,7 +330,7 @@ export default function CreateOffer({
                                         <textarea
                                             id="description"
                                             rows={4}
-                                            placeholder="A short description of this offer"
+                                            placeholder="A short description of this gift card"
                                             value={data.description}
                                             onChange={(e) =>
                                                 setData(
@@ -374,7 +397,7 @@ export default function CreateOffer({
                                     className="cursor-pointer"
                                 >
                                     {processing && <Spinner />}
-                                    Create offer
+                                    Create gift card
                                 </Button>
                             </div>
                         </Card>
@@ -387,10 +410,10 @@ export default function CreateOffer({
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "Dashboard", href: dashboard() },
-    { title: "Offers", href: offersRoutes.index() },
-    { title: "Create", href: offersRoutes.create() },
+    { title: "Gift Cards", href: giftCardsRoutes.index() },
+    { title: "Create", href: giftCardsRoutes.create() },
 ];
 
-CreateOffer.layout = {
+CreateGiftCard.layout = {
     breadcrumbs,
 };

@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Models\ProductCategory;
+use App\Models\GiftCard;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProductCategoryStoreRequest extends FormRequest
+class GiftCardStoreRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,14 +17,16 @@ class ProductCategoryStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:product_categories,name'],
-            'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'max:5120'],
-            'display_order' => ['required', 'integer', 'min:1', 'unique:product_categories,display_order'],
+            'brand_id' => ['required', 'integer', 'exists:brands,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'amount' => ['required', 'string'],
+            'currency' => ['required', 'string', 'size:3'],
+            'image' => ['required', 'image', 'max:5120'],
             'status' => ['required', Rule::in([
-                ProductCategory::STATUS_ACTIVE,
-                ProductCategory::STATUS_INACTIVE,
-                ProductCategory::STATUS_DRAFT,
+                GiftCard::STATUS_ACTIVE,
+                GiftCard::STATUS_INACTIVE,
+                GiftCard::STATUS_DRAFT,
             ])],
         ];
     }
@@ -37,7 +39,7 @@ class ProductCategoryStoreRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'category name',
+            'brand_id' => 'brand',
         ];
     }
 }

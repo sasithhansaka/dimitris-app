@@ -15,22 +15,44 @@ import { dashboard } from "@/routes";
 import productCategoriesRoutes from "@/routes/product-categories";
 import type { BreadcrumbItem } from "@/types";
 import { Head, useForm } from "@inertiajs/react";
-import { Tags } from "lucide-react";
+import { Tags, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 export default function CreateProductCategory({
     nextCategoryCode,
+    nextDisplayOrder,
 }: {
     nextCategoryCode: string;
+    nextDisplayOrder: number;
 }) {
     const { data, setData, post, processing, errors } = useForm({
         name: "",
         description: "",
+        image: null as File | null,
+        display_order: String(nextDisplayOrder),
         status: "active",
     });
 
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        setData("image", file);
+        setImagePreview(file ? URL.createObjectURL(file) : null);
+    };
+
+    const removeImage = () => {
+        setData("image", null);
+        setImagePreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(productCategoriesRoutes.store().url);
+        post(productCategoriesRoutes.store().url, { forceFormData: true });
     };
 
     return (
@@ -131,6 +153,31 @@ export default function CreateProductCategory({
                                         <InputError message={errors.status} />
                                     </div>
 
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="display_order">
+                                            Display Order{" "}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
+                                        <Input
+                                            id="display_order"
+                                            type="number"
+                                            min={1}
+                                            placeholder="e.g. 1"
+                                            value={data.display_order}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "display_order",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.display_order}
+                                        />
+                                    </div>
+
                                     <div className="grid gap-2 sm:col-span-2">
                                         <Label htmlFor="description">
                                             Description
@@ -151,6 +198,35 @@ export default function CreateProductCategory({
                                         <InputError
                                             message={errors.description}
                                         />
+                                    </div>
+
+                                    <div className="grid gap-2 sm:col-span-2">
+                                        <Label htmlFor="image">Image</Label>
+                                        <Input
+                                            id="image"
+                                            type="file"
+                                            accept="image/*"
+                                            ref={fileInputRef}
+                                            onChange={handleImageChange}
+                                        />
+                                        {imagePreview && (
+                                            <div className="relative mt-2 w-fit">
+                                                <img
+                                                    src={imagePreview}
+                                                    alt="Image preview"
+                                                    className="border-border h-40 w-40 rounded-md border object-cover"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={removeImage}
+                                                    title="Remove image"
+                                                    className="absolute -top-2 -right-2 cursor-pointer rounded-full bg-gray-100 p-1 text-black hover:opacity-90"
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </button>
+                                            </div>
+                                        )}
+                                        <InputError message={errors.image} />
                                     </div>
                                 </div>
                             </CardContent>

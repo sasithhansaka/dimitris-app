@@ -68,6 +68,7 @@ class BrandUpdateRequest extends FormRequest
             $linkedTo = array_filter([
                 $brand->products()->exists() ? 'products' : null,
                 $brand->offers()->exists() ? 'offers' : null,
+                $brand->giftCards()->exists() ? 'gift cards' : null,
             ]);
 
             if ($linkedTo !== []) {

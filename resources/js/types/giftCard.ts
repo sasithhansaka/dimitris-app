@@ -1,16 +1,15 @@
 import type { Brand } from "./brand";
 
-export type Offer = {
+export type GiftCard = {
     id: number;
-    offer_code: string;
+    gift_code: string;
     brand_id: number;
-    title: string;
+    name: string;
     description: string;
-    image: string;
-    start_date: string;
-    end_date: string;
+    amount: string;
+    currency: string;
+    image: string | null;
     status: "active" | "inactive" | "draft";
-    featured: boolean;
     brand?: Brand;
     created_at: string;
     updated_at: string;

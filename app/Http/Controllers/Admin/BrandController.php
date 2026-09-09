@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\BrandStoreRequest;
 use App\Http\Requests\Admin\BrandUpdateRequest;
 use App\Models\Brand;
 use App\Models\Distributor;
+use App\Models\GiftCard;
 use App\Models\Offer;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
@@ -95,6 +96,7 @@ class BrandController extends Controller
                 'distributors' => fn ($query) => $query->where('status', Distributor::STATUS_ACTIVE),
                 'products' => fn ($query) => $query->where('status', Product::STATUS_ACTIVE),
                 'offers' => fn ($query) => $query->where('status', Offer::STATUS_ACTIVE),
+                'giftCards' => fn ($query) => $query->where('status', GiftCard::STATUS_ACTIVE),
             ]),
         ]);
     }
@@ -104,7 +106,7 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand): Response
     {
-        $brand->load('distributors:id')->loadCount(['products', 'offers']);
+        $brand->load('distributors:id')->loadCount(['products', 'offers', 'giftCards']);
         $linkedIds = $brand->distributors->pluck('id');
 
         return Inertia::render('Admin/brands/edit', [
@@ -152,6 +154,7 @@ class BrandController extends Controller
         $linkedTo = array_filter([
             $brand->products()->exists() ? 'products' : null,
             $brand->offers()->exists() ? 'offers' : null,
+            $brand->giftCards()->exists() ? 'gift cards' : null,
         ]);
 
         if ($linkedTo !== []) {

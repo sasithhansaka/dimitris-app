@@ -78,4 +78,9 @@ class Brand extends Model
     {
         return $this->hasMany(Offer::class);
     }
+
+    public function giftCards(): HasMany
+    {
+        return $this->hasMany(GiftCard::class);
+    }
 }

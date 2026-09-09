@@ -3,6 +3,7 @@ import {
     BookOpen,
     Building2,
     FolderGit2,
+    Gift,
     LayoutGrid,
     Newspaper,
     Package,
@@ -33,6 +34,7 @@ import articlesRoutes from "@/routes/articles";
 import brandsRoutes from "@/routes/brands";
 import couponsRoutes from "@/routes/coupons";
 import distributorsRoutes from "@/routes/distributors";
+import giftCardsRoutes from "@/routes/gift-cards";
 import logsRoutes from "@/routes/logs";
 import offersRoutes from "@/routes/offers";
 import productCategoriesRoutes from "@/routes/product-categories";
@@ -56,6 +58,11 @@ const mainNavItems: NavItem[] = [
         title: "Offers",
         href: offersRoutes.index(),
         icon: Percent,
+    },
+    {
+        title: "Gift Cards",
+        href: giftCardsRoutes.index(),
+        icon: Gift,
     },
     {
         title: "Coupons",
@@ -101,7 +108,7 @@ const distributorNavItems: NavItem[] = [
         href: brandsRoutes.index(),
         icon: Tag,
     },
-      {
+    {
         title: "Retailers",
         href: retailersRoutes.index(),
         icon: Store,
