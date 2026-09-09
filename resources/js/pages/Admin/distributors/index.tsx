@@ -76,7 +76,7 @@ export default function DistributorsIndex({
                     }}
                     search={{
                         placeholder:
-                            "Search by distributor ID, name, country or email...",
+                            "Search by distributor ID, name or country...",
                     }}
                     statusFilter={{
                         options: [

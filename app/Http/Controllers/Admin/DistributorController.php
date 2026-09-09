@@ -28,8 +28,7 @@ class DistributorController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('distributor_code', 'like', "%{$search}%")
                     ->orWhere('name', 'like', "%{$search}%")
-                    ->orWhere('country', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('country', 'like', "%{$search}%");
             });
         }
 
