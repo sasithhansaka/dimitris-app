@@ -4,6 +4,8 @@ export type * from "./auth";
 export type * from "./brand";
 export type * from "./coupon";
 export type * from "./distributor";
+export type * from "./faq";
+export type * from "./faqCategory";
 export type * from "./giftCard";
 export type * from "./navigation";
 export type * from "./offer";
