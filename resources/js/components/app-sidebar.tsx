@@ -1,5 +1,6 @@
 import { Link } from "@inertiajs/react";
 import {
+    Award,
     BookOpen,
     Building2,
     FolderGit2,
@@ -42,6 +43,7 @@ import offersRoutes from "@/routes/offers";
 import productCategoriesRoutes from "@/routes/product-categories";
 import productsRoutes from "@/routes/products";
 import retailersRoutes from "@/routes/retailers";
+import stampProgramsRoutes from "@/routes/stamp-programs";
 import usersRoutes from "@/routes/users";
 import type { NavItem } from "@/types";
 
@@ -154,6 +156,14 @@ const faqNavItems: NavItem[] = [
     },
 ];
 
+const stampNavItems: NavItem[] = [
+    {
+        title: "Stamp Programs",
+        href: stampProgramsRoutes.index(),
+        icon: Award,
+    },
+];
+
 const LogsNavItems: NavItem[] = [
     {
         title: "System Logs",
@@ -203,6 +213,7 @@ export function AppSidebar() {
                 {/* <NavMain items={offerNavItems} label="Offers" /> */}
                 <NavMain items={articleNavItems} label="Articles" />
                 <NavMain items={faqNavItems} label="FAQs" />
+                <NavMain items={stampNavItems} label="Stamps" />
                 <NavMain items={LogsNavItems} label="Logs" />
             </SidebarContent>
 
