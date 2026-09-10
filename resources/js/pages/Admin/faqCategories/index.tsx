@@ -72,7 +72,7 @@ export default function FaqCategoriesIndex({
                     filters={filters}
                     url={faqCategoriesRoutes.index().url}
                     createLink={{
-                        label: "Create FAQ Section",
+                        label: "Create FAQ Category",
                         url: faqCategoriesRoutes.create().url,
                     }}
                     search={{ placeholder: "Search by name or description..." }}

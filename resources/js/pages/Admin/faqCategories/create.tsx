@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import {
     Select,
     SelectContent,
@@ -356,19 +357,17 @@ export default function CreateFaqCategory({
                                                         *
                                                     </span>
                                                 </Label>
-                                                <textarea
+                                                <RichTextEditor
                                                     id={`faqs.${index}.answer`}
-                                                    rows={3}
-                                                    placeholder="Write the answer to this question"
                                                     value={faq.answer}
-                                                    onChange={(e) =>
+                                                    onChange={(value) =>
                                                         updateFaqRow(
                                                             index,
                                                             "answer",
-                                                            e.target.value,
+                                                            value,
                                                         )
                                                     }
-                                                    className="border-input placeholder:text-muted-foreground flex w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 aria-invalid:border-destructive md:text-sm"
+                                                    placeholder="Write the answer to this question"
                                                 />
                                                 <InputError
                                                     message={
