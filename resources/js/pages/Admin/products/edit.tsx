@@ -49,6 +49,7 @@ export default function EditProduct({
     const linkedTo = [
         (product.retailers_count ?? 0) > 0 ? "retailers" : null,
         (product.coupons_count ?? 0) > 0 ? "coupons" : null,
+        (product.stamp_programs_count ?? 0) > 0 ? "stamp programs" : null,
     ].filter((item): item is string => item !== null);
     const isLinked = linkedTo.length > 0;
 

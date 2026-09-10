@@ -69,6 +69,7 @@ class ProductUpdateRequest extends FormRequest
                 $linkedTo = array_filter([
                     $product->retailers()->exists() ? 'retailers' : null,
                     $product->coupons()->exists() ? 'coupons' : null,
+                    $product->stampPrograms()->exists() ? 'stamp programs' : null,
                 ]);
 
                 if ($linkedTo !== []) {

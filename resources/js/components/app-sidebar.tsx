@@ -1,9 +1,11 @@
 import { Link } from "@inertiajs/react";
 import {
+    Award,
     BookOpen,
     Building2,
     FolderGit2,
     Gift,
+    HelpCircle,
     LayoutGrid,
     Newspaper,
     Package,
@@ -34,12 +36,14 @@ import articlesRoutes from "@/routes/articles";
 import brandsRoutes from "@/routes/brands";
 import couponsRoutes from "@/routes/coupons";
 import distributorsRoutes from "@/routes/distributors";
+import faqCategoriesRoutes from "@/routes/faq-categories";
 import giftCardsRoutes from "@/routes/gift-cards";
 import logsRoutes from "@/routes/logs";
 import offersRoutes from "@/routes/offers";
 import productCategoriesRoutes from "@/routes/product-categories";
 import productsRoutes from "@/routes/products";
 import retailersRoutes from "@/routes/retailers";
+import stampProgramsRoutes from "@/routes/stamp-programs";
 import usersRoutes from "@/routes/users";
 import type { NavItem } from "@/types";
 
@@ -144,6 +148,22 @@ const articleNavItems: NavItem[] = [
     },
 ];
 
+const faqNavItems: NavItem[] = [
+    {
+        title: "FAQ",
+        href: faqCategoriesRoutes.index(),
+        icon: HelpCircle,
+    },
+];
+
+const stampNavItems: NavItem[] = [
+    {
+        title: "Stamp Programs",
+        href: stampProgramsRoutes.index(),
+        icon: Award,
+    },
+];
+
 const LogsNavItems: NavItem[] = [
     {
         title: "System Logs",
@@ -192,6 +212,8 @@ export function AppSidebar() {
                 <NavMain items={distributorNavItems} label="B2B" />
                 {/* <NavMain items={offerNavItems} label="Offers" /> */}
                 <NavMain items={articleNavItems} label="Articles" />
+                <NavMain items={faqNavItems} label="FAQs" />
+                <NavMain items={stampNavItems} label="Stamps" />
                 <NavMain items={LogsNavItems} label="Logs" />
             </SidebarContent>
 

@@ -107,7 +107,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product): Response
     {
-        $product->loadCount(['retailers', 'coupons']);
+        $product->loadCount(['retailers', 'coupons', 'stampPrograms']);
 
         return Inertia::render('Admin/products/edit', [
             'product' => $product,
@@ -162,6 +162,7 @@ class ProductController extends Controller
         $linkedTo = array_filter([
             $product->retailers()->exists() ? 'retailers' : null,
             $product->coupons()->exists() ? 'coupons' : null,
+            $product->stampPrograms()->exists() ? 'stamp programs' : null,
         ]);
 
         if ($linkedTo !== []) {

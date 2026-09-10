@@ -22,6 +22,7 @@ export type Product = {
     retailers?: Retailer[];
     retailers_count?: number;
     coupons_count?: number;
+    stamp_programs_count?: number;
     created_at: string;
     updated_at: string;
     [key: string]: unknown;

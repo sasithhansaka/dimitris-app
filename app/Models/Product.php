@@ -92,4 +92,10 @@ class Product extends Model
             ->withPivot(['ocr_name', 'ocr_keywords', 'quantity', 'required'])
             ->withTimestamps();
     }
+
+    public function stampPrograms(): BelongsToMany
+    {
+        return $this->belongsToMany(StampProgram::class, 'stamp_products')
+            ->withTimestamps();
+    }
 }

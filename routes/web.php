@@ -6,11 +6,13 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DistributorController;
+use App\Http\Controllers\Admin\FaqCategoryController;
 use App\Http\Controllers\Admin\GiftCardController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RetailerController;
+use App\Http\Controllers\Admin\StampProgramController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
 use Illuminate\Support\Facades\Route;
@@ -115,6 +117,20 @@ Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(functio
     Route::get('admin/retailers/{retailer}/edit', [RetailerController::class, 'edit'])->name('retailers.edit');
     Route::put('admin/retailers/{retailer}', [RetailerController::class, 'update'])->name('retailers.update');
     Route::delete('admin/retailers/{retailer}', [RetailerController::class, 'destroy'])->name('retailers.destroy');
+
+    Route::get('admin/faq-categories', [FaqCategoryController::class, 'index'])->name('faq-categories.index');
+    Route::get('admin/faq-categories/create', [FaqCategoryController::class, 'create'])->name('faq-categories.create');
+    Route::post('admin/faq-categories', [FaqCategoryController::class, 'store'])->name('faq-categories.store');
+    Route::get('admin/faq-categories/{faqCategory}/edit', [FaqCategoryController::class, 'edit'])->name('faq-categories.edit');
+    Route::put('admin/faq-categories/{faqCategory}', [FaqCategoryController::class, 'update'])->name('faq-categories.update');
+    Route::delete('admin/faq-categories/{faqCategory}', [FaqCategoryController::class, 'destroy'])->name('faq-categories.destroy');
+
+    Route::get('admin/stamp-programs', [StampProgramController::class, 'index'])->name('stamp-programs.index');
+    Route::get('admin/stamp-programs/create', [StampProgramController::class, 'create'])->name('stamp-programs.create');
+    Route::post('admin/stamp-programs', [StampProgramController::class, 'store'])->name('stamp-programs.store');
+    Route::get('admin/stamp-programs/{stampProgram}/edit', [StampProgramController::class, 'edit'])->name('stamp-programs.edit');
+    Route::put('admin/stamp-programs/{stampProgram}', [StampProgramController::class, 'update'])->name('stamp-programs.update');
+    Route::delete('admin/stamp-programs/{stampProgram}', [StampProgramController::class, 'destroy'])->name('stamp-programs.destroy');
 });
 
 require __DIR__.'/settings.php';
