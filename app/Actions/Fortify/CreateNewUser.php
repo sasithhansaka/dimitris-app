@@ -22,6 +22,14 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+            'country' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
+            'phone_number' => ['required', 'digits_between:1,50'],
+            'dob' => ['required', 'date', 'before_or_equal:-18 years'],
+            'terms_and_conditions' => ['required', 'accepted'],
+        ], [
+            'dob.before_or_equal' => 'You must be at least 18 years old to register.',
         ])->validate();
 
         return User::create([
@@ -29,6 +37,12 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => $input['password'],
             'role' => User::ROLE_USER,
+            'country' => $input['country'],
+            'city' => $input['city'],
+            'address' => $input['address'],
+            'phone_number' => $input['phone_number'],
+            'dob' => $input['dob'] ?? null,
+            'terms_and_conditions' => true,
         ]);
     }
 }

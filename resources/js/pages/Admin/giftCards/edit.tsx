@@ -1,6 +1,7 @@
 import InputError from "@/components/input-error";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -20,6 +21,10 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import { Gift, Plus, X } from "lucide-react";
 import { useRef, useState } from "react";
 
+function toDateInputValue(date: string): string {
+    return date.slice(0, 10);
+}
+
 export default function EditGiftCard({
     giftCard,
     brands,
@@ -35,6 +40,9 @@ export default function EditGiftCard({
         currency: giftCard.currency,
         image: null as File | null,
         status: giftCard.status,
+        featured: giftCard.featured,
+        start_date: toDateInputValue(giftCard.start_date),
+        end_date: toDateInputValue(giftCard.end_date),
         remove_image: false,
         _method: "put",
     });
@@ -288,6 +296,70 @@ export default function EditGiftCard({
                                             </SelectContent>
                                         </Select>
                                         <InputError message={errors.currency} />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="start_date">
+                                            Start Date{" "}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
+                                        <Input
+                                            id="start_date"
+                                            type="date"
+                                            value={data.start_date}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "start_date",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError
+                                            message={errors.start_date}
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="end_date">
+                                            End Date{" "}
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        </Label>
+                                        <Input
+                                            id="end_date"
+                                            type="date"
+                                            value={data.end_date}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "end_date",
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        <InputError message={errors.end_date} />
+                                    </div>
+
+                                    <div className="flex items-center gap-2 pt-7">
+                                        <Checkbox
+                                            id="featured"
+                                            checked={data.featured}
+                                            onCheckedChange={(checked) =>
+                                                setData(
+                                                    "featured",
+                                                    checked === true,
+                                                )
+                                            }
+                                        />
+                                        <Label
+                                            htmlFor="featured"
+                                            className="font-normal"
+                                        >
+                                            Featured gift card
+                                        </Label>
+                                        <InputError message={errors.featured} />
                                     </div>
 
                                     <div className="grid gap-2 sm:col-span-2">

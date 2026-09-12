@@ -140,6 +140,18 @@ export default function GiftCardsShow({ giftCard }: { giftCard: GiftCard }) {
                                     value={giftCard.currency}
                                 />
                                 <InfoRow
+                                    label="Start Date"
+                                    value={formatDate(giftCard.start_date)}
+                                />
+                                <InfoRow
+                                    label="End Date"
+                                    value={formatDate(giftCard.end_date)}
+                                />
+                                <InfoRow
+                                    label="Featured"
+                                    value={giftCard.featured ? "Yes" : "No"}
+                                />
+                                <InfoRow
                                     label="Created"
                                     value={formatDate(giftCard.created_at)}
                                 />

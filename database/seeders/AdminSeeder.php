@@ -17,11 +17,13 @@ class AdminSeeder extends Seeder
                 'name' => 'Super Admin',
                 'email' => 'superadmin1@gmail.com',
                 'password' => 'Super#Admin1st',
+                'country' => 'Greece',
             ],
             [
                 'name' => 'Super Admin',
                 'email' => 'superadmin2@gmail.com',
                 'password' => 'Super#Admin2nd',
+                'country' => 'Greece',
             ],
         ];
 
@@ -35,6 +37,8 @@ class AdminSeeder extends Seeder
                     'registered_date' => now(),
                     'status' => User::STATUS_ACTIVE,
                     'email_verified_at' => now(),
+                    'country' => $admin['country'],
+                    'terms_and_conditions' => true,
                 ]
             );
         }

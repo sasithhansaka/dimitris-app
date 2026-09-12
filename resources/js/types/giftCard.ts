@@ -10,6 +10,9 @@ export type GiftCard = {
     currency: string;
     image: string | null;
     status: "active" | "inactive" | "draft";
+    featured: boolean;
+    start_date: string;
+    end_date: string;
     brand?: Brand;
     created_at: string;
     updated_at: string;

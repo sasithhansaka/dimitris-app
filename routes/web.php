@@ -14,21 +14,31 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RetailerController;
 use App\Http\Controllers\Admin\StampProgramController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\RegistrationValidationController;
+use App\Http\Controllers\Public\AccountController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
+use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\ProductController as PublicProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['coming.soon'])->group(function () {
-    Route::inertia('/', 'Public/home')->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('articles', [PublicArticleController::class, 'index'])->name('public.articles');
     Route::get('articles/{article:slug}', [PublicArticleController::class, 'show'])->name('public.articles.show');
     Route::inertia('competitions', 'Public/Competitions/page')->name('public.competitions');
     Route::inertia('offers', 'Public/Offers/page')->name('public.offers');
     Route::inertia('gift-cards', 'Public/GiftCards/page')->name('public.gift-cards');
     Route::inertia('coupons', 'Public/Coupons/page')->name('public.coupons');
-    Route::inertia('products', 'Public/products/page')->name('public.products');
-    Route::inertia('account', 'Public/account/page')->name('public.account');
+    Route::get('products', [PublicProductController::class, 'index'])->name('public.products');
     Route::inertia('wallet', 'Public/wallet/page')->name('public.wallet');
     Route::inertia('notifications', 'Public/notifications/page')->name('public.notifications');
+});
+
+Route::middleware(['coming.soon', 'auth'])->group(function () {
+    Route::get('account', [AccountController::class, 'index'])->name('public.account');
+    Route::put('account/details', [AccountController::class, 'updateDetails'])->name('public.account.details.update');
+    Route::post('account/categories/{category}/toggle', [AccountController::class, 'toggleCategory'])->name('public.account.categories.toggle');
+    Route::post('account/brands/{brand}/toggle', [AccountController::class, 'toggleBrand'])->name('public.account.brands.toggle');
 });
 
 Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(function () {
@@ -132,5 +142,9 @@ Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(functio
     Route::put('admin/stamp-programs/{stampProgram}', [StampProgramController::class, 'update'])->name('stamp-programs.update');
     Route::delete('admin/stamp-programs/{stampProgram}', [StampProgramController::class, 'destroy'])->name('stamp-programs.destroy');
 });
+
+Route::post('register/validate-account', [RegistrationValidationController::class, 'account'])
+    ->middleware(['guest', 'throttle:10,1'])
+    ->name('register.validate-account');
 
 require __DIR__.'/settings.php';
