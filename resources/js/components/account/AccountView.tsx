@@ -134,7 +134,7 @@ export function AccountView() {
         </div>
         <p className="u-nums mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1 border-t border-rule pt-4 text-[0.875rem] leading-relaxed text-ink-2">
           <span className="whitespace-nowrap">
-            <span className="font-semibold text-ink">6</span> saved
+            <span className="font-semibold text-ink">6</span> Categories
           </span>
           <span className="text-rule-strong" aria-hidden="true">
             ·
