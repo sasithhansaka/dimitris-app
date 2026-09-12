@@ -17,10 +17,11 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegistrationValidationController;
 use App\Http\Controllers\Public\AccountController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
+use App\Http\Controllers\Public\HomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['coming.soon'])->group(function () {
-    Route::inertia('/', 'Public/home')->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('articles', [PublicArticleController::class, 'index'])->name('public.articles');
     Route::get('articles/{article:slug}', [PublicArticleController::class, 'show'])->name('public.articles.show');
     Route::inertia('competitions', 'Public/Competitions/page')->name('public.competitions');

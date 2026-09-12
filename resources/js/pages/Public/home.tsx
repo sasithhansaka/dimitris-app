@@ -17,69 +17,13 @@ import {
 } from "@/components/offers/CatalogOfferCard";
 import { BrandCard } from "@/components/brands/BrandCard";
 import type { Brand } from "@/components/brands/BrandLogo";
-import { GiftCardCard, type GiftCard } from "@/components/gift-cards/GiftCardCard";
+import {
+    GiftCardCard,
+    type GiftCard,
+} from "@/components/gift-cards/GiftCardCard";
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import type { Article } from "@/types/article";
 import { ArrowRight, Search, TicketCheck, Trophy } from "lucide-react";
-
-const FEATURED_PRODUCTS: Product[] = [
-    {
-        id: "1",
-        name: "Wireless Noise-Cancelling Headphones",
-        description:
-            "Over-ear headphones with adaptive noise cancellation and 30-hour battery life.",
-        brand: {
-            id: "3",
-            name: "Circuit",
-            logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
-        },
-        category: { id: "electronics", name: "Electronics" },
-        coupon: { slug: "5-cashback-electronics", reward: "5% BACK" },
-        image: { pattern: "beam", accent: "#d97706" },
-    },
-    {
-        id: "2",
-        name: "Organic Snack Variety Pack",
-        description:
-            "A mix of organic, non-GMO snacks perfect for lunchboxes and travel.",
-        brand: {
-            id: "2",
-            name: "Fresco",
-            logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
-        },
-        category: { id: "grocery", name: "Grocery" },
-        coupon: { slug: "buy-one-get-one-free", reward: "BOGO" },
-        image: { pattern: "field", accent: "#059669" },
-    },
-    {
-        id: "3",
-        name: "Everyday Backpack",
-        description:
-            "Water-resistant backpack with a padded laptop sleeve and multiple compartments.",
-        brand: {
-            id: "1",
-            name: "Northwind",
-            logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
-        },
-        category: { id: "fashion", name: "Fashion" },
-        coupon: { slug: "buy-one-get-one-free", reward: "BOGO" },
-        image: { pattern: "tile", accent: "#2563eb" },
-    },
-    {
-        id: "4",
-        name: "Ceramic Cookware Set",
-        description:
-            "A 10-piece non-stick ceramic cookware set, oven-safe up to 450°F.",
-        brand: {
-            id: "4",
-            name: "Hearth",
-            logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" },
-        },
-        category: { id: "home", name: "Home & Living" },
-        coupon: { slug: "buy-one-get-one-free", reward: "BOGO" },
-        image: { pattern: "bloom", accent: "#7c3aed" },
-    },
-];
 
 const FEATURED_COUPONS: Coupon[] = [
     {
@@ -174,51 +118,6 @@ const FEATURED_COMPETITIONS: Competition[] = [
     },
 ];
 
-const FEATURED_OFFERS: Offer[] = [
-    {
-        id: "1",
-        slug: "northwind-storewide-sale",
-        title: "Northwind storewide seasonal sale",
-        description: "Save across the full catalog, no minimum spend required.",
-        validUntil: "2026-11-15",
-        brand: {
-            id: "1",
-            name: "Northwind",
-            logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
-        },
-        relatedCouponSlug: "20-off-first-order",
-        image: { pattern: "wave", accent: "#2563eb" },
-    },
-    {
-        id: "2",
-        slug: "fresco-weekly-groceries",
-        title: "Fresco weekly grocery picks",
-        description: "Fresh deals on pantry staples, updated every Monday.",
-        validUntil: "2026-10-20",
-        brand: {
-            id: "2",
-            name: "Fresco",
-            logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
-        },
-        relatedCouponSlug: "buy-one-get-one-free",
-        image: { pattern: "field", accent: "#059669" },
-    },
-    {
-        id: "3",
-        slug: "circuit-tech-clearance",
-        title: "Circuit tech clearance event",
-        description:
-            "Last season's electronics at clearance prices, while supplies last.",
-        validUntil: "2026-10-05",
-        brand: {
-            id: "3",
-            name: "Circuit",
-            logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
-        },
-        image: { pattern: "tile", accent: "#d97706" },
-    },
-];
-
 const POPULAR_BRANDS: Brand[] = [
     {
         id: "1",
@@ -271,7 +170,11 @@ const FEATURED_GIFT_CARDS: GiftCard[] = [
         title: "Northwind gift card",
         description: "Redeemable storewide, online and in every location.",
         valueLabels: ["$25", "$50", "$100"],
-        brand: { id: "1", name: "Northwind", logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" } },
+        brand: {
+            id: "1",
+            name: "Northwind",
+            logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
+        },
         image: { pattern: "wave", accent: "#2563eb" },
     },
     {
@@ -280,7 +183,11 @@ const FEATURED_GIFT_CARDS: GiftCard[] = [
         title: "Fresco gift card",
         description: "Perfect for groceries, gifting, or weekly essentials.",
         valueLabels: ["$20", "$40", "$75"],
-        brand: { id: "2", name: "Fresco", logo: { monogram: "F", accent: "#059669", ink: "#ffffff" } },
+        brand: {
+            id: "2",
+            name: "Fresco",
+            logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
+        },
         image: { pattern: "field", accent: "#059669" },
     },
     {
@@ -289,7 +196,11 @@ const FEATURED_GIFT_CARDS: GiftCard[] = [
         title: "Circuit gift card",
         description: "Put toward electronics, accessories, and more.",
         valueLabels: ["$50", "$100", "$200"],
-        brand: { id: "3", name: "Circuit", logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" } },
+        brand: {
+            id: "3",
+            name: "Circuit",
+            logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
+        },
         image: { pattern: "tile", accent: "#d97706" },
     },
     {
@@ -298,7 +209,11 @@ const FEATURED_GIFT_CARDS: GiftCard[] = [
         title: "Hearth gift card",
         description: "A flexible gift for home and living purchases.",
         valueLabels: ["$25", "$50", "$100"],
-        brand: { id: "4", name: "Hearth", logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" } },
+        brand: {
+            id: "4",
+            name: "Hearth",
+            logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" },
+        },
         image: { pattern: "bloom", accent: "#7c3aed" },
     },
 ];
@@ -308,7 +223,8 @@ const FEATURED_ARTICLES: Article[] = [
         id: 1,
         title: "How to stack coupons for maximum savings",
         slug: "how-to-stack-coupons",
-        introduction: "A quick guide to combining store offers, manufacturer coupons, and cashback for the biggest discount.",
+        introduction:
+            "A quick guide to combining store offers, manufacturer coupons, and cashback for the biggest discount.",
         content: "",
         banner: "",
         keywords: null,
@@ -316,7 +232,15 @@ const FEATURED_ARTICLES: Article[] = [
         read_time: 5,
         featured: true,
         article_category_id: 1,
-        category: { id: 1, name: "Guides", slug: "guides", description: null, status: "active", created_at: "", updated_at: "" },
+        category: {
+            id: 1,
+            name: "Guides",
+            slug: "guides",
+            description: null,
+            status: "active",
+            created_at: "",
+            updated_at: "",
+        },
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
     },
@@ -324,7 +248,8 @@ const FEATURED_ARTICLES: Article[] = [
         id: 2,
         title: "5 gift card tricks most shoppers miss",
         slug: "gift-card-tricks",
-        introduction: "Simple ways to get more value out of gift cards before they expire.",
+        introduction:
+            "Simple ways to get more value out of gift cards before they expire.",
         content: "",
         banner: "",
         keywords: null,
@@ -332,7 +257,15 @@ const FEATURED_ARTICLES: Article[] = [
         read_time: 4,
         featured: false,
         article_category_id: 2,
-        category: { id: 2, name: "Tips", slug: "tips", description: null, status: "active", created_at: "", updated_at: "" },
+        category: {
+            id: 2,
+            name: "Tips",
+            slug: "tips",
+            description: null,
+            status: "active",
+            created_at: "",
+            updated_at: "",
+        },
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
     },
@@ -340,7 +273,8 @@ const FEATURED_ARTICLES: Article[] = [
         id: 3,
         title: "The competition entry checklist",
         slug: "competition-entry-checklist",
-        introduction: "What to check before you submit an entry so you don't get disqualified.",
+        introduction:
+            "What to check before you submit an entry so you don't get disqualified.",
         content: "",
         banner: "",
         keywords: null,
@@ -348,13 +282,26 @@ const FEATURED_ARTICLES: Article[] = [
         read_time: 3,
         featured: false,
         article_category_id: 3,
-        category: { id: 3, name: "Competitions", slug: "competitions", description: null, status: "active", created_at: "", updated_at: "" },
+        category: {
+            id: 3,
+            name: "Competitions",
+            slug: "competitions",
+            description: null,
+            status: "active",
+            created_at: "",
+            updated_at: "",
+        },
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
     },
 ];
 
-export default function Home() {
+type Props = {
+    featuredProducts: Product[];
+    featuredOffers: Offer[];
+};
+
+export default function Home({ featuredProducts, featuredOffers }: Props) {
     const { auth } = usePage().props;
 
     return (
@@ -369,7 +316,9 @@ export default function Home() {
                                 More ways to get rewarded.
                             </h1>
                             <p className="mt-5 max-w-[55ch] text-[1.02rem] leading-relaxed text-ink-2">
-                             Claim coupon benefits, collect loyalty stamps, or enter prize competitions — with every next step made clear.
+                                Claim coupon benefits, collect loyalty stamps,
+                                or enter prize competitions — with every next
+                                step made clear.
                             </p>
                             <form
                                 action="/products"
@@ -470,7 +419,7 @@ export default function Home() {
                     actionHref="/products"
                 />
                 <div className="u-rail u-rail-mask -mx-5 mt-7 flex gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-2 lg:px-0 xl:grid-cols-4">
-                    {FEATURED_PRODUCTS.map((product) => (
+                    {featuredProducts.map((product) => (
                         <div
                             key={product.id}
                             className="w-[78vw] max-w-[300px] shrink-0 lg:w-auto lg:max-w-none"
@@ -523,11 +472,17 @@ export default function Home() {
                     actionLabel="View all offers"
                     actionHref="/offers"
                 />
-                <div className="mt-7 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                    {FEATURED_OFFERS.map((offer) => (
-                        <CatalogOfferCard key={offer.id} offer={offer} />
-                    ))}
-                </div>
+                {featuredOffers.length > 0 ? (
+                    <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        {featuredOffers.map((offer) => (
+                            <CatalogOfferCard key={offer.id} offer={offer} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="mt-7 rounded-lg border border-dashed border-rule-strong bg-surface px-6 py-14 text-center">
+                        <p className="text-[0.9rem] text-ink-3">No offers</p>
+                    </div>
+                )}
             </Container>
 
             {/* brands */}
@@ -578,8 +533,7 @@ export default function Home() {
                 </div>
             </Container>
 
-
-{/* 
+            {/* 
 //////////
 
 s
