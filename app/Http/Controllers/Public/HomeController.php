@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\Brand;
 use App\Models\GiftCard;
 use App\Models\Offer;
 use App\Models\Product;
@@ -61,11 +62,23 @@ class HomeController extends Controller
             ->take(3)
             ->values();
 
+        $featuredBrands = Brand::query()
+            ->withCount(['offers' => function ($query) {
+                $query->where('status', Offer::STATUS_ACTIVE);
+            }])
+            ->where('status', Brand::STATUS_ACTIVE)
+            ->where('featured', true)
+            ->get()
+            ->shuffle()
+            ->take(6)
+            ->values();
+
         return Inertia::render('Public/home', [
             'featuredProducts' => $featuredProducts,
             'featuredOffers' => $featuredOffers,
             'featuredGiftCards' => $featuredGiftCards,
             'featuredArticles' => $featuredArticles,
+            'featuredBrands' => $featuredBrands,
         ]);
     }
 }

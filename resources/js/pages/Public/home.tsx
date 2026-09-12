@@ -15,8 +15,7 @@ import {
     CatalogOfferCard,
     type Offer,
 } from "@/components/offers/CatalogOfferCard";
-import { BrandCard } from "@/components/brands/BrandCard";
-import type { Brand } from "@/components/brands/BrandLogo";
+import { BrandCard, type Brand } from "@/components/brands/BrandCard";
 import {
     GiftCardCard,
     type GiftCard,
@@ -119,56 +118,12 @@ const FEATURED_COMPETITIONS: Competition[] = [
     },
 ];
 
-const POPULAR_BRANDS: Brand[] = [
-    {
-        id: "1",
-        name: "Northwind",
-        tagline: "Everyday essentials",
-        activeOffers: 4,
-        logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
-    },
-    {
-        id: "2",
-        name: "Fresco",
-        tagline: "Fresh groceries",
-        activeOffers: 3,
-        logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
-    },
-    {
-        id: "3",
-        name: "Circuit",
-        tagline: "Electronics & tech",
-        activeOffers: 5,
-        logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
-    },
-    {
-        id: "4",
-        name: "Hearth",
-        tagline: "Home & living",
-        activeOffers: 2,
-        logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" },
-    },
-    {
-        id: "5",
-        name: "Solace",
-        tagline: "Beauty & wellness",
-        activeOffers: 3,
-        logo: { monogram: "S", accent: "#dc2626", ink: "#ffffff" },
-    },
-    {
-        id: "6",
-        name: "Uplift",
-        tagline: "Sports & outdoors",
-        activeOffers: 1,
-        logo: { monogram: "U", accent: "#0f766e", ink: "#ffffff" },
-    },
-];
-
 type Props = {
     featuredProducts: Product[];
     featuredOffers: Offer[];
     featuredGiftCards: GiftCard[];
     featuredArticles: Article[];
+    featuredBrands: Brand[];
 };
 
 export default function Home({
@@ -176,6 +131,7 @@ export default function Home({
     featuredOffers,
     featuredGiftCards,
     featuredArticles,
+    featuredBrands,
 }: Props) {
     const { auth } = usePage().props;
 
@@ -369,11 +325,17 @@ export default function Home({
                     actionLabel="Browse products"
                     actionHref="/products"
                 />
-                <div className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:gap-5 xl:grid-cols-6">
-                    {POPULAR_BRANDS.map((brand) => (
-                        <BrandCard key={brand.id} brand={brand} />
-                    ))}
-                </div>
+                {featuredBrands.length > 0 ? (
+                    <div className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:gap-5 xl:grid-cols-6">
+                        {featuredBrands.map((brand) => (
+                            <BrandCard key={brand.id} brand={brand} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="mt-7 rounded-lg border border-dashed border-rule-strong bg-surface px-6 py-14 text-center">
+                        <p className="text-[0.9rem] text-ink-3">No brands</p>
+                    </div>
+                )}
             </Container>
 
             <Container as="section" className="pt-14 lg:pt-20">
