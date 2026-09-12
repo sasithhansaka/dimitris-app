@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { router } from "@inertiajs/react";
-import { Check } from "lucide-react";
+import { Link, router } from "@inertiajs/react";
+import { Check, LogOut, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useInitials } from "@/hooks/use-initials";
 import AccountController from "@/actions/App/Http/Controllers/Public/AccountController";
+import { logout } from "@/routes";
+import { AccountDetailsDialog } from "./AccountDetailsDialog";
+import { VerifyEmailNotice } from "./VerifyEmailNotice";
 import type {
     AccountBrand,
     AccountCategory,
@@ -18,6 +21,7 @@ type Props = {
     brands: AccountBrand[];
     favoriteCategoryIds: number[];
     favoriteBrandIds: number[];
+    status?: string;
 };
 
 function Section({
@@ -70,6 +74,7 @@ export function AccountView({
     brands,
     favoriteCategoryIds,
     favoriteBrandIds,
+    status,
 }: Props) {
     const getInitials = useInitials();
     const [selectedCategoryIds, setSelectedCategoryIds] =
@@ -82,6 +87,7 @@ export function AccountView({
     const [pendingBrandIds, setPendingBrandIds] = useState<Set<number>>(
         new Set(),
     );
+    const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
 
     const toggleCategory = (id: number) => {
         if (pendingCategoryIds.has(id)) {
@@ -147,6 +153,8 @@ export function AccountView({
 
     return (
         <div className="space-y-11">
+            {!user.email_verified_at && <VerifyEmailNotice status={status} />}
+
             <section className="rounded-lg border border-rule bg-surface p-6 sm:p-7">
                 <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
                     <span
@@ -163,6 +171,16 @@ export function AccountView({
                             {user.email}
                         </p>
                     </div>
+                    <Link
+                        href={logout()}
+                        as="button"
+                        onClick={() => router.flushAll()}
+                        data-test="logout-button"
+                        className="inline-flex min-h-9 shrink-0 items-center gap-1.5 self-start rounded-md border border-rule px-3 text-[0.8125rem] font-semibold text-ink-2 transition-colors hover:border-ink-3 hover:text-ink sm:self-center"
+                    >
+                        <LogOut className="size-3.5" aria-hidden="true" />
+                        Log out
+                    </Link>
                 </div>
                 <p className="u-nums mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1 border-t border-rule pt-4 text-[0.875rem] leading-relaxed text-ink-2">
                     <span className="whitespace-nowrap">
@@ -201,6 +219,72 @@ export function AccountView({
                     </span>
                 </p>
             </section>
+
+            <section className="rounded-lg border border-rule bg-surface p-6 sm:p-7">
+                <div className="flex items-center justify-between gap-4">
+                    <h2 className="u-display text-[1.3rem] text-ink">
+                        Account details{" "}
+                    </h2>
+                    <button
+                        type="button"
+                        onClick={() => setDetailsDialogOpen(true)}
+                        className="inline-flex min-h-9 items-center gap-1.5 rounded-md border border-rule px-3 text-[0.8125rem] font-semibold text-ink-2 transition-colors hover:border-ink-3 hover:text-ink"
+                    >
+                        <Pencil className="size-3.5" aria-hidden="true" />
+                        Edit
+                    </button>
+                </div>
+                <dl className="mt-5 grid gap-4 border-t border-rule pt-5 sm:grid-cols-2">
+                    <div>
+                        <dt className="u-label text-ink-3">Name</dt>
+                        <dd className="mt-1 text-[0.9375rem] text-ink">
+                            {user.name}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt className="u-label text-ink-3">Email</dt>
+                        <dd className="mt-1 truncate text-[0.9375rem] text-ink">
+                            {user.email}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt className="u-label text-ink-3">Country</dt>
+                        <dd className="mt-1 text-[0.9375rem] text-ink">
+                            {user.country ?? "—"}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt className="u-label text-ink-3">City</dt>
+                        <dd className="mt-1 text-[0.9375rem] text-ink">
+                            {user.city ?? "—"}
+                        </dd>
+                    </div>
+                    <div className="sm:col-span-2">
+                        <dt className="u-label text-ink-3">Address</dt>
+                        <dd className="mt-1 text-[0.9375rem] text-ink">
+                            {user.address ?? "—"}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt className="u-label text-ink-3">Phone number</dt>
+                        <dd className="mt-1 text-[0.9375rem] text-ink">
+                            {user.phone_number ?? "—"}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt className="u-label text-ink-3">Date of birth</dt>
+                        <dd className="mt-1 text-[0.9375rem] text-ink">
+                            {user.dob ?? "—"}
+                        </dd>
+                    </div>
+                </dl>
+            </section>
+
+            <AccountDetailsDialog
+                user={user}
+                open={detailsDialogOpen}
+                onOpenChange={setDetailsDialogOpen}
+            />
 
             <Section
                 id="preferences"

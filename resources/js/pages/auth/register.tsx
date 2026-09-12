@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import AppLogoIcon from "@/components/app-logo-icon";
 import InputError from "@/components/input-error";
 import PasswordInput from "@/components/password-input";
+import { RequiredMark } from "@/components/required-mark";
 import TextLink from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -37,10 +38,6 @@ const ACCOUNT_STEP_FIELDS = [
 type AccountStepErrors = Partial<
     Record<(typeof ACCOUNT_STEP_FIELDS)[number], string>
 >;
-
-function RequiredMark() {
-    return <span className="text-destructive">*</span>;
-}
 
 const MIN_REGISTRATION_AGE = 18;
 

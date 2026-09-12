@@ -7,7 +7,12 @@ import { AccountView } from "@/components/account/AccountView";
 export type AccountUser = {
     name: string;
     email: string;
+    email_verified_at: string | null;
     country: string | null;
+    city: string | null;
+    address: string | null;
+    phone_number: string | null;
+    dob: string | null;
     created_at: string;
 };
 
@@ -32,6 +37,7 @@ type Props = {
     brands: AccountBrand[];
     favoriteCategoryIds: number[];
     favoriteBrandIds: number[];
+    status?: string;
 };
 
 function AccountSkeleton() {
@@ -73,6 +79,7 @@ export default function AccountPage({
     brands,
     favoriteCategoryIds,
     favoriteBrandIds,
+    status,
 }: Props) {
     const [isNavigating, setIsNavigating] = useState(false);
 
@@ -99,7 +106,7 @@ export default function AccountPage({
                         Account
                     </h1>
                     <p className="mt-3 max-w-[52ch] text-[1.0125rem] leading-relaxed text-ink-2">
-                       Your profile, your preferences and how offers reach you.
+                        Your profile, your preferences and how offers reach you.
                     </p>
                 </header>
                 {isNavigating ? (
@@ -113,6 +120,7 @@ export default function AccountPage({
                         brands={brands}
                         favoriteCategoryIds={favoriteCategoryIds}
                         favoriteBrandIds={favoriteBrandIds}
+                        status={status}
                     />
                 )}
             </Container>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Public\AccountDetailsUpdateRequest;
 use App\Models\Brand;
 use App\Models\ProductCategory;
 use Illuminate\Http\RedirectResponse;
@@ -36,7 +37,12 @@ class AccountController extends Controller
             'user' => [
                 'name' => $user->name,
                 'email' => $user->email,
+                'email_verified_at' => $user->email_verified_at,
                 'country' => $user->country,
+                'city' => $user->city,
+                'address' => $user->address,
+                'phone_number' => $user->phone_number,
+                'dob' => $user->dob?->toDateString(),
                 'created_at' => $user->created_at,
             ],
             'favoriteCategoryCount' => $favoriteCategoryIds->count(),
@@ -45,7 +51,18 @@ class AccountController extends Controller
             'brands' => $brands,
             'favoriteCategoryIds' => $favoriteCategoryIds->values(),
             'favoriteBrandIds' => $favoriteBrandIds->values(),
+            'status' => $request->session()->get('status'),
         ]);
+    }
+
+    /**
+     * Update the authenticated user's account details.
+     */
+    public function updateDetails(AccountDetailsUpdateRequest $request): RedirectResponse
+    {
+        $request->user()->update($request->validated());
+
+        return back();
     }
 
     /**

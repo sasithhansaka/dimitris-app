@@ -1,102 +1,25 @@
+import { router } from "@inertiajs/react";
 import { Search, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import PublicProductController from "@/actions/App/Http/Controllers/Public/ProductController";
 import { ProductCard, type Product } from "./ProductCard";
-
-const PRODUCTS: Product[] = [
-    {
-        id: 1,
-        name: "Wireless Noise-Cancelling Headphones",
-        description:
-            "Over-ear headphones with adaptive noise cancellation and 30-hour battery life.",
-        brand: { id: 3, name: "Circuit", logo: null },
-        category: { id: 1, name: "Electronics" },
-        coupons_count: 1,
-        image: "",
-    },
-    {
-        id: 2,
-        name: "Organic Snack Variety Pack",
-        description:
-            "A mix of organic, non-GMO snacks perfect for lunchboxes and travel.",
-        brand: { id: 2, name: "Fresco", logo: null },
-        category: { id: 2, name: "Grocery" },
-        coupons_count: 1,
-        image: "",
-    },
-    {
-        id: 3,
-        name: "Everyday Backpack",
-        description:
-            "Water-resistant backpack with a padded laptop sleeve and multiple compartments.",
-        brand: { id: 1, name: "Northwind", logo: null },
-        category: { id: 3, name: "Fashion" },
-        coupons_count: 0,
-        image: "",
-    },
-    {
-        id: 4,
-        name: "Ceramic Cookware Set",
-        description:
-            "A 10-piece non-stick ceramic cookware set, oven-safe up to 450°F.",
-        brand: { id: 4, name: "Hearth", logo: null },
-        category: { id: 4, name: "Home & Living" },
-        coupons_count: 0,
-        image: "",
-    },
-    {
-        id: 5,
-        name: "Bluetooth Portable Speaker",
-        description: "Compact speaker with 360° sound and 12-hour playtime.",
-        brand: { id: 3, name: "Circuit", logo: null },
-        category: { id: 1, name: "Electronics" },
-        coupons_count: 0,
-        image: "",
-    },
-    {
-        id: 6,
-        name: "Cold-Pressed Juice Bundle",
-        description:
-            "A weekly bundle of six cold-pressed juices, delivered fresh.",
-        brand: { id: 2, name: "Fresco", logo: null },
-        category: { id: 2, name: "Grocery" },
-        coupons_count: 1,
-        image: "",
-    },
-    {
-        id: 7,
-        name: "Classic Denim Jacket",
-        description:
-            "A timeless denim jacket with a relaxed fit, available in three washes.",
-        brand: { id: 1, name: "Northwind", logo: null },
-        category: { id: 3, name: "Fashion" },
-        coupons_count: 1,
-        image: "",
-    },
-    {
-        id: 8,
-        name: "Scented Soy Candle Set",
-        description:
-            "A set of three hand-poured soy candles in seasonal scents.",
-        brand: { id: 4, name: "Hearth", logo: null },
-        category: { id: 4, name: "Home & Living" },
-        coupons_count: 1,
-        image: "",
-    },
-];
-
-const BRANDS = Array.from(
-    new Map(PRODUCTS.map((p) => [p.brand.id, p.brand])).values(),
-);
-const CATEGORIES = Array.from(
-    new Map(PRODUCTS.map((p) => [p.category.id, p.category])).values(),
-);
+import type {
+    ProductBrandOption,
+    ProductCategoryOption,
+} from "@/pages/Public/products/page";
 
 export function ProductsView({
+    products,
+    brands,
+    categories,
     initialQuery = "",
     initialCategory = "",
     initialBrand = "",
 }: {
+    products: Product[];
+    brands: ProductBrandOption[];
+    categories: ProductCategoryOption[];
     initialQuery?: string;
     initialCategory?: string;
     /** Lets brand cards and notifications land on a pre-filtered product list. */
@@ -109,36 +32,67 @@ export function ProductsView({
     const [categoryId, setCategoryId] = useState<number | "">(
         initialCategory ? Number(initialCategory) : "",
     );
+    const isFirstRender = useRef(true);
 
-    const results = useMemo(() => {
-        const needle = query.trim().toLowerCase();
-        return PRODUCTS.filter((product) => {
-            return (
-                (!brandId || product.brand.id === brandId) &&
-                (!categoryId || product.category.id === categoryId) &&
-                (!needle ||
-                    `${product.name} ${product.brand.name}`
-                        .toLowerCase()
-                        .includes(needle))
-            );
-        });
-    }, [brandId, categoryId, query]);
+    const applyFilters = (next: {
+        query: string;
+        brandId: number | "";
+        categoryId: number | "";
+    }) => {
+        router.get(
+            PublicProductController.index.url(),
+            {
+                q: next.query || undefined,
+                brand: next.brandId || undefined,
+                category: next.categoryId || undefined,
+            },
+            { preserveState: true, preserveScroll: true, replace: true },
+        );
+    };
+
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            applyFilters({ query, brandId, categoryId });
+        }, 350);
+
+        return () => clearTimeout(timeout);
+    }, [query]);
+
+    const toggleBrand = (id: number) => {
+        const next = brandId === id ? "" : id;
+        setBrandId(next);
+        applyFilters({ query, brandId: next, categoryId });
+    };
+
+    const toggleCategory = (id: number) => {
+        const next = categoryId === id ? "" : id;
+        setCategoryId(next);
+        applyFilters({ query, brandId, categoryId: next });
+    };
 
     const clear = () => {
         setQuery("");
         setBrandId("");
         setCategoryId("");
+        applyFilters({ query: "", brandId: "", categoryId: "" });
     };
+
+    const hasActiveFilters = Boolean(query || brandId || categoryId);
 
     return (
         <>
             <section className="mt-8 grid gap-5 border-y border-rule py-6 lg:grid-cols-[1.2fr_1fr_1fr] lg:gap-8 lg:py-8">
                 <div className="min-w-0">
                     <h2 className="u-display text-[1.25rem] text-ink">
-                        By name
+                        Find by name
                     </h2>
                     <p className="mt-1.5 text-[0.82rem] text-ink-3">
-                        Search for a specific product
+                        Search the product you already have in mind.
                     </p>
                     <label className="mt-4 flex min-h-12 items-center gap-3 rounded-md border border-rule-strong bg-surface px-4 focus-within:border-brand">
                         <Search
@@ -157,21 +111,17 @@ export function ProductsView({
 
                 <div className="min-w-0">
                     <h2 className="u-display text-[1.25rem] text-ink">
-                        By brand
+                        Browse by brand
                     </h2>
                     <p className="mt-1.5 text-[0.82rem] text-ink-3">
-                        Filter to a business you trust
+                        See products from a brand you recognise.
                     </p>
                     <div className="u-rail mt-4 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible">
-                        {BRANDS.map((brand) => (
+                        {brands.map((brand) => (
                             <button
                                 key={brand.id}
                                 type="button"
-                                onClick={() =>
-                                    setBrandId(
-                                        brandId === brand.id ? "" : brand.id,
-                                    )
-                                }
+                                onClick={() => toggleBrand(brand.id)}
                                 aria-pressed={brandId === brand.id}
                                 className={cn(
                                     "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md border px-3 py-2 text-[0.82rem] font-semibold transition-colors",
@@ -199,23 +149,17 @@ export function ProductsView({
 
                 <div className="min-w-0">
                     <h2 className="u-display text-[1.25rem] text-ink">
-                        By category
+                        Browse by category
                     </h2>
                     <p className="mt-1.5 text-[0.82rem] text-ink-3">
-                        Browse a product category
+                        Start with the type of product you need.
                     </p>
                     <div className="u-rail mt-4 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible">
-                        {CATEGORIES.map((category) => (
+                        {categories.map((category) => (
                             <button
                                 key={category.id}
                                 type="button"
-                                onClick={() =>
-                                    setCategoryId(
-                                        categoryId === category.id
-                                            ? ""
-                                            : category.id,
-                                    )
-                                }
+                                onClick={() => toggleCategory(category.id)}
                                 aria-pressed={categoryId === category.id}
                                 className={cn(
                                     "min-h-11 shrink-0 rounded-md border px-3 py-2 text-[0.82rem] font-semibold transition-colors",
@@ -234,14 +178,14 @@ export function ProductsView({
             <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
                 <div>
                     <h2 className="u-display text-[1.65rem] leading-tight text-ink">
-                        Results
+                        Product results
                     </h2>
                     <p className="u-nums mt-1 text-[0.85rem] text-ink-3">
-                        {results.length} matching product
-                        {results.length === 1 ? "" : "s"}
+                        {products.length} matching product
+                        {products.length === 1 ? "" : "s"}
                     </p>
                 </div>
-                {(query || brandId || categoryId) && (
+                {hasActiveFilters && (
                     <button
                         type="button"
                         onClick={clear}
@@ -253,9 +197,9 @@ export function ProductsView({
                 )}
             </div>
 
-            {results.length > 0 ? (
+            {products.length > 0 ? (
                 <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {results.map((product) => (
+                    {products.map((product) => (
                         <ProductCard key={product.id} product={product} />
                     ))}
                 </div>

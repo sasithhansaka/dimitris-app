@@ -207,7 +207,7 @@ export default function Home({
                                 <input
                                     name="q"
                                     type="search"
-                                    placeholder="Search products, brands, stores…"
+                                    placeholder="Search By Product Name"
                                     aria-label="Search product by name"
                                     className="min-h-11 min-w-0 flex-1 bg-transparent px-1 text-[0.92rem] outline-none"
                                 />
