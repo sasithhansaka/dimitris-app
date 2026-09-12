@@ -4,6 +4,7 @@ import { Bell, Search, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SearchOverlay } from "./SearchOverlay";
+import { login } from "@/routes";
 
 const NAV = [
     { href: "/products", label: "Products" },
@@ -15,7 +16,8 @@ const NAV = [
 ];
 
 export function Header() {
-    const { url } = usePage();
+    const { url, props } = usePage();
+    const isAuthenticated = Boolean(props.auth?.user);
     const [searchOpen, setSearchOpen] = useState(false);
     const [query, setQuery] = useState("");
 
@@ -107,52 +109,66 @@ export function Header() {
                             />
                         </button>
 
-                        <Link
-                            href="/wallet"
-                            aria-label="Wallet"
-                            className={cn(
-                                "flex size-10 items-center justify-center rounded-md transition-colors hover:bg-paper-deep",
-                                isActive("/wallet")
-                                    ? "text-brand"
-                                    : "text-ink-2 hover:text-ink",
-                            )}
-                        >
-                            <Wallet
-                                className="size-[21px]"
-                                aria-hidden="true"
-                            />
-                        </Link>
+                        {isAuthenticated ? (
+                            <>
+                                <Link
+                                    href="/wallet"
+                                    aria-label="Wallet"
+                                    className={cn(
+                                        "flex size-10 items-center justify-center rounded-md transition-colors hover:bg-paper-deep",
+                                        isActive("/wallet")
+                                            ? "text-brand"
+                                            : "text-ink-2 hover:text-ink",
+                                    )}
+                                >
+                                    <Wallet
+                                        className="size-[21px]"
+                                        aria-hidden="true"
+                                    />
+                                </Link>
 
-                        <Link
-                            href="/notifications"
-                            aria-label="Notifications"
-                            className={cn(
-                                "flex size-10 items-center justify-center rounded-md transition-colors hover:bg-paper-deep",
-                                isActive("/notifications")
-                                    ? "text-brand"
-                                    : "text-ink-2 hover:text-ink",
-                            )}
-                        >
-                            <Bell className="size-[21px]" aria-hidden="true" />
-                        </Link>
+                                <Link
+                                    href="/notifications"
+                                    aria-label="Notifications"
+                                    className={cn(
+                                        "flex size-10 items-center justify-center rounded-md transition-colors hover:bg-paper-deep",
+                                        isActive("/notifications")
+                                            ? "text-brand"
+                                            : "text-ink-2 hover:text-ink",
+                                    )}
+                                >
+                                    <Bell
+                                        className="size-[21px]"
+                                        aria-hidden="true"
+                                    />
+                                </Link>
 
-                        <Link
-                            href="/account"
-                            aria-label="Account"
-                            className="ml-1 flex items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-                        >
-                            <span
-                                className={cn(
-                                    "flex size-9 items-center justify-center rounded-full text-[0.75rem] font-bold tracking-[0.02em] transition-colors",
-                                    isActive("/account")
-                                        ? "bg-brand text-paper"
-                                        : "bg-ink text-paper hover:bg-brand",
-                                )}
-                                aria-hidden="true"
+                                <Link
+                                    href="/account"
+                                    aria-label="Account"
+                                    className="ml-1 flex items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                                >
+                                    <span
+                                        className={cn(
+                                            "flex size-9 items-center justify-center rounded-full text-[0.75rem] font-bold tracking-[0.02em] transition-colors",
+                                            isActive("/account")
+                                                ? "bg-brand text-paper"
+                                                : "bg-ink text-paper hover:bg-brand",
+                                        )}
+                                        aria-hidden="true"
+                                    >
+                                        AM
+                                    </span>
+                                </Link>
+                            </>
+                        ) : (
+                            <Link
+                                href={login()}
+                                className="ml-1 rounded-md px-3 py-2 text-[0.9rem] font-medium text-ink-2 transition-colors hover:bg-paper-deep hover:text-ink"
                             >
-                                AM
-                            </span>
-                        </Link>
+                                Log in
+                            </Link>
+                        )}
                     </div>
                 </div>
             </header>

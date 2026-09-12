@@ -25,6 +25,12 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string $role
  * @property Carbon $registered_date
  * @property string $status
+ * @property string|null $country
+ * @property string|null $city
+ * @property string|null $address
+ * @property string|null $phone_number
+ * @property Carbon|null $dob
+ * @property bool $terms_and_conditions
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
@@ -32,7 +38,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password', 'role', 'registered_date', 'status'])]
+#[Fillable(['name', 'email', 'password', 'role', 'registered_date', 'status', 'country', 'city', 'address', 'phone_number', 'dob', 'terms_and_conditions'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmailContract, PasskeyUser
 {
@@ -67,6 +73,8 @@ class User extends Authenticatable implements MustVerifyEmailContract, PasskeyUs
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'registered_date' => 'date',
+            'dob' => 'date',
+            'terms_and_conditions' => 'boolean',
             /* @chisel-2fa */
             'two_factor_confirmed_at' => 'datetime',
             /* @end-chisel-2fa */

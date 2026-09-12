@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Auth\RegistrationValidationController;
 use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\BrandController;
@@ -132,5 +133,9 @@ Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(functio
     Route::put('admin/stamp-programs/{stampProgram}', [StampProgramController::class, 'update'])->name('stamp-programs.update');
     Route::delete('admin/stamp-programs/{stampProgram}', [StampProgramController::class, 'destroy'])->name('stamp-programs.destroy');
 });
+
+Route::post('register/validate-account', [RegistrationValidationController::class, 'account'])
+    ->middleware(['guest', 'throttle:10,1'])
+    ->name('register.validate-account');
 
 require __DIR__.'/settings.php';
