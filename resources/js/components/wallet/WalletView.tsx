@@ -1,18 +1,11 @@
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import type { LucideIcon } from "lucide-react";
 import { Clock3, Gift, Heart, ReceiptText } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BrandLogo, type Brand } from "@/components/brands/BrandLogo";
-
-type GiftCard = {
-    id: string;
-    slug: string;
-    title: string;
-    description: string;
-    valueLabels: string[];
-    brand: Brand;
-};
+import GiftCardController from "@/actions/App/Http/Controllers/Public/GiftCardController";
+import type { WalletGiftCard } from "@/pages/Public/wallet/page";
 
 type Tab = "saved" | "rewards" | "activity";
 const TABS: { id: Tab; label: string }[] = [
@@ -25,11 +18,6 @@ const NORTHWIND: Brand = {
     id: "1",
     name: "Northwind",
     logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
-};
-const FRESCO: Brand = {
-    id: "2",
-    name: "Fresco",
-    logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
 };
 const CIRCUIT: Brand = {
     id: "3",
@@ -69,17 +57,6 @@ const SAVED_COUPONS: SavedCoupon[] = [
     },
 ];
 
-const SAVED_GIFT_CARDS: GiftCard[] = [
-    {
-        id: "1",
-        slug: "fresco-gift-card",
-        title: "Fresco gift card",
-        description: "Perfect for groceries, gifting, or weekly essentials.",
-        valueLabels: ["$20", "$40", "$75"],
-        brand: FRESCO,
-    },
-];
-
 const WALLET_REWARDS: WalletReward[] = [
     {
         id: "1",
@@ -110,10 +87,57 @@ const RECEIPT_SUBMISSIONS: ReceiptSubmission[] = [
     },
 ];
 
-export function WalletView({ initialTab }: { initialTab: Tab }) {
+export function WalletView({
+    initialTab,
+    savedGiftCards: initialSavedGiftCards,
+}: {
+    initialTab: Tab;
+    savedGiftCards: WalletGiftCard[];
+}) {
     const [tab, setTab] = useState<Tab>(initialTab);
     const [savedCoupons, setSavedCoupons] = useState(SAVED_COUPONS);
-    const [savedGiftCards, setSavedGiftCards] = useState(SAVED_GIFT_CARDS);
+    const [savedGiftCards, setSavedGiftCards] = useState(
+        initialSavedGiftCards,
+    );
+    const [removingGiftCardIds, setRemovingGiftCardIds] = useState<
+        Set<number>
+    >(new Set());
+
+    const removeGiftCard = (giftCardId: number) => {
+        if (removingGiftCardIds.has(giftCardId)) {
+            return;
+        }
+
+        setRemovingGiftCardIds((prev) => new Set(prev).add(giftCardId));
+
+        router.post(
+            GiftCardController.toggle.url(giftCardId),
+            {},
+            {
+                preserveScroll: true,
+                preserveState: true,
+                except: [
+                    "featuredProducts",
+                    "featuredOffers",
+                    "featuredGiftCards",
+                    "featuredArticles",
+                    "featuredBrands",
+                    "giftCards",
+                    "offers",
+                ],
+                onSuccess: () =>
+                    setSavedGiftCards((prev) =>
+                        prev.filter((item) => item.id !== giftCardId),
+                    ),
+                onFinish: () =>
+                    setRemovingGiftCardIds((prev) => {
+                        const next = new Set(prev);
+                        next.delete(giftCardId);
+                        return next;
+                    }),
+            },
+        );
+    };
 
     return (
         <>
@@ -237,61 +261,108 @@ export function WalletView({ initialTab }: { initialTab: Tab }) {
                                         </p>
                                     </div>
                                     <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                                        {savedGiftCards.map((giftCard) => (
-                                            <article
-                                                key={giftCard.id}
-                                                className="overflow-hidden rounded-lg border border-rule bg-surface"
-                                            >
-                                                <div className="flex aspect-16/10 items-center justify-center bg-paper-deep">
-                                                    <BrandLogo
-                                                        brand={giftCard.brand}
-                                                        size="lg"
-                                                    />
-                                                </div>
-                                                <div className="p-5">
-                                                    <p className="u-label text-ink-3">
-                                                        Saved gift card
-                                                    </p>
-                                                    <h3 className="mt-2 font-semibold text-ink">
-                                                        {giftCard.title}
-                                                    </h3>
-                                                    <p className="mt-1 text-[0.8rem] text-ink-3">
-                                                        Saved for later. It has
-                                                        not been purchased.
-                                                    </p>
-                                                    <div className="mt-5 flex gap-2 border-t border-rule pt-4">
-                                                        <Link
-                                                            href={`/gift-cards/${giftCard.slug}`}
-                                                            className="inline-flex min-h-11 flex-1 items-center justify-center rounded-md bg-brand px-3 text-[0.82rem] font-semibold text-paper"
-                                                        >
-                                                            View gift card
-                                                        </Link>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() =>
-                                                                setSavedGiftCards(
-                                                                    (prev) =>
-                                                                        prev.filter(
-                                                                            (
-                                                                                item,
-                                                                            ) =>
-                                                                                item.id !==
-                                                                                giftCard.id,
-                                                                        ),
-                                                                )
+                                        {savedGiftCards.map((giftCard) => {
+                                            const expired =
+                                                giftCard.is_expired;
+                                            const removing =
+                                                removingGiftCardIds.has(
+                                                    giftCard.id,
+                                                );
+                                            const cardImage = (
+                                                <div
+                                                    className={cn(
+                                                        "flex aspect-16/10 items-center justify-center overflow-hidden bg-white",
+                                                        expired &&
+                                                            "grayscale",
+                                                    )}
+                                                >
+                                                    {giftCard.image ? (
+                                                        <img
+                                                            src={`/storage/${giftCard.image}`}
+                                                            alt={
+                                                                giftCard.name
                                                             }
-                                                            aria-label={`Remove ${giftCard.title} from Saved`}
-                                                            className="flex size-11 items-center justify-center rounded-md border border-rule text-ink-3 hover:text-ink"
-                                                        >
-                                                            <Heart
-                                                                className="size-4"
-                                                                fill="currentColor"
-                                                            />
-                                                        </button>
-                                                    </div>
+                                                            className="h-4/5 w-4/5 object-contain"
+                                                        />
+                                                    ) : (
+                                                        <span className="u-display flex size-14 items-center justify-center rounded-full bg-ink text-[1.05rem] font-bold text-paper">
+                                                            {giftCard.name
+                                                                .slice(0, 2)
+                                                                .toUpperCase()}
+                                                        </span>
+                                                    )}
                                                 </div>
-                                            </article>
-                                        ))}
+                                            );
+
+                                            return (
+                                                <article
+                                                    key={giftCard.id}
+                                                    className={cn(
+                                                        "overflow-hidden rounded-lg border border-rule bg-surface",
+                                                        expired &&
+                                                            "opacity-70",
+                                                    )}
+                                                >
+                                                    {cardImage}
+                                                    <div className="p-5">
+                                                        <div className="flex items-start justify-between gap-2">
+                                                            <p className="u-label text-ink-3">
+                                                                Saved gift card
+                                                            </p>
+                                                            {expired && (
+                                                                <span className="u-label shrink-0 rounded-full bg-paper-deep px-2 py-0.5 text-ink-3">
+                                                                    Expired
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <h3 className="mt-2 font-semibold text-ink">
+                                                            {giftCard.name}
+                                                        </h3>
+                                                        <p className="mt-1 text-[0.8rem] text-ink-3">
+                                                            {expired
+                                                                ? "This gift card has expired and is no longer available."
+                                                                : "Saved for later. It has not been purchased."}
+                                                        </p>
+                                                        <div className="mt-5 flex gap-2 border-t border-rule pt-4">
+                                                            {expired ? (
+                                                                <span
+                                                                    aria-disabled="true"
+                                                                    className="inline-flex min-h-11 flex-1 cursor-not-allowed items-center justify-center rounded-md bg-paper-deep px-3 text-[0.82rem] font-semibold text-ink-3"
+                                                                >
+                                                                    Expired
+                                                                </span>
+                                                            ) : (
+                                                                <Link
+                                                                    href={`/gift-cards/${giftCard.id}`}
+                                                                    className="inline-flex min-h-11 flex-1 items-center justify-center rounded-md bg-brand px-3 text-[0.82rem] font-semibold text-paper"
+                                                                >
+                                                                    View gift
+                                                                    card
+                                                                </Link>
+                                                            )}
+                                                            <button
+                                                                type="button"
+                                                                disabled={
+                                                                    removing
+                                                                }
+                                                                onClick={() =>
+                                                                    removeGiftCard(
+                                                                        giftCard.id,
+                                                                    )
+                                                                }
+                                                                aria-label={`Remove ${giftCard.name} from Saved`}
+                                                                className="flex size-11 items-center justify-center rounded-md border border-rule text-ink-3 transition-colors hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
+                                                            >
+                                                                <Heart
+                                                                    className="size-4"
+                                                                    fill="currentColor"
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </article>
+                                            );
+                                        })}
                                     </div>
                                 </section>
                             )}

@@ -124,6 +124,7 @@ type Props = {
     featuredGiftCards: GiftCard[];
     featuredArticles: Article[];
     featuredBrands: Brand[];
+    favoriteGiftCardIds: number[];
 };
 
 export default function Home({
@@ -132,6 +133,7 @@ export default function Home({
     featuredGiftCards,
     featuredArticles,
     featuredBrands,
+    favoriteGiftCardIds,
 }: Props) {
     const { auth } = usePage().props;
 
@@ -352,7 +354,12 @@ export default function Home({
                                 key={giftCard.id}
                                 className="w-[78vw] max-w-77.5 shrink-0 sm:w-auto sm:max-w-none"
                             >
-                                <GiftCardCard giftCard={giftCard} />
+                                <GiftCardCard
+                                    giftCard={giftCard}
+                                    isFavorited={favoriteGiftCardIds.includes(
+                                        giftCard.id,
+                                    )}
+                                />
                             </div>
                         ))}
                     </div>

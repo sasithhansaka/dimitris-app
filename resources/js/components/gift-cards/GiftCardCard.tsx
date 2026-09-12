@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/react";
 import { currencySymbol } from "@/lib/currencies";
 import { GiftCardSaveButton } from "./GiftCardSaveButton";
 
@@ -15,7 +16,13 @@ export type GiftCard = {
     };
 };
 
-export function GiftCardCard({ giftCard }: { giftCard: GiftCard }) {
+export function GiftCardCard({
+    giftCard,
+    isFavorited = false,
+}: {
+    giftCard: GiftCard;
+    isFavorited?: boolean;
+}) {
     const symbol = currencySymbol(giftCard.currency);
     const prices = giftCard.amount
         .split(",")
@@ -24,19 +31,22 @@ export function GiftCardCard({ giftCard }: { giftCard: GiftCard }) {
 
     return (
         <article className="u-lift flex h-full flex-col overflow-hidden rounded-md border border-rule bg-surface">
-            <div className="relative aspect-16/10 flex items-center justify-center overflow-hidden bg-white">
+            <Link
+                href={`/gift-cards/${giftCard.id}`}
+                className="relative flex aspect-16/10 items-center justify-center overflow-hidden bg-white"
+            >
                 {giftCard.image ? (
                     <img
                         src={`/storage/${giftCard.image}`}
                         alt={giftCard.name}
-                    className="h-4/5 w-4/5 object-contain"
+                        className="h-4/5 w-4/5 object-contain"
                     />
                 ) : (
                     <div className="flex size-full items-center justify-center text-[0.85rem] font-semibold text-ink-3">
                         {giftCard.name}
                     </div>
                 )}
-            </div>
+            </Link>
             <div className="flex flex-1 flex-col p-4">
                 <div className="flex items-center gap-2">
                     {giftCard.brand.logo ? (
@@ -58,7 +68,9 @@ export function GiftCardCard({ giftCard }: { giftCard: GiftCard }) {
                     </span>
                 </div>
                 <h3 className="mt-3 text-[1rem] leading-snug font-semibold tracking-[-0.015em] text-ink">
-                    {giftCard.name}
+                    <Link href={`/gift-cards/${giftCard.id}`}>
+                        {giftCard.name}
+                    </Link>
                 </h3>
                 <p className="mt-2 line-clamp-2 text-[0.82rem] leading-relaxed text-ink-3">
                     {giftCard.description}
@@ -71,6 +83,7 @@ export function GiftCardCard({ giftCard }: { giftCard: GiftCard }) {
                 <GiftCardSaveButton
                     giftCardId={giftCard.id}
                     title={giftCard.name}
+                    initialSaved={isFavorited}
                     className="mt-4 w-full"
                 />
             </div>

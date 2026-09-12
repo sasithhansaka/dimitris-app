@@ -77,6 +77,13 @@ class User extends Authenticatable implements MustVerifyEmailContract, PasskeyUs
             ->withTimestamps();
     }
 
+    public function favoriteGiftCards(): BelongsToMany
+    {
+        return $this->belongsToMany(GiftCard::class, 'user_favorite_gift_cards', 'user_id', 'gift_card_id')
+            ->using(UserFavoriteGiftCard::class)
+            ->withTimestamps();
+    }
+
     /**
      * Get the attributes that should be cast.
      *

@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\GiftCard;
 use App\Models\Offer;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,7 +18,7 @@ class HomeController extends Controller
     /**
      * Display the public home page.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $featuredProducts = Product::query()
             ->with(['brand', 'category'])
@@ -79,6 +80,10 @@ class HomeController extends Controller
             'featuredGiftCards' => $featuredGiftCards,
             'featuredArticles' => $featuredArticles,
             'featuredBrands' => $featuredBrands,
+            'favoriteGiftCardIds' => $request->user()
+                ?->favoriteGiftCards()
+                ->pluck('gift_cards.id')
+                ->values() ?? [],
         ]);
     }
 }

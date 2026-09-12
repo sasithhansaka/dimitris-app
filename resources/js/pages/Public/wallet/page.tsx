@@ -1,11 +1,18 @@
 import { Head, usePage } from "@inertiajs/react";
 import { Container } from "@/components/ui/Container";
 import { WalletView } from "@/components/wallet/WalletView";
+import type { GiftCard } from "@/types/giftCard";
 
 type TabKey = "saved" | "rewards" | "activity";
 const VALID: TabKey[] = ["saved", "rewards", "activity"];
 
-export default function WalletPage() {
+export type WalletGiftCard = GiftCard & { is_expired: boolean };
+
+type Props = {
+  savedGiftCards: WalletGiftCard[];
+};
+
+export default function WalletPage({ savedGiftCards }: Props) {
   const { url } = usePage();
   const params = new URLSearchParams(url.split("?")[1] ?? "");
   const raw = params.get("tab");
@@ -23,7 +30,7 @@ export default function WalletPage() {
             Everything you've saved, earned, and submitted in one place.
           </p>
         </header>
-        <WalletView initialTab={initialTab} />
+        <WalletView initialTab={initialTab} savedGiftCards={savedGiftCards} />
       </Container>
     </>
   );

@@ -5,46 +5,15 @@ import {
     type GiftCard,
 } from "@/components/gift-cards/GiftCardCard";
 
-const GIFT_CARDS: GiftCard[] = [
-    {
-        id: 1,
-        name: "Northwind gift card",
-        description: "Redeemable storewide, online and in every location.",
-        amount: "25,50,100",
-        currency: "USD",
-        brand: { id: 1, name: "Northwind", logo: null },
-        image: null,
-    },
-    {
-        id: 2,
-        name: "Fresco gift card",
-        description: "Perfect for groceries, gifting, or weekly essentials.",
-        amount: "20,40,75",
-        currency: "USD",
-        brand: { id: 2, name: "Fresco", logo: null },
-        image: null,
-    },
-    {
-        id: 3,
-        name: "Circuit gift card",
-        description: "Put toward electronics, accessories, and more.",
-        amount: "50,100,200",
-        currency: "USD",
-        brand: { id: 3, name: "Circuit", logo: null },
-        image: null,
-    },
-    {
-        id: 4,
-        name: "Hearth gift card",
-        description: "A flexible gift for home and living purchases.",
-        amount: "25,50,100",
-        currency: "USD",
-        brand: { id: 4, name: "Hearth", logo: null },
-        image: null,
-    },
-];
+type Props = {
+    giftCards: GiftCard[];
+    favoriteGiftCardIds: number[];
+};
 
-export default function GiftCardsPage() {
+export default function GiftCardsPage({
+    giftCards,
+    favoriteGiftCardIds,
+}: Props) {
     return (
         <>
             <Head title="Gift Cards" />
@@ -69,14 +38,26 @@ export default function GiftCardsPage() {
                         </p>
                     </div>
                     <p className="u-nums hidden text-[0.82rem] text-ink-3 sm:block">
-                        {GIFT_CARDS.length} cards
+                        {giftCards.length} cards
                     </p>
                 </div>
-                <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {GIFT_CARDS.map((giftCard) => (
-                        <GiftCardCard key={giftCard.id} giftCard={giftCard} />
-                    ))}
-                </div>
+                {giftCards.length > 0 ? (
+                    <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {giftCards.map((giftCard) => (
+                            <GiftCardCard
+                                key={giftCard.id}
+                                giftCard={giftCard}
+                                isFavorited={favoriteGiftCardIds.includes(
+                                    giftCard.id,
+                                )}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <p className="mt-6 border-t border-rule pt-6 text-[0.9rem] text-ink-3">
+                        No active gift cards right now. Check back soon.
+                    </p>
+                )}
             </Container>
         </>
     );

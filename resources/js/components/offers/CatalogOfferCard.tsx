@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/react";
 import { ArrowRight, CalendarDays } from "lucide-react";
 
 export type Offer = {
@@ -21,13 +22,16 @@ const DATE_FORMAT = new Intl.DateTimeFormat("en", {
 export function CatalogOfferCard({ offer }: { offer: Offer }) {
     return (
         <article className="u-lift group flex h-full flex-col overflow-hidden rounded-md border border-rule bg-surface">
-            <div className="relative aspect-16/10 overflow-hidden items-center justify-center flex bg-white">
+            <Link
+                href={`/offers/${offer.id}`}
+                className="relative flex aspect-16/10 items-center justify-center overflow-hidden bg-white"
+            >
                 <img
                     src={`/storage/${offer.image}`}
                     alt={offer.title}
                     className="h-4/5 w-4/5 object-contain"
                 />
-            </div>
+            </Link>
             <div className="flex flex-1 flex-col p-4">
                 <div className="flex items-center gap-2">
                     {offer.brand.logo ? (
@@ -47,7 +51,7 @@ export function CatalogOfferCard({ offer }: { offer: Offer }) {
                     <span className="u-label ml-auto text-ink-3">Offer</span>
                 </div>
                 <h3 className="mt-3 text-[1.05rem] leading-snug font-semibold tracking-[-0.015em] text-ink">
-                    {offer.title}
+                    <Link href={`/offers/${offer.id}`}>{offer.title}</Link>
                 </h3>
                 <p className="mt-2 line-clamp-2 text-[0.82rem] leading-relaxed text-ink-3">
                     {offer.description}
@@ -57,10 +61,13 @@ export function CatalogOfferCard({ offer }: { offer: Offer }) {
                         <CalendarDays className="size-3.5" aria-hidden="true" />
                         Until {DATE_FORMAT.format(new Date(offer.end_date))}
                     </p>
-                    <span className="inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-[0.82rem] font-semibold text-brand">
+                    <Link
+                        href={`/offers/${offer.id}`}
+                        className="inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-[0.82rem] font-semibold text-brand"
+                    >
                         View offer{" "}
                         <ArrowRight className="size-4" aria-hidden="true" />
-                    </span>
+                    </Link>
                 </div>
             </div>
         </article>

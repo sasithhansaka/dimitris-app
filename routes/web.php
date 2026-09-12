@@ -17,8 +17,11 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegistrationValidationController;
 use App\Http\Controllers\Public\AccountController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
+use App\Http\Controllers\Public\GiftCardController as PublicGiftCardController;
 use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\OfferController as PublicOfferController;
 use App\Http\Controllers\Public\ProductController as PublicProductController;
+use App\Http\Controllers\Public\WalletController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['coming.soon'])->group(function () {
@@ -26,11 +29,12 @@ Route::middleware(['coming.soon'])->group(function () {
     Route::get('articles', [PublicArticleController::class, 'index'])->name('public.articles');
     Route::get('articles/{article:slug}', [PublicArticleController::class, 'show'])->name('public.articles.show');
     Route::inertia('competitions', 'Public/Competitions/page')->name('public.competitions');
-    Route::inertia('offers', 'Public/Offers/page')->name('public.offers');
-    Route::inertia('gift-cards', 'Public/GiftCards/page')->name('public.gift-cards');
+    Route::get('offers', [PublicOfferController::class, 'index'])->name('public.offers');
+    Route::get('offers/{offer}', [PublicOfferController::class, 'show'])->name('public.offers.show');
+    Route::get('gift-cards', [PublicGiftCardController::class, 'index'])->name('public.gift-cards');
+    Route::get('gift-cards/{giftCard}', [PublicGiftCardController::class, 'show'])->name('public.gift-cards.show');
     Route::inertia('coupons', 'Public/Coupons/page')->name('public.coupons');
     Route::get('products', [PublicProductController::class, 'index'])->name('public.products');
-    Route::inertia('wallet', 'Public/wallet/page')->name('public.wallet');
     Route::inertia('notifications', 'Public/notifications/page')->name('public.notifications');
 });
 
@@ -39,6 +43,8 @@ Route::middleware(['coming.soon', 'auth'])->group(function () {
     Route::put('account/details', [AccountController::class, 'updateDetails'])->name('public.account.details.update');
     Route::post('account/categories/{category}/toggle', [AccountController::class, 'toggleCategory'])->name('public.account.categories.toggle');
     Route::post('account/brands/{brand}/toggle', [AccountController::class, 'toggleBrand'])->name('public.account.brands.toggle');
+    Route::post('gift-cards/{giftCard}/toggle', [PublicGiftCardController::class, 'toggle'])->name('public.gift-cards.toggle');
+    Route::get('wallet', [WalletController::class, 'index'])->name('public.wallet');
 });
 
 Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(function () {

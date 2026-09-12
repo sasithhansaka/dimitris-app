@@ -5,44 +5,11 @@ import {
     type Offer,
 } from "@/components/offers/CatalogOfferCard";
 
-const OFFERS: Offer[] = [
-    {
-        id: 1,
-        title: "Northwind storewide seasonal sale",
-        description: "Save across the full catalog, no minimum spend required.",
-        end_date: "2026-11-15",
-        brand: { id: 1, name: "Northwind", logo: null },
-        image: "",
-    },
-    {
-        id: 2,
-        title: "Fresco weekly grocery picks",
-        description: "Fresh deals on pantry staples, updated every Monday.",
-        end_date: "2026-10-20",
-        brand: { id: 2, name: "Fresco", logo: null },
-        image: "",
-    },
-    {
-        id: 3,
-        title: "Circuit tech clearance event",
-        description:
-            "Last season's electronics at clearance prices, while supplies last.",
-        end_date: "2026-10-05",
-        brand: { id: 3, name: "Circuit", logo: null },
-        image: "",
-    },
-    {
-        id: 4,
-        title: "Hearth home refresh collection",
-        description:
-            "A curated set of home and living picks for the new season.",
-        end_date: "2026-11-30",
-        brand: { id: 4, name: "Hearth", logo: null },
-        image: "",
-    },
-];
+type Props = {
+    offers: Offer[];
+};
 
-export default function OffersPage() {
+export default function OffersPage({ offers }: Props) {
     return (
         <>
             <Head title="Offers" />
@@ -67,14 +34,20 @@ export default function OffersPage() {
                         </p>
                     </div>
                     <p className="u-nums hidden text-[0.82rem] text-ink-3 sm:block">
-                        {OFFERS.length} offers
+                        {offers.length} offers
                     </p>
                 </div>
-                <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                    {OFFERS.map((offer) => (
-                        <CatalogOfferCard key={offer.id} offer={offer} />
-                    ))}
-                </div>
+                {offers.length > 0 ? (
+                    <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                        {offers.map((offer) => (
+                            <CatalogOfferCard key={offer.id} offer={offer} />
+                        ))}
+                    </div>
+                ) : (
+                    <p className="mt-6 border-t border-rule pt-6 text-[0.9rem] text-ink-3">
+                        No active offers right now. Check back soon.
+                    </p>
+                )}
             </Container>
         </>
     );
