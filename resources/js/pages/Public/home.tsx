@@ -163,61 +163,6 @@ const POPULAR_BRANDS: Brand[] = [
     },
 ];
 
-const FEATURED_GIFT_CARDS: GiftCard[] = [
-    {
-        id: "1",
-        slug: "northwind-gift-card",
-        title: "Northwind gift card",
-        description: "Redeemable storewide, online and in every location.",
-        valueLabels: ["$25", "$50", "$100"],
-        brand: {
-            id: "1",
-            name: "Northwind",
-            logo: { monogram: "N", accent: "#2563eb", ink: "#ffffff" },
-        },
-        image: { pattern: "wave", accent: "#2563eb" },
-    },
-    {
-        id: "2",
-        slug: "fresco-gift-card",
-        title: "Fresco gift card",
-        description: "Perfect for groceries, gifting, or weekly essentials.",
-        valueLabels: ["$20", "$40", "$75"],
-        brand: {
-            id: "2",
-            name: "Fresco",
-            logo: { monogram: "F", accent: "#059669", ink: "#ffffff" },
-        },
-        image: { pattern: "field", accent: "#059669" },
-    },
-    {
-        id: "3",
-        slug: "circuit-gift-card",
-        title: "Circuit gift card",
-        description: "Put toward electronics, accessories, and more.",
-        valueLabels: ["$50", "$100", "$200"],
-        brand: {
-            id: "3",
-            name: "Circuit",
-            logo: { monogram: "C", accent: "#d97706", ink: "#ffffff" },
-        },
-        image: { pattern: "tile", accent: "#d97706" },
-    },
-    {
-        id: "4",
-        slug: "hearth-gift-card",
-        title: "Hearth gift card",
-        description: "A flexible gift for home and living purchases.",
-        valueLabels: ["$25", "$50", "$100"],
-        brand: {
-            id: "4",
-            name: "Hearth",
-            logo: { monogram: "H", accent: "#7c3aed", ink: "#ffffff" },
-        },
-        image: { pattern: "bloom", accent: "#7c3aed" },
-    },
-];
-
 const FEATURED_ARTICLES: Article[] = [
     {
         id: 1,
@@ -299,9 +244,14 @@ const FEATURED_ARTICLES: Article[] = [
 type Props = {
     featuredProducts: Product[];
     featuredOffers: Offer[];
+    featuredGiftCards: GiftCard[];
 };
 
-export default function Home({ featuredProducts, featuredOffers }: Props) {
+export default function Home({
+    featuredProducts,
+    featuredOffers,
+    featuredGiftCards,
+}: Props) {
     const { auth } = usePage().props;
 
     return (
@@ -508,16 +458,24 @@ export default function Home({ featuredProducts, featuredOffers }: Props) {
                     actionLabel="Browse gift cards"
                     actionHref="/gift-cards"
                 />
-                <div className="u-rail u-rail-mask-sm -mx-5 mt-7 flex gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 xl:grid-cols-4">
-                    {FEATURED_GIFT_CARDS.map((giftCard) => (
-                        <div
-                            key={giftCard.id}
-                            className="w-[78vw] max-w-77.5 shrink-0 sm:w-auto sm:max-w-none"
-                        >
-                            <GiftCardCard giftCard={giftCard} />
-                        </div>
-                    ))}
-                </div>
+                {featuredGiftCards.length > 0 ? (
+                    <div className="u-rail u-rail-mask-sm -mx-5 mt-7 flex gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 xl:grid-cols-4">
+                        {featuredGiftCards.map((giftCard) => (
+                            <div
+                                key={giftCard.id}
+                                className="w-[78vw] max-w-77.5 shrink-0 sm:w-auto sm:max-w-none"
+                            >
+                                <GiftCardCard giftCard={giftCard} />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="mt-7 rounded-lg border border-dashed border-rule-strong bg-surface px-6 py-14 text-center">
+                        <p className="text-[0.9rem] text-ink-3">
+                            No gift cards
+                        </p>
+                    </div>
+                )}
             </Container>
             <Container as="section" className="pt-14 lg:pt-20">
                 <SectionHeading

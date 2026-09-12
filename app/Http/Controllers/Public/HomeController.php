@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\GiftCard;
 use App\Models\Offer;
 use App\Models\Product;
 use Illuminate\Support\Carbon;
@@ -39,9 +40,21 @@ class HomeController extends Controller
             ->take(3)
             ->values();
 
+        $featuredGiftCards = GiftCard::query()
+            ->with('brand')
+            ->where('status', GiftCard::STATUS_ACTIVE)
+            ->where('featured', true)
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
+            ->get()
+            ->shuffle()
+            ->take(4)
+            ->values();
+
         return Inertia::render('Public/home', [
             'featuredProducts' => $featuredProducts,
             'featuredOffers' => $featuredOffers,
+            'featuredGiftCards' => $featuredGiftCards,
         ]);
     }
 }

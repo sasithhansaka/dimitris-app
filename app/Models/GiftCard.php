@@ -18,10 +18,13 @@ use Illuminate\Support\Carbon;
  * @property string $currency
  * @property string|null $image
  * @property string $status
+ * @property bool $featured
+ * @property Carbon $start_date
+ * @property Carbon $end_date
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['gift_code', 'brand_id', 'name', 'description', 'amount', 'currency', 'image', 'status'])]
+#[Fillable(['gift_code', 'brand_id', 'name', 'description', 'amount', 'currency', 'image', 'status', 'featured', 'start_date', 'end_date'])]
 class GiftCard extends Model
 {
     use LogsActivity;
@@ -31,6 +34,12 @@ class GiftCard extends Model
     public const STATUS_INACTIVE = 'inactive';
 
     public const STATUS_DRAFT = 'draft';
+
+    protected $casts = [
+        'featured' => 'boolean',
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
 
     protected static function booted(): void
     {

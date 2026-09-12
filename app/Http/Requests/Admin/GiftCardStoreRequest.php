@@ -23,11 +23,14 @@ class GiftCardStoreRequest extends FormRequest
             'amount' => ['required', 'string'],
             'currency' => ['required', 'string', 'size:3'],
             'image' => ['required', 'image', 'max:5120'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'status' => ['required', Rule::in([
                 GiftCard::STATUS_ACTIVE,
                 GiftCard::STATUS_INACTIVE,
                 GiftCard::STATUS_DRAFT,
             ])],
+            'featured' => ['boolean'],
         ];
     }
 
