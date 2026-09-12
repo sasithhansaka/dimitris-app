@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SearchOverlay } from "./SearchOverlay";
 import { login } from "@/routes";
+import { useInitials } from "@/hooks/use-initials";
 
 const NAV = [
     { href: "/products", label: "Products" },
@@ -18,6 +19,10 @@ const NAV = [
 export function Header() {
     const { url, props } = usePage();
     const isAuthenticated = Boolean(props.auth?.user);
+    const getInitials = useInitials();
+    const userInitials = props.auth?.user
+        ? getInitials(props.auth.user.name)
+        : "";
     const [searchOpen, setSearchOpen] = useState(false);
     const [query, setQuery] = useState("");
 
@@ -157,7 +162,7 @@ export function Header() {
                                         )}
                                         aria-hidden="true"
                                     >
-                                        AM
+                                        {userInitials}
                                     </span>
                                 </Link>
                             </>
