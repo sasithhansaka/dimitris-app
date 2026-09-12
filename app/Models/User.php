@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Traits\LogsActivity;
+use Database\Factories\UserFactory;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -60,6 +61,20 @@ class User extends Authenticatable implements MustVerifyEmailContract, PasskeyUs
     public function isAdmin(): bool
     {
         return in_array($this->role, [self::ROLE_ADMIN, self::ROLE_SUPER_ADMIN], true);
+    }
+
+    public function favoriteCategories(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductCategory::class, 'user_favorite_categories', 'user_id', 'category_id')
+            ->using(UserFavoriteCategory::class)
+            ->withTimestamps();
+    }
+
+    public function favoriteBrands(): BelongsToMany
+    {
+        return $this->belongsToMany(Brand::class, 'user_favorite_brands', 'user_id', 'brand_id')
+            ->using(UserFavoriteBrand::class)
+            ->withTimestamps();
     }
 
     /**

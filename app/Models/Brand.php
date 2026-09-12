@@ -83,4 +83,11 @@ class Brand extends Model
     {
         return $this->hasMany(GiftCard::class);
     }
+
+    public function favoritedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_favorite_brands')
+            ->using(UserFavoriteBrand::class)
+            ->withTimestamps();
+    }
 }

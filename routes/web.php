@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityLogController;
-use App\Http\Controllers\Auth\RegistrationValidationController;
 use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\BrandController;
@@ -15,6 +14,8 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RetailerController;
 use App\Http\Controllers\Admin\StampProgramController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\RegistrationValidationController;
+use App\Http\Controllers\Public\AccountController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,9 +28,14 @@ Route::middleware(['coming.soon'])->group(function () {
     Route::inertia('gift-cards', 'Public/GiftCards/page')->name('public.gift-cards');
     Route::inertia('coupons', 'Public/Coupons/page')->name('public.coupons');
     Route::inertia('products', 'Public/products/page')->name('public.products');
-    Route::inertia('account', 'Public/account/page')->name('public.account');
     Route::inertia('wallet', 'Public/wallet/page')->name('public.wallet');
     Route::inertia('notifications', 'Public/notifications/page')->name('public.notifications');
+});
+
+Route::middleware(['coming.soon', 'auth'])->group(function () {
+    Route::get('account', [AccountController::class, 'index'])->name('public.account');
+    Route::post('account/categories/{category}/toggle', [AccountController::class, 'toggleCategory'])->name('public.account.categories.toggle');
+    Route::post('account/brands/{brand}/toggle', [AccountController::class, 'toggleBrand'])->name('public.account.brands.toggle');
 });
 
 Route::middleware(['auth', 'verified', 'role:admin,super_admin'])->group(function () {
