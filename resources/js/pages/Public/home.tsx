@@ -24,6 +24,7 @@ import {
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import type { Article } from "@/types/article";
 import { ArrowRight, Search, TicketCheck, Trophy } from "lucide-react";
+import { ArticleCardHome } from "@/components/articles/ArticleCard-home";
 
 const FEATURED_COUPONS: Coupon[] = [
     {
@@ -163,94 +164,18 @@ const POPULAR_BRANDS: Brand[] = [
     },
 ];
 
-const FEATURED_ARTICLES: Article[] = [
-    {
-        id: 1,
-        title: "How to stack coupons for maximum savings",
-        slug: "how-to-stack-coupons",
-        introduction:
-            "A quick guide to combining store offers, manufacturer coupons, and cashback for the biggest discount.",
-        content: "",
-        banner: "",
-        keywords: null,
-        status: "active",
-        read_time: 5,
-        featured: true,
-        article_category_id: 1,
-        category: {
-            id: 1,
-            name: "Guides",
-            slug: "guides",
-            description: null,
-            status: "active",
-            created_at: "",
-            updated_at: "",
-        },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-    },
-    {
-        id: 2,
-        title: "5 gift card tricks most shoppers miss",
-        slug: "gift-card-tricks",
-        introduction:
-            "Simple ways to get more value out of gift cards before they expire.",
-        content: "",
-        banner: "",
-        keywords: null,
-        status: "active",
-        read_time: 4,
-        featured: false,
-        article_category_id: 2,
-        category: {
-            id: 2,
-            name: "Tips",
-            slug: "tips",
-            description: null,
-            status: "active",
-            created_at: "",
-            updated_at: "",
-        },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-    },
-    {
-        id: 3,
-        title: "The competition entry checklist",
-        slug: "competition-entry-checklist",
-        introduction:
-            "What to check before you submit an entry so you don't get disqualified.",
-        content: "",
-        banner: "",
-        keywords: null,
-        status: "active",
-        read_time: 3,
-        featured: false,
-        article_category_id: 3,
-        category: {
-            id: 3,
-            name: "Competitions",
-            slug: "competitions",
-            description: null,
-            status: "active",
-            created_at: "",
-            updated_at: "",
-        },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-    },
-];
-
 type Props = {
     featuredProducts: Product[];
     featuredOffers: Offer[];
     featuredGiftCards: GiftCard[];
+    featuredArticles: Article[];
 };
 
 export default function Home({
     featuredProducts,
     featuredOffers,
     featuredGiftCards,
+    featuredArticles,
 }: Props) {
     const { auth } = usePage().props;
 
@@ -484,11 +409,17 @@ export default function Home({
                     actionLabel="All articles"
                     actionHref="/articles"
                 />
-                <div className="mt-7 grid gap-5 sm:grid-cols-3">
-                    {FEATURED_ARTICLES.map((article) => (
-                        <ArticleCard key={article.id} article={article} />
-                    ))}
-                </div>
+                {featuredArticles.length > 0 ? (
+                    <div className="mt-7 grid gap-5 sm:grid-cols-3">
+                        {featuredArticles.map((article) => (
+                            <ArticleCardHome key={article.id} article={article} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="mt-7 rounded-lg border border-dashed border-rule-strong bg-surface px-6 py-14 text-center">
+                        <p className="text-[0.9rem] text-ink-3">No articles</p>
+                    </div>
+                )}
             </Container>
 
             {/* 
@@ -515,7 +446,7 @@ ss
             //////////
             <SelectionBar /> */}
 
-            <div className="flex flex-col items-center gap-4 p-6 text-sm lg:p-8">
+            {/* <div className="flex flex-col items-center gap-4 p-6 text-sm lg:p-8">
                 {auth.user ? (
                     <Link
                         href={dashboard()}
@@ -531,17 +462,15 @@ ss
                         >
                             Log in
                         </Link>
-                        {/* @chisel-registration */}
-                        <Link
+=                        <Link
                             href={register()}
                             className="inline-block rounded-sm border border-rule px-5 py-1.5 text-sm leading-normal text-ink hover:bg-paper-deep"
                         >
                             Register
                         </Link>
-                        {/* @end-chisel-registration */}
-                    </div>
+=                    </div>
                 )}
-            </div>
+            </div> */}
         </>
     );
 }

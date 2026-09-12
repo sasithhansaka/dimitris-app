@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use App\Models\GiftCard;
 use App\Models\Offer;
 use App\Models\Product;
@@ -51,10 +52,20 @@ class HomeController extends Controller
             ->take(4)
             ->values();
 
+        $featuredArticles = Article::query()
+            ->with('category')
+            ->where('status', Article::STATUS_ACTIVE)
+            ->where('featured', true)
+            ->get()
+            ->shuffle()
+            ->take(3)
+            ->values();
+
         return Inertia::render('Public/home', [
             'featuredProducts' => $featuredProducts,
             'featuredOffers' => $featuredOffers,
             'featuredGiftCards' => $featuredGiftCards,
+            'featuredArticles' => $featuredArticles,
         ]);
     }
 }
