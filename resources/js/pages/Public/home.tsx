@@ -366,13 +366,10 @@ export default function Home() {
                     <div className="grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-stretch lg:gap-12">
                         <div className="flex flex-col justify-center">
                             <h1 className="u-display max-w-[15ch] text-[2.45rem] leading-[1.01] text-ink sm:text-[3.3rem] lg:text-[3.85rem]">
-                                Find the product. Claim the benefit. Enter to
-                                win.
+                                More ways to get rewarded.
                             </h1>
                             <p className="mt-5 max-w-[55ch] text-[1.02rem] leading-relaxed text-ink-2">
-                                Two clear ways to take part: register product
-                                coupons with a receipt, or enter prize
-                                competitions using the method shown.{" "}
+                             Claim coupon benefits, collect loyalty stamps, or enter prize competitions — with every next step made clear.
                             </p>
                             <form
                                 action="/products"
